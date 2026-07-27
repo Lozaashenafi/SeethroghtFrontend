@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Brand Colors ─── */
+@theme {
+  --color-brand-olive: #424532;
+  --color-brand-cream: #ffefcd;
+  --color-brand-navy: #2f4f6f;
+  --color-brand-navy-light: #3d688f;
+
+  /* Light theme (default) */
+  --color-bg: #fffdf7;
+  --color-surface: #ffffff;
+  --color-card: #ffffff;
+  --color-text: #2b2b2b;
+  --color-text-secondary: #6b7280;
+  --color-border: #ece6d6;
+
+  /* Semantic */
+  --color-info: var(--color-brand-navy);
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ─── Dark Theme ─── */
+.dark {
+  --color-bg: #2b2f23;
+  --color-surface: #34382a;
+  --color-card: #3b4030;
+  --color-text: #ffefcd;
+  --color-text-secondary: rgba(255, 239, 205, 0.75);
+  --color-border: rgba(255, 239, 205, 0.08);
+  --color-info: var(--color-brand-navy-light);
+}
+
+/* ─── Base Styles ─── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-olive);
+    color: var(--color-brand-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-navy);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+/* ─── Utility Classes ─── */
+@utility container-base {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
