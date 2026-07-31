@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Building2, ArrowLeft, Send, Globe } from 'lucide-react';
+import { Building2, ArrowLeft, Send, Globe, Search, Loader2, Sparkles } from 'lucide-react';
 import { Container } from '@/components/common';
 import { useIndustries } from '@/hooks';
-import { createCompany } from '@/services/companies.service';
+import { createCompany, scrapeCompanyWebsite, type ScrapedCompanyData } from '@/services/companies.service';
+import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 
@@ -19,6 +20,7 @@ export function CreateCompanyPage() {
 
   const { data: industries } = useIndustries();
   const [isLoading, setIsLoading] = useState(false);
+  const [isScraping, setIsScraping] = useState(false);
 
   const [name, setName] = useState(prefillName);
   const [slug, setSlug] = useState(prefillSlug);
@@ -27,6 +29,7 @@ export function CreateCompanyPage() {
   const [city, setCity] = useState('');
   const [description, setDescription] = useState('');
   const [industryId, setIndustryId] = useState('');
+  const [scrapeUrl, setScrapeUrl] = useState('');
 
   const handleNameChange = (value: string) => {
     setName(value);
@@ -38,6 +41,56 @@ export function CreateCompanyPage() {
           .replace(/-+/g, '-')
           .replace(/^-|-$/g, '')
       );
+    }
+  };
+
+  const handleScrape = async () => {
+    if (!scrapeUrl.trim()) {
+      toast.error('Please enter a website URL');
+      return;
+    }
+    setIsScraping(true);
+    try {
+      const data: ScrapedCompanyData = await scrapeCompanyWebsite(scrapeUrl.trim());
+      let filledCount = 0;
+
+      if (data.name) {
+        handleNameChange(data.name);
+        filledCount++;
+      }
+      if (data.description) {
+        setDescription(data.description);
+        filledCount++;
+      }
+      if (data.country) {
+        setCountry(data.country);
+        filledCount++;
+      }
+      if (data.city) {
+        setCity(data.city);
+        filledCount++;
+      }
+      if (data.industrySlug && industries) {
+        const match = industries.find((ind) => ind.slug === data.industrySlug);
+        if (match) {
+          setIndustryId(match.id);
+          filledCount++;
+        }
+      }
+      if (data.logoUrl) {
+        // Logo is scraped but not stored as a form field;
+        // we could use it for preview in the future
+      }
+
+      setWebsite(scrapeUrl.trim());
+
+      toast.success(
+        `Scraped successfully! ${filledCount > 0 ? `Filled ${filledCount} field${filledCount > 1 ? 's' : ''}.` : 'No additional data found — you can fill manually.'}`,
+      );
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to scrape website. Check the URL and try again.'));
+    } finally {
+      setIsScraping(false);
     }
   };
 
@@ -60,9 +113,8 @@ export function CreateCompanyPage() {
       });
       toast.success('Company added!');
       navigate(`/company/${slug.trim()}`);
-    } catch (error: any) {
-      const message = error?.response?.data?.message || 'Failed to create company';
-      toast.error(message);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to create company'));
     } finally {
       setIsLoading(false);
     }
@@ -103,6 +155,44 @@ export function CreateCompanyPage() {
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-8">
+            {/* ─────────────── Scrape from Website ─────────────── */}
+            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)]">
+                <Sparkles size={18} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
+                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)]">
+                  Quick Add — Scrape from Website
+                </h2>
+              </div>
+              <p className="text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)] mb-5">
+                Enter a company's website URL and we'll automatically pull their info — name, description, location, and industry.
+              </p>
+              <div className="flex items-stretch gap-3">
+                <div className="flex-1 border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] flex items-center px-4">
+                  <Globe size={16} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-3 shrink-0" />
+                  <input
+                    value={scrapeUrl}
+                    onChange={(e) => setScrapeUrl(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleScrape())}
+                    placeholder="https://example.com"
+                    className="w-full py-3 text-sm outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleScrape}
+                  disabled={isScraping || !scrapeUrl.trim()}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-4 border-[#2b2f23] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                >
+                  {isScraping ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Search size={16} />
+                  )}
+                  {isScraping ? 'Scraping...' : 'Scrape Data'}
+                </button>
+              </div>
+            </div>
+
             {/* Basic Info */}
             <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)]">
@@ -250,10 +340,7 @@ export function CreateCompanyPage() {
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
-                    <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Adding...
                   </span>
                 ) : (

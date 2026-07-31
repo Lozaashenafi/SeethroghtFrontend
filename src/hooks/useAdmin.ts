@@ -5,12 +5,10 @@ import {
   adminListIdentities,
   adminBlockIdentity,
   adminUnblockIdentity,
-  adminUpdateCompany,
   adminDeleteCompany,
   adminGetReports,
   adminUpdateReportStatus,
 } from '@/services/admin.service';
-import { createCompany } from '@/services/companies.service';
 
 // ─── Reports (admin) ───
 
@@ -35,37 +33,11 @@ export function useAdminUpdateReportStatus() {
 
 // ─── Companies (admin: update, delete) ───
 
-export function useAdminUpdateCompany() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ slug, input }: { slug: string; input: Parameters<typeof adminUpdateCompany>[1] }) =>
-      adminUpdateCompany(slug, input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['companies'] });
-      queryClient.invalidateQueries({ queryKey: ['company'] });
-    },
-  });
-}
-
 export function useAdminDeleteCompany() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (slug: string) => adminDeleteCompany(slug),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['companies'] });
-    },
-  });
-}
-
-// ─── Create Company (public) ───
-
-export function useCreateCompany() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (input: Parameters<typeof createCompany>[0]) => createCompany(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
     },

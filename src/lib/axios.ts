@@ -4,6 +4,7 @@ import { config } from '@/config';
 const apiClient = axios.create({
   baseURL: config.api.baseURL,
   timeout: config.api.timeout,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },

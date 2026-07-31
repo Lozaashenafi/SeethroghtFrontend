@@ -215,7 +215,7 @@ export function ReviewDetailPage() {
           <div className="flex items-center gap-3 mb-6">
             <BrandStarRating rating={review.overallRating} size={16} />
             <span className="font-black text-lg text-[#2b2f23] dark:text-[var(--color-text)]">
-              {review.overallRating}/5
+              {review.overallRating ? `${review.overallRating}/5` : 'N/A'}
             </span>
           </div>
 

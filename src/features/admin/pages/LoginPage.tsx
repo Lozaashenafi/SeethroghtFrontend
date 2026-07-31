@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Eye, LogIn } from 'lucide-react';
+import { Shield, LogIn } from 'lucide-react';
 import { Container } from '@/components/common';
 import { useAuth } from '@/context/AuthContext';
+import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
+
+interface LoginLocationState {
+  from?: { pathname?: string };
+}
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,9 +20,11 @@ export function LoginPage() {
   const location = useLocation();
   const { login, isAuthenticated } = useAuth();
 
+  const getRedirectTarget = () =>
+    (location.state as LoginLocationState | null)?.from?.pathname ?? '/admin';
+
   if (isAuthenticated) {
-    const from = (location.state as any)?.from?.pathname || '/admin';
-    navigate(from, { replace: true });
+    navigate(getRedirectTarget(), { replace: true });
     return null;
   }
 
@@ -31,11 +38,9 @@ export function LoginPage() {
     try {
       await login(email, password);
       toast.success('Welcome back!');
-      const from = (location.state as any)?.from?.pathname || '/admin';
-      navigate(from, { replace: true });
-    } catch (error: any) {
-      const message = error?.response?.data?.message || 'Invalid email or password';
-      toast.error(message);
+      navigate(getRedirectTarget(), { replace: true });
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Invalid email or password'));
     } finally {
       setIsLoading(false);
     }
@@ -79,7 +84,7 @@ export function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@seethrough.com"
+                    placeholder="admin@example.com"
                     autoComplete="email"
                     autoFocus
                     className="w-full px-4 py-3 text-sm outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
@@ -115,11 +120,6 @@ export function LoginPage() {
                 )}
               </button>
             </form>
-
-            <div className="mt-6 flex items-center justify-center gap-2 text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
-              <Eye size={12} />
-              <span>Default: admin@seethrough.com / admin123</span>
-            </div>
           </div>
         </motion.div>
       </Container>

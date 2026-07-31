@@ -1,48 +1,39 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Eye, Shield, AlertTriangle, MessageSquare, ThumbsUp } from 'lucide-react';
+import { Eye, Shield, AlertTriangle, ThumbsUp } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui';
 import { useLocalStorage } from '@/hooks';
-import { fadeInUp, staggerContainer } from '@/lib/animations';
 
 const WELCOME_SEEN_KEY = 'see-through-welcome-seen';
+
+// Match the torn effect from the homepage
+const tornEffect = {
+  clipPath: `polygon(0% 0%, 100% 0%, 100% 98%, 98% 100%, 95% 98%, 92% 100%, 89% 98%, 85% 100%, 80% 97%, 75% 100%, 70% 98%, 65% 100%, 60% 97%, 55% 100%, 50% 98%, 45% 100%, 40% 97%, 35% 100%, 30% 98%, 25% 100%, 20% 97%, 15% 100%, 10% 98%, 5% 100%, 0% 97%)`
+};
 
 const guidelines = [
   {
     icon: Eye,
     title: 'See Through the Surface',
-    description:
-      'This platform lets you read honest, anonymous reviews from real employees before you apply or get hired. Get the inside scoop on company culture, management, and more.',
-    color: 'text-brand-navy',
+    description: 'Read honest, anonymous reviews from real employees before you apply.',
+    color: 'text-[#2b2f23] dark:text-[var(--color-text)]',
   },
   {
     icon: Shield,
     title: 'Stay Anonymous',
-    description:
-      'Everything you share is completely anonymous. No names, no emails, no tracking. Your identity is protected so you can speak freely.',
-    color: 'text-brand-olive',
+    description: 'No names, no emails, no tracking. Your identity is protected.',
+    color: 'text-emerald-700 dark:text-emerald-400',
   },
   {
     icon: AlertTriangle,
-    title: 'Reviews May Not Be 100% Accurate',
-    description:
-      'Every review is a personal opinion. Information might not always be accurate. Always check the likes, comments, and multiple reviews to get a balanced view.',
-    color: 'text-warning',
+    title: 'Accuracy Notice',
+    description: 'Reviews are personal opinions. Check likes and comments for balance.',
+    color: 'text-orange-700 dark:text-orange-400',
   },
   {
     icon: ThumbsUp,
     title: 'Be Honest & Fair',
-    description:
-      'Only write about companies you actually work(ed) for. Don\'t post reviews out of revenge or malice. Keep it constructive and respectful.',
-    color: 'text-success',
-  },
-  {
-    icon: MessageSquare,
-    title: 'Keep It Clean',
-    description:
-      'No bad language, harassment, or personal attacks. Reviews with inappropriate content will be removed. Let\'s keep this helpful for everyone.',
-    color: 'text-info',
+    description: 'Only review companies you worked for. No malice, keep it constructive.',
+    color: 'text-blue-700 dark:text-blue-400',
   },
 ];
 
@@ -61,84 +52,71 @@ export function WelcomeModal() {
       onClose={handleDismiss}
       size="lg"
       showCloseButton={false}
-      className="overflow-hidden"
+      // Remove default modal styling to use our custom brutalist container
+      className="bg-transparent border-none shadow-none overflow-visible"
     >
-      <div className="space-y-6">
-        {/* Header */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="text-center"
+      <div className="relative">
+        {/* Shadow layer */}
+        <div 
+          className="absolute inset-0 translate-x-2 translate-y-2 bg-[#2b2f23]/10 dark:bg-black/40" 
+          style={tornEffect} 
+        />
+        
+        {/* Main Content Card */}
+        <div 
+          className="relative bg-[#FCFAF7] dark:bg-[var(--color-card)] border-4 border-[#2b2f23] dark:border-[var(--color-text)] p-8 md:p-10"
+          style={tornEffect}
         >
-          <motion.div
-            variants={fadeInUp}
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-olive/10 dark:bg-brand-cream/10"
-          >
-            <Eye size={32} className="text-brand-olive dark:text-brand-cream" />
-          </motion.div>
-          <motion.h2
-            variants={fadeInUp}
-            className="text-2xl font-semibold text-brand-olive dark:text-brand-cream"
-          >
-            Welcome to See Through
-          </motion.h2>
-          <motion.p
-            variants={fadeInUp}
-            className="mt-2 text-sm text-text-secondary"
-          >
-            Honest workplace reviews, shared anonymously.
-          </motion.p>
-        </motion.div>
+          {/* Header */}
+          <div className="text-center mb-10">
+            <div className="inline-flex h-16 w-16 items-center justify-center border-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-6 rotate-3">
+              <Eye size={32} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
+            </div>
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+              Welcome to <br/>
+              <span className="bg-[#2b2f23] text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] px-2">See Through</span>
+            </h2>
+            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
+              Establishing the ground rules
+            </p>
+          </div>
 
-        {/* Guidelines */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-          className="space-y-3"
-        >
-          {guidelines.map((item) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={item.title}
-                variants={fadeInUp}
-                className="flex items-start gap-3 rounded-xl bg-brand-olive/[0.03] dark:bg-brand-cream/[0.03] p-3.5"
-              >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface">
-                  <Icon size={18} className={item.color} />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-text">{item.title}</h3>
-                  <p className="mt-0.5 text-xs leading-relaxed text-text-secondary">
+          {/* Guidelines Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+            {guidelines.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div 
+                  key={item.title}
+                  className="p-4 border-2 border-[#2b2f23]/10 dark:border-[var(--color-border)] bg-white/50 dark:bg-[var(--color-surface)]/50"
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Icon size={18} className={item.color} />
+                    <h3 className="text-xs font-black uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)]">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="text-sm font-serif italic leading-snug text-stone-600 dark:text-[var(--color-text-secondary)]">
                     {item.description}
                   </p>
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              );
+            })}
+          </div>
 
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-center"
-        >
-          <Button
-            onClick={handleDismiss}
-            variant="primary"
-            size="lg"
-            className="w-full"
-          >
-            I Understand, Let's Go!
-          </Button>
-          <p className="mt-2 text-xs text-text-secondary/60">
-            You can find this info again anytime in the footer.
-          </p>
-        </motion.div>
+          {/* Footer/Action */}
+          <div className="space-y-4">
+            <button
+              onClick={handleDismiss}
+              className="w-full py-4 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-[0.3em] hover:opacity-90 transition-transform active:scale-[0.98] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
+            >
+              I Understand. Enter.
+            </button>
+            <p className="text-center text-[10px] font-mono uppercase text-stone-400 dark:text-[var(--color-text-secondary)]">
+              Verification is required for posting, not browsing.
+            </p>
+          </div>
+        </div>
       </div>
     </Modal>
   );

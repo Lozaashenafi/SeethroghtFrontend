@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { getCompanies, getCompanyBySlug } from '@/services';
-import type { Company } from '@/types';
 
 interface UseCompaniesParams {
   search?: string;

@@ -1,9 +1,9 @@
 import { createContext, useState, useCallback, useContext, type ReactNode } from 'react';
 import {
   adminLogin,
-  getAdminToken,
+  adminLogout,
   getAdminUser,
-  setAdminAuth,
+  setAdminUser,
   clearAdminAuth,
 } from '@/services/auth.service';
 
@@ -16,7 +16,6 @@ interface AdminUser {
 interface AuthContextType {
   isAuthenticated: boolean;
   admin: AdminUser | null;
-  token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
@@ -24,28 +23,25 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(getAdminToken());
   const [admin, setAdmin] = useState<AdminUser | null>(getAdminUser());
 
   const login = useCallback(async (email: string, password: string) => {
     const result = await adminLogin(email, password);
-    setAdminAuth(result.token, result.admin);
-    setToken(result.token);
+    setAdminUser(result.admin);
     setAdmin(result.admin);
   }, []);
 
   const logout = useCallback(() => {
     clearAdminAuth();
-    setToken(null);
     setAdmin(null);
+    void adminLogout().catch(() => {});
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!token,
+        isAuthenticated: !!admin,
         admin,
-        token,
         login,
         logout,
       }}
@@ -55,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {

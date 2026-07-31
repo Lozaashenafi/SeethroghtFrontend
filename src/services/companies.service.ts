@@ -39,3 +39,20 @@ export async function createCompany(input: {
   if (!data.data) throw new Error('Failed to create company');
   return data.data;
 }
+
+export interface ScrapedCompanyData {
+  name: string | null;
+  description: string | null;
+  country: string | null;
+  city: string | null;
+  industrySlug: string | null;
+  logoUrl: string | null;
+}
+
+export async function scrapeCompanyWebsite(website: string): Promise<ScrapedCompanyData> {
+  const { data } = await apiClient.post<ApiResponse<ScrapedCompanyData>>('/api/v1/companies/scrape', {
+    website,
+  });
+  if (!data.data) throw new Error('Failed to scrape website');
+  return data.data;
+}

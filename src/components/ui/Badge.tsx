@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info' | 'outline';
 
 interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  children: ReactNode;
+  children?: ReactNode;
   variant?: BadgeVariant;
   dot?: boolean;
 }

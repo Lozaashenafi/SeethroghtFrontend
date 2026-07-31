@@ -9,8 +9,9 @@ import {
   X,
 } from 'lucide-react';
 import { Container } from '@/components/common';
-import { useCreateReview, useCompanies, useCompany, useTags, useDebounce } from '@/hooks';
+import { useCreateReview, useCompanies, useTags, useDebounce } from '@/hooks';
 import { ROUTES } from '@/constants';
+import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import type { Tag } from '@/types';
@@ -23,6 +24,8 @@ const employmentOptions = [
   { value: 'intern', label: 'Intern' },
   { value: 'freelance', label: 'Freelance' },
 ] as const;
+
+type EmploymentStatusValue = (typeof employmentOptions)[number]['value'];
 
 const ratingLabels: Record<string, string> = {
   overallRating: 'Overall Rating',
@@ -96,10 +99,8 @@ function DiamondRatingInput({
 }
 
 function CompanySearchSelect({
-  value,
   onChange,
 }: {
-  value: string;
   onChange: (slug: string, name: string) => void;
 }) {
   const [search, setSearch] = useState('');
@@ -264,11 +265,9 @@ export function CreateReviewPage() {
 
   const createReview = useCreateReview();
   const { data: tagsData } = useTags();
-  const { data: prefillCompany } = useCompany(prefillCompanySlug || undefined);
   const tags = tagsData ?? [];
 
   const [companySlug, setCompanySlug] = useState(prefillCompanySlug ?? '');
-  const [companyName, setCompanyName] = useState(prefillCompany?.name ?? '');
   const [title, setTitle] = useState('');
   const [pros, setPros] = useState('');
   const [cons, setCons] = useState('');
@@ -279,7 +278,7 @@ export function CreateReviewPage() {
   const [compensation, setCompensation] = useState<number | null>(null);
   const [opportunities, setOpportunities] = useState<number | null>(null);
   const [isCurrentEmployee, setIsCurrentEmployee] = useState(false);
-  const [employmentStatus, setEmploymentStatus] = useState('');
+  const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatusValue>('');
   const [jobTitle, setJobTitle] = useState('');
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -312,13 +311,15 @@ export function CreateReviewPage() {
         compensation: compensation ?? undefined,
         opportunities: opportunities ?? undefined,
         isCurrentEmployee: isCurrentEmployee || undefined,
-        employmentStatus: (employmentStatus as any) || undefined,
+        employmentStatus: employmentStatus === '' ? undefined : employmentStatus,
         jobTitle: jobTitle.trim() || undefined,
         tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
       });
       toast.success('Your review has been posted!');
       navigate(`/review/${review.publicId}`);
-    } catch { toast.error('Failed to submit review. Please try again.'); }
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to submit review. Please try again.'));
+    }
   };
 
   return (
@@ -350,13 +351,13 @@ export function CreateReviewPage() {
         <form onSubmit={handleSubmit}>
           <div className="space-y-8">
             {/* Company */}
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            {/* NOTE: no tornEffect clipPath on this card because the dropdown would be clipped */}
+            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...cardShadow }}>
               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)]">
                 Company
               </h2>
               <CompanySearchSelect
-                value={companySlug}
-                onChange={(slug, name) => { setCompanySlug(slug); setCompanyName(name); if (slug) setErrors(p => ({ ...p, company: '' })); }}
+                onChange={(slug) => { setCompanySlug(slug); if (slug) setErrors(p => ({ ...p, company: '' })); }}
               />
               {errors.company && <p className="mt-1.5 text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.company}</p>}
             </div>
@@ -483,7 +484,7 @@ export function CreateReviewPage() {
                   <div className="border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                     <select
                       value={employmentStatus}
-                      onChange={(e) => setEmploymentStatus(e.target.value)}
+                      onChange={(e) => setEmploymentStatus(e.target.value as EmploymentStatusValue)}
                       className="w-full px-4 py-3 text-sm font-black uppercase tracking-wider outline-none bg-transparent dark:text-[var(--color-text)]"
                     >
                       {employmentOptions.map((opt) => (

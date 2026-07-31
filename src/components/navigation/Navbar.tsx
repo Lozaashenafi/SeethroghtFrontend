@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Eye, Pencil, Plus } from 'lucide-react';
+import { Menu, Eye, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchBar } from './SearchBar';
 import { MobileNav } from './MobileNav';
-import { Button } from '@/components/ui';
 import { ROUTES } from '@/constants';
 
 const navLinks = [

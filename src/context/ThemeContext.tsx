@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, type ReactNode } from 'react';
 import type { Theme, ThemeContextType } from '@/types';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 function getInitialTheme(): Theme {

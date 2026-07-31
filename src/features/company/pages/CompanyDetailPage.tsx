@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { Building2, Globe, MapPin, ArrowLeft, ThumbsUp, Briefcase, Pencil, MessageSquareText } from 'lucide-react';
+import { Globe, MapPin, ArrowLeft, ThumbsUp, Briefcase, Pencil, MessageSquareText } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useCompany, useReviews } from '@/hooks';

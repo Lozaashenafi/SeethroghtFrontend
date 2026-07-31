@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, Search, MapPin, Plus, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { Container } from '@/components/common';
-import { BrandStarRating, TornSkeleton } from '@/components/ui';
+import { BrandStarRating } from '@/components/ui';
 import { useCompanies, useDebounce } from '@/hooks';
 import { formatNumber } from '@/utils';
 import { tornEffect, cardShadow } from '@/constants/brand';

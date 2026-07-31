@@ -1,14 +1,10 @@
-import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
-  Shield,
   Flag,
   Building2,
   MessageSquare,
   Users,
   LogOut,
-  ChevronLeft,
 } from 'lucide-react';
 import { Navbar } from '@/components/navigation/Navbar';
 import { Footer } from '@/components/navigation/Footer';
@@ -27,7 +23,6 @@ export function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { admin, logout } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const handleLogout = () => {
     logout();

@@ -2,25 +2,20 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   MessageSquareText,
-  Star,
   ChevronLeft,
   ChevronRight,
   ThumbsUp,
-  ThumbsDown,
   Search,
   Plus,
   ArrowUpRight
 } from 'lucide-react';
 import { Page, Container } from '@/components/common';
-import { Badge, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { WelcomeModal } from '@/components/onboarding';
 import type { Review } from '@/types';
 import { useReviews } from '@/hooks';
 import { formatDate } from '@/utils';
 import { ROUTES } from '@/constants';
-
-// Primary color for light mode (replacing black)
-const PRIMARY_LIGHT = '#2b2f23';
 
 const tornEffect = {
   clipPath: `polygon(0% 0%, 100% 0%, 100% 96%, 98% 98%, 95% 96%, 92% 99%, 89% 96%, 85% 98%, 80% 95%, 75% 99%, 70% 96%, 65% 98%, 60% 95%, 55% 99%, 50% 96%, 45% 98%, 40% 95%, 35% 99%, 30% 96%, 25% 98%, 20% 95%, 15% 99%, 10% 96%, 5% 98%, 0% 95%)`
@@ -156,10 +151,10 @@ export function HomePage() {
           {/* Filtering Header */}
           <div className="flex items-center justify-between mb-12 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)] pb-4">
             <div className="flex gap-8">
-              {['engagement', 'recent'].map((sort) => (
+              {(['engagement', 'recent'] as const).map((sort) => (
                 <button
                   key={sort}
-                  onClick={() => { setSortBy(sort as any); setPage(1); }}
+                  onClick={() => { setSortBy(sort); setPage(1); }}
                   className={`text-xs font-black uppercase tracking-[0.2em] transition-all relative ${
                     sortBy === sort 
                       ? 'text-[#2b2f23] dark:text-[var(--color-text)]' 

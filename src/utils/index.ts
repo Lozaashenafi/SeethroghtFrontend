@@ -4,3 +4,4 @@ export { truncate } from './truncate';
 export { slugify } from './slugify';
 export { debounce } from './debounce';
 export { copyToClipboard } from './copyToClipboard';
+export { getApiErrorMessage } from './errorMessage';
