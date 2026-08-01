@@ -10,7 +10,7 @@ import {
   Search,
   Check,
 } from 'lucide-react';
-import { Card, Badge, Button, Input } from '@/components/ui';
+import { Card, Badge, Button, Input, ConfirmDialog } from '@/components/ui';
 import { useCompanies, useIndustries, useDebounce } from '@/hooks';
 import { useAdminDeleteCompany } from '@/hooks/useAdmin';
 import { adminUpdateCompany } from '@/services/admin.service';
@@ -126,13 +126,23 @@ export function CompaniesTab() {
   const deleteCompany = useAdminDeleteCompany();
   const companies = data?.companies ?? [];
   const pagination = data?.pagination;
+  const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
 
-  const handleDelete = async (slug: string, name: string) => {
-    if (!window.confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await deleteCompany.mutateAsync(slug);
-      toast.success('Company deleted');
-    } catch { toast.error('Failed to delete company'); }
+      await toast.promise(
+        deleteCompany.mutateAsync(deleteTarget.slug),
+        {
+          loading: 'Deleting company...',
+          success: 'Company deleted',
+          error: 'Failed to delete company',
+        },
+      );
+      setDeleteTarget(null);
+    } catch {
+      // toast.promise already surfaced the error
+    }
   };
 
   return (
@@ -172,7 +182,7 @@ export function CompaniesTab() {
                   <Link to={`/company/${company.slug}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
                   <Button variant="ghost" size="sm" onClick={() => setEditingCompany(company)}>Edit</Button>
                   <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
-                    onClick={() => handleDelete(company.slug, company.name)}
+                    onClick={() => setDeleteTarget(company)}
                     leftIcon={<Trash2 size={14} />}
                   />
                 </div>
@@ -197,6 +207,15 @@ export function CompaniesTab() {
           onSaved={() => { setShowCreateModal(false); setEditingCompany(null); }}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        title="Delete company"
+        description={`Delete "${deleteTarget?.name}"? This will permanently remove the company and all of its reviews, comments, and reports. This cannot be undone.`}
+        isLoading={deleteCompany.isPending}
+        onConfirm={handleDelete}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

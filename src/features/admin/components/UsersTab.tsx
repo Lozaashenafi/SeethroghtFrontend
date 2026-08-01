@@ -19,16 +19,32 @@ export function UsersTab() {
 
   const handleBlock = async (publicId: string) => {
     try {
-      await blockUser.mutateAsync(publicId);
-      toast.success('User blocked');
-    } catch { toast.error('Failed to block user'); }
+      await toast.promise(
+        blockUser.mutateAsync(publicId),
+        {
+          loading: 'Blocking user...',
+          success: 'User blocked',
+          error: 'Failed to block user',
+        },
+      );
+    } catch {
+      // toast.promise already surfaced the error
+    }
   };
 
   const handleUnblock = async (publicId: string) => {
     try {
-      await unblockUser.mutateAsync(publicId);
-      toast.success('User unblocked');
-    } catch { toast.error('Failed to unblock user'); }
+      await toast.promise(
+        unblockUser.mutateAsync(publicId),
+        {
+          loading: 'Unblocking user...',
+          success: 'User unblocked',
+          error: 'Failed to unblock user',
+        },
+      );
+    } catch {
+      // toast.promise already surfaced the error
+    }
   };
 
   return (

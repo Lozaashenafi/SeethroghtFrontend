@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, ExternalLink, Star, Trash2 } from 'lucide-react';
-import { Card, Badge, Button } from '@/components/ui';
+import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
 import { useAdminReviews, useAdminDeleteReview } from '@/hooks/useAdmin';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
+import type { Review } from '@/types';
 
 export function ReviewsTab() {
   const [page, setPage] = useState(1);
@@ -12,13 +13,23 @@ export function ReviewsTab() {
   const deleteReview = useAdminDeleteReview();
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
+  const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
 
-  const handleDelete = async (publicId: string) => {
-    if (!window.confirm('Delete this review? This cannot be undone.')) return;
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
     try {
-      await deleteReview.mutateAsync(publicId);
-      toast.success('Review deleted');
-    } catch { toast.error('Failed to delete review'); }
+      await toast.promise(
+        deleteReview.mutateAsync(deleteTarget.publicId),
+        {
+          loading: 'Deleting review...',
+          success: 'Review deleted',
+          error: 'Failed to delete review',
+        },
+      );
+      setDeleteTarget(null);
+    } catch {
+      // toast.promise already surfaced the error
+    }
   };
 
   return (
@@ -54,7 +65,7 @@ export function ReviewsTab() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
                   <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
-                    onClick={() => handleDelete(review.publicId)}
+                    onClick={() => setDeleteTarget(review)}
                     leftIcon={<Trash2 size={14} />}
                   />
                 </div>
@@ -71,6 +82,15 @@ export function ReviewsTab() {
           <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= pagination.totalPages}>Next</Button>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={!!deleteTarget}
+        title="Delete review"
+        description={`Delete "${deleteTarget?.title}"? This will permanently remove the review and all of its comments and reports. This cannot be undone.`}
+        isLoading={deleteReview.isPending}
+        onConfirm={handleDelete}
+        onClose={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

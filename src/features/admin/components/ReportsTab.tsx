@@ -79,9 +79,17 @@ export function ReportsTab() {
 
   const handleUpdate = async (publicId: string, status: 'resolved' | 'dismissed') => {
     try {
-      await updateStatus.mutateAsync({ publicId, status });
-      toast.success(`Report ${status === 'resolved' ? 'accepted' : 'dismissed'}`);
-    } catch { toast.error('Failed to update report'); }
+      await toast.promise(
+        updateStatus.mutateAsync({ publicId, status }),
+        {
+          loading: status === 'resolved' ? 'Accepting report...' : 'Dismissing report...',
+          success: `Report ${status === 'resolved' ? 'accepted' : 'dismissed'}`,
+          error: 'Failed to update report',
+        },
+      );
+    } catch {
+      // toast.promise already surfaced the error
+    }
   };
 
   return (
