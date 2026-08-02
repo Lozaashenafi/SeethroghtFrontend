@@ -21,14 +21,12 @@ export function Navbar() {
     <>
       <header className="sticky top-0 z-30 border-b-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-[#F4F1EA] dark:bg-[var(--color-bg)]">
         <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Logo Section */}
+         
           <Link
             to={ROUTES.HOME}
             className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter italic text-[#2b2f23] dark:text-[var(--color-text)]"
           >
-            <div className="bg-[#2b2f23] dark:bg-[var(--color-text)] p-1">
-                <Eye size={20} className="text-white dark:text-[var(--color-bg)]" />
-            </div>
+            <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
             <span>See Through</span>
           </Link>
 

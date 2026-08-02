@@ -18,18 +18,19 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'typ
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand-olive text-brand-cream hover:brightness-110 active:brightness-95',
+    'bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-2 border-[#2b2f23] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90',
   secondary:
-    'bg-brand-cream text-brand-olive hover:brightness-95 active:brightness-90',
+    'bg-[#FCFAF7] dark:bg-[var(--color-surface)] text-[#2b2f23] dark:text-[var(--color-text)] border-2 border-[#2b2f23] dark:border-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
   outline:
-    'border border-brand-olive text-brand-olive dark:border-brand-cream dark:text-brand-cream hover:bg-brand-olive/5',
+    'border-2 border-[#2b2f23] dark:border-[var(--color-text)] text-[#2b2f23] dark:text-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
   ghost:
-    'text-brand-olive dark:text-brand-cream hover:bg-brand-olive/5',
-  danger: 'bg-error text-white hover:brightness-110 active:brightness-95',
+    'text-[#2b2f23] dark:text-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
+  danger:
+    'bg-error text-white border-2 border-error shadow-[4px_4px_0px_0px_rgba(220,38,38,0.35)] hover:brightness-110',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
+  sm: 'px-3 py-1.5 text-xs gap-1.5',
   md: 'px-5 py-2.5 text-sm gap-2',
   lg: 'px-7 py-3 text-base gap-2.5',
 };
@@ -51,9 +52,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    // Variants with a hard offset shadow collapse it on press (brutalist press effect)
+    const hardShadowVariants: ButtonVariant[] = ['primary', 'danger'];
     const motionProps: HTMLMotionProps<'button'> = {
       whileHover: disabled ? undefined : { scale: 1.02 },
-      whileTap: disabled ? undefined : { scale: 0.98 },
+      whileTap: disabled
+        ? undefined
+        : hardShadowVariants.includes(variant)
+          ? { scale: 0.97, boxShadow: '0px 0px 0px 0px rgba(0,0,0,0)' }
+          : { scale: 0.98 },
       transition: hoverLift,
     };
 
@@ -63,10 +70,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled || isLoading}
         className={cn(
-          'relative inline-flex items-center justify-center rounded-lg font-medium',
+          'relative inline-flex items-center justify-center rounded-none font-black uppercase tracking-widest',
           'transition-all duration-200 ease-out',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-navy',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none',
           variantStyles[variant],
           sizeStyles[size],
           fullWidth && 'w-full',

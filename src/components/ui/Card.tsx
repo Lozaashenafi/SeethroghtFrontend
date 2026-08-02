@@ -1,11 +1,14 @@
 import { type HTMLAttributes, type ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/cn';
+import { tornEffect, cardShadow } from '@/constants/brand';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   hover?: boolean;
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  /** Use torn-paper edges + offset shadow (homepage look). Defaults to true. */
+  torn?: boolean;
 }
 
 const paddingStyles = {
@@ -19,28 +22,53 @@ export function Card({
   children,
   hover = false,
   padding = 'md',
+  torn = true,
   className,
   ...props
 }: CardProps) {
   const motionProps: HTMLMotionProps<'div'> = hover
     ? {
-        whileHover: { y: -2, boxShadow: '0 8px 30px rgba(0,0,0,0.08)' },
+        whileHover: { y: -2 },
         transition: { type: 'spring', stiffness: 300, damping: 25 },
       }
     : {};
 
+  const base = cn(
+    'bg-[#FCFAF7] dark:bg-[var(--color-card)] transition-colors duration-200',
+    paddingStyles[padding],
+  );
+
+  if (!torn) {
+    return (
+      <motion.div
+        className={cn('border-2 border-[#2b2f23] dark:border-[var(--color-text)]', base, className)}
+        style={cardShadow}
+        {...motionProps}
+        {...(props as HTMLMotionProps<'div'>)}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
-      className={cn(
-        'rounded-xl border bg-card shadow-sm',
-        paddingStyles[padding],
-        'transition-colors duration-200',
-        className,
-      )}
+      className={cn('relative', className)}
       {...motionProps}
       {...(props as HTMLMotionProps<'div'>)}
     >
-      {children}
+      {/* Shadow layer */}
+      <div
+        aria-hidden
+        className="absolute inset-0 translate-x-1 translate-y-1 bg-[#2b2f23]/10 dark:bg-black/25"
+        style={tornEffect}
+      />
+      <div
+        className={cn('relative border border-stone-200 dark:border-[var(--color-border)]', base)}
+        style={tornEffect}
+      >
+        {children}
+      </div>
     </motion.div>
   );
 }

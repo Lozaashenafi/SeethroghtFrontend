@@ -64,8 +64,8 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-lg rounded-xl bg-card p-6 shadow-xl" onClick={e => e.stopPropagation()}>
-        <h2 className="mb-4 text-lg font-semibold text-brand-olive dark:text-brand-cream">
+      <div className="w-full max-w-lg rounded-none border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 shadow-[10px_10px_0px_0px_#2b2f23] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]" onClick={e => e.stopPropagation()}>
+        <h2 className="mb-4 text-xs font-black uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)]">
           {isEditing ? `Edit ${company.name}` : 'Add Company'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -79,9 +79,9 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
           </div>
           {!isEditing && (
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-brand-olive dark:text-brand-cream">Industry</label>
+              <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">Industry</label>
               <select value={industryId} onChange={e => setIndustryId(e.target.value)} required
-                className="w-full rounded-lg border bg-surface px-4 py-2.5 text-sm text-text focus:outline-none focus:ring-2 focus:ring-brand-navy/30"
+                className="w-full rounded-none border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[#2b2f23] dark:text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-navy/30"
               >
                 <option value="">Select industry...</option>
                 {industries?.map(ind => <option key={ind.id} value={ind.id}>{ind.name}</option>)}
@@ -89,21 +89,21 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
             </div>
           )}
           <div className="space-y-1.5">
-            <label className="block text-sm font-medium text-brand-olive dark:text-brand-cream">Description</label>
+            <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">Description</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
-              className="w-full rounded-lg border bg-surface px-4 py-2.5 text-sm text-text placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-brand-navy/30 resize-y"
+              className="w-full rounded-none border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[#2b2f23] dark:text-[var(--color-text)] placeholder:text-[#2b2f23]/35 dark:placeholder:text-[var(--color-text-secondary)]/50 focus:outline-none focus:ring-2 focus:ring-brand-navy/30 resize-y"
             />
           </div>
           {isEditing && (
             <label className="flex items-center gap-3 cursor-pointer">
               <div onClick={() => setVerified(!verified)}
-                className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-colors ${
-                  verified ? 'border-brand-olive bg-brand-olive dark:border-brand-cream dark:bg-brand-cream' : 'border-border'
+                className={`flex h-5 w-5 items-center justify-center rounded-none border-2 transition-colors ${
+                  verified ? 'border-[#2b2f23] bg-[#2b2f23] dark:border-[var(--color-text)] dark:bg-[var(--color-text)]' : 'border-stone-300 dark:border-[var(--color-border)]'
                 }`}
               >
-                {verified && <Check size={12} className="text-brand-cream dark:text-brand-olive" />}
+                {verified && <Check size={12} className="text-white dark:text-[var(--color-bg)]" />}
               </div>
-              <span className="text-sm text-text">Verified company</span>
+              <span className="text-xs font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">Verified company</span>
             </label>
           )}
           <div className="flex justify-end gap-3 pt-2">
@@ -156,7 +156,7 @@ export function CompaniesTab() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse rounded-xl bg-surface p-4"><div className="h-5 w-48 rounded bg-border" /></div>)}</div>
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[#2b2f23]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[#2b2f23]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
       ) : companies.length === 0 ? (
         <Card padding="lg" className="text-center"><p className="text-text-secondary">No companies found.</p></Card>
       ) : (

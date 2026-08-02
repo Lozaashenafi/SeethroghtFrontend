@@ -13,9 +13,10 @@ import { Page, Container } from '@/components/common';
 import { Button } from '@/components/ui';
 import { WelcomeModal } from '@/components/onboarding';
 import type { Review } from '@/types';
-import { useReviews } from '@/hooks';
+import { useReviews, useVoteOnReview } from '@/hooks';
 import { formatDate } from '@/utils';
 import { ROUTES } from '@/constants';
+import { toast } from 'sonner';
 
 const tornEffect = {
   clipPath: `polygon(0% 0%, 100% 0%, 100% 96%, 98% 98%, 95% 96%, 92% 99%, 89% 96%, 85% 98%, 80% 95%, 75% 99%, 70% 96%, 65% 98%, 60% 95%, 55% 99%, 50% 96%, 45% 98%, 40% 95%, 35% 99%, 30% 96%, 25% 98%, 20% 95%, 15% 99%, 10% 96%, 5% 98%, 0% 95%)`
@@ -40,6 +41,21 @@ function StarRating({ rating }: { rating: number | null }) {
 }
 
 function ReviewItem({ review }: { review: Review }) {
+  const vote = useVoteOnReview();
+
+  const handleVote = async (e: React.MouseEvent) => {
+    // Keep the vote from bubbling up to the card's <Link> navigation.
+    e.preventDefault();
+    e.stopPropagation();
+    if (vote.isPending) return;
+    try {
+      await vote.mutateAsync({ reviewPublicId: review.publicId, voteType: 'helpful' });
+      toast.success('Vote recorded');
+    } catch {
+      toast.error('Failed to record vote');
+    }
+  };
+
   return (
     <div className="group relative">
       {/* Shadow element - uses primary color with low opacity instead of black */}
@@ -87,9 +103,15 @@ function ReviewItem({ review }: { review: Review }) {
 
         <div className="flex items-center justify-between pt-6 border-t border-stone-200 dark:border-[var(--color-border)]">
           <div className="flex gap-6">
-             <div className="flex items-center gap-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
+             <button
+                type="button"
+                onClick={handleVote}
+                disabled={vote.isPending}
+                aria-label="Mark review as helpful"
+                className="flex items-center gap-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50 transition-colors cursor-pointer"
+             >
                 <ThumbsUp size={14} /> {review.helpfulCount || 0}
-             </div>
+             </button>
              <div className="flex items-center gap-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
                 <MessageSquareText size={14} /> DISCUSS
              </div>

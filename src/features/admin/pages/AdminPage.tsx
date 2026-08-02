@@ -41,18 +41,20 @@ export function AdminPage() {
   const tabConfig = tabs.find(t => t.id === activeTab)!;
 
   return (
-    <Page title={`Admin - ${tabConfig.label}`} description="Manage the See Through platform.">
+    <Page>
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-1">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-olive/5 dark:bg-brand-cream/5">
-            <Shield size={22} className="text-brand-olive dark:text-brand-cream" />
+        <div className="flex items-center gap-4 mb-1">
+          <div className="flex h-12 w-12 items-center justify-center border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
+            <Shield size={24} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-brand-olive dark:text-brand-cream">
+            <h1 className="text-2xl font-black uppercase tracking-tighter italic text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
               {tabConfig.label}
             </h1>
-            <p className="text-sm text-text-secondary">Manage the See Through platform</p>
+            <p className="mt-1 text-[11px] font-mono uppercase tracking-wider text-stone-500 dark:text-[var(--color-text-secondary)]">
+              Manage the See Through platform
+            </p>
           </div>
         </div>
       </div>

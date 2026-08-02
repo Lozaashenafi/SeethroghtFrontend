@@ -94,13 +94,13 @@ export function ReportsTab() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-2 border-b pb-4">
+      <div className="mb-6 flex items-center gap-2 border-b-2 border-[#2b2f23]/20 dark:border-[var(--color-border)] pb-4">
         {['pending', 'resolved', 'dismissed', 'all'].map((filter) => (
           <button key={filter} onClick={() => { setStatusFilter(filter === 'all' ? '' : filter); setPage(1); }}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-none border-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${
               (filter === 'all' && !statusFilter) || statusFilter === filter
-                ? 'bg-brand-olive text-brand-cream dark:bg-brand-cream dark:text-brand-olive'
-                : 'text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5'
+                ? 'border-[#2b2f23] bg-[#2b2f23] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
+                : 'border-[#2b2f23]/30 text-stone-500 dark:border-[var(--color-border)] dark:text-[var(--color-text-secondary)] hover:border-[#2b2f23] hover:text-[#2b2f23] dark:hover:border-[var(--color-text)] dark:hover:text-[var(--color-text)]'
             }`}
           >
             {filter === 'all' ? 'All Reports' : filter.charAt(0).toUpperCase() + filter.slice(1)}
@@ -109,7 +109,7 @@ export function ReportsTab() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="animate-pulse rounded-xl bg-surface p-6"><div className="h-5 w-48 rounded bg-border" /></div>)}</div>
+        <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[#2b2f23]/20 dark:border-[var(--color-border)] bg-surface p-6"><div className="h-5 w-48 bg-[#2b2f23]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
       ) : error ? (
         <Card padding="lg" className="text-center"><AlertTriangle size={24} className="mx-auto mb-3 text-error" /><p className="text-text-secondary">Failed to load reports.</p></Card>
       ) : reports.length === 0 ? (

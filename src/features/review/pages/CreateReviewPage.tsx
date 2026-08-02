@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import {
   Building2,
@@ -9,7 +9,7 @@ import {
   X,
 } from 'lucide-react';
 import { Container } from '@/components/common';
-import { useCreateReview, useCompanies, useTags, useDebounce } from '@/hooks';
+import { useCreateReview, useCompanies, useCompany, useTags, useDebounce } from '@/hooks';
 import { ROUTES } from '@/constants';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
@@ -100,13 +100,26 @@ function DiamondRatingInput({
 
 function CompanySearchSelect({
   onChange,
+  presetName,
 }: {
   onChange: (slug: string, name: string) => void;
+  /** Name of a company preselected via the ?company= URL param. */
+  presetName?: string;
 }) {
   const [search, setSearch] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedName, setSelectedName] = useState('');
+  const [selectedName, setSelectedName] = useState(presetName ?? '');
+  const userInteractedRef = useRef(false);
   const debouncedSearch = useDebounce(search, 300);
+
+  // Reflect the URL-preselected company once its details load, unless the user
+  // has already changed/cleared the selection (so a later URL change doesn't
+  // silently override their choice).
+  useEffect(() => {
+    if (presetName && !userInteractedRef.current) {
+      setSelectedName(presetName);
+    }
+  }, [presetName]);
   const { data, isLoading } = useCompanies({
     search: debouncedSearch || undefined,
     limit: 8,
@@ -115,6 +128,7 @@ function CompanySearchSelect({
   const companies = data?.companies ?? [];
 
   const handleSelect = (slug: string, name: string) => {
+    userInteractedRef.current = true;
     onChange(slug, name);
     setSelectedName(name);
     setSearch('');
@@ -135,7 +149,7 @@ function CompanySearchSelect({
             </div>
             <button
               type="button"
-              onClick={() => { onChange('', ''); setSelectedName(''); }}
+              onClick={() => { userInteractedRef.current = true; onChange('', ''); setSelectedName(''); }}
               className="p-1 hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] transition-colors"
             >
               <X size={14} />
@@ -149,6 +163,13 @@ function CompanySearchSelect({
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setIsOpen(true); }}
                 onFocus={() => setIsOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') return;
+                  e.preventDefault();
+                  if (companies.length === 1) {
+                    handleSelect(companies[0].slug, companies[0].name);
+                  }
+                }}
                 placeholder="SEARCH COMPANY..."
                 className="flex-1 px-4 py-3 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
               />
@@ -262,6 +283,7 @@ export function CreateReviewPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const prefillCompanySlug = searchParams.get('company');
+  const { data: prefillCompany } = useCompany(prefillCompanySlug ?? undefined);
 
   const createReview = useCreateReview();
   const { data: tagsData } = useTags();
@@ -283,7 +305,7 @@ export function CreateReviewPage() {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validate = useCallback((): boolean => {
+  const validate = useCallback((): Record<string, string> => {
     const newErrors: Record<string, string> = {};
     if (!companySlug) newErrors.company = 'Please select a company';
     if (!title.trim() || title.trim().length < 10) newErrors.title = 'Title must be at least 10 characters';
@@ -292,12 +314,27 @@ export function CreateReviewPage() {
     if (cons && cons.length > 2000) newErrors.cons = 'Cons must be at most 2000 characters';
     if (jobTitle && jobTitle.length > 100) newErrors.jobTitle = 'Job title must be at most 100 characters';
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   }, [companySlug, title, pros, cons, jobTitle]);
+
+  // Scroll the first invalid field into view so the inline error is visible.
+  const focusFirstError = useCallback((validationErrors: Record<string, string>) => {
+    const firstKey = Object.keys(validationErrors)[0];
+    if (!firstKey) return;
+    document
+      .querySelector(`[data-field="${firstKey}"]`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) { toast.error('Please fix the form errors'); return; }
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      const messages = Object.values(validationErrors);
+      toast.error(`Please fix the form errors: ${messages.join(' ')}`);
+      focusFirstError(validationErrors);
+      return;
+    }
     try {
       const review = await createReview.mutateAsync({
         companySlug,
@@ -352,11 +389,12 @@ export function CreateReviewPage() {
           <div className="space-y-8">
             {/* Company */}
             {/* NOTE: no tornEffect clipPath on this card because the dropdown would be clipped */}
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...cardShadow }}>
+            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" data-field="company" style={{ ...cardShadow }}>
               <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)]">
                 Company
               </h2>
               <CompanySearchSelect
+                presetName={prefillCompany?.name}
                 onChange={(slug) => { setCompanySlug(slug); if (slug) setErrors(p => ({ ...p, company: '' })); }}
               />
               {errors.company && <p className="mt-1.5 text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.company}</p>}
@@ -402,7 +440,7 @@ export function CreateReviewPage() {
                 Your Review
               </h2>
               <div className="space-y-5">
-                <div className="space-y-1.5">
+                <div className="space-y-1.5" data-field="title">
                   <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">
                     Review Title *
                   </label>
@@ -418,7 +456,7 @@ export function CreateReviewPage() {
                   {errors.title && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.title}</p>}
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5" data-field="pros">
                   <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">
                     Pros
                   </label>
@@ -435,7 +473,7 @@ export function CreateReviewPage() {
                   {errors.pros && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.pros}</p>}
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5" data-field="cons">
                   <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">
                     Cons
                   </label>
@@ -460,7 +498,7 @@ export function CreateReviewPage() {
                 Job Details
               </h2>
               <div className="space-y-5">
-                <div className="space-y-1.5">
+                <div className="space-y-1.5" data-field="jobTitle">
                   <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">
                     Job Title
                   </label>
@@ -531,7 +569,6 @@ export function CreateReviewPage() {
               </Link>
               <button
                 type="submit"
-                disabled={!companySlug || !title.trim() || title.trim().length < 10 || createReview.isPending}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-4 border-[#2b2f23] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_#2b2f23] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {createReview.isPending ? (

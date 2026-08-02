@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, LogIn } from 'lucide-react';
 import { Container } from '@/components/common';
@@ -18,14 +18,21 @@ export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { login, isAuthenticated } = useAuth();
 
-  const getRedirectTarget = () =>
-    (location.state as LoginLocationState | null)?.from?.pathname ?? '/admin';
+  // Prefer the ?redirect= query param (used by the axios 401 handler), then the
+  // router location state (used by ProtectedRoute), then the admin root.
+  const getRedirectTarget = () => {
+    const fromQuery = searchParams.get('redirect');
+    if (fromQuery && (fromQuery === '/admin' || fromQuery.startsWith('/admin/'))) {
+      return fromQuery;
+    }
+    return (location.state as LoginLocationState | null)?.from?.pathname ?? '/admin';
+  };
 
   if (isAuthenticated) {
-    navigate(getRedirectTarget(), { replace: true });
-    return null;
+    return <Navigate to={getRedirectTarget()} replace />;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

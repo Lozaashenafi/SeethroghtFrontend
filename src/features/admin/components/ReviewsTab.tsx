@@ -35,7 +35,7 @@ export function ReviewsTab() {
   return (
     <div>
       {isLoading ? (
-        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse rounded-xl bg-surface p-4"><div className="h-5 w-48 rounded bg-border" /></div>)}</div>
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[#2b2f23]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[#2b2f23]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
       ) : reviews.length === 0 ? (
         <Card padding="lg" className="text-center"><p className="text-text-secondary">No reviews found.</p></Card>
       ) : (

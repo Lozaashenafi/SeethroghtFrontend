@@ -39,15 +39,15 @@ export function DashboardLayout() {
             <aside className="hidden lg:block">
               <nav className="sticky top-24 space-y-1" aria-label="Dashboard navigation">
                 <div className="mb-4 flex items-center justify-between px-3">
-                  <p className="text-xs font-medium uppercase tracking-wider text-text-secondary">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
                     Admin Panel
                   </p>
                 </div>
 
                 {admin && (
-                  <div className="mb-4 rounded-lg bg-surface px-4 py-3">
-                    <p className="text-sm font-medium text-text truncate">{admin.name}</p>
-                    <p className="text-xs text-text-secondary truncate">{admin.email}</p>
+                  <div className="mb-4 border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-[#FCFAF7] dark:bg-[var(--color-card)] px-4 py-3 shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
+                    <p className="text-sm font-black uppercase tracking-wide text-[#2b2f23] dark:text-[var(--color-text)] truncate">{admin.name}</p>
+                    <p className="mt-0.5 text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] truncate">{admin.email}</p>
                   </div>
                 )}
 
@@ -63,10 +63,10 @@ export function DashboardLayout() {
                       key={link.href}
                       to={link.href}
                       className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                        'flex items-center gap-3 rounded-none border-2 px-3 py-2.5 text-xs font-black uppercase tracking-widest transition-colors',
                         isActive
-                          ? 'bg-brand-olive text-brand-cream dark:bg-brand-cream dark:text-brand-olive'
-                          : 'text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5',
+                          ? 'border-[#2b2f23] bg-[#2b2f23] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
+                          : 'border-transparent text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-[#2b2f23]/30 hover:text-[#2b2f23] dark:hover:border-[var(--color-text)]/30 dark:hover:text-[var(--color-text)]',
                       )}
                     >
                       <Icon size={18} />
@@ -78,7 +78,7 @@ export function DashboardLayout() {
                 <div className="pt-4">
                   <button
                     onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:text-error hover:bg-error/5 transition-colors"
+                    className="flex w-full items-center gap-3 rounded-none border-2 border-transparent px-3 py-2.5 text-xs font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-error hover:bg-error/5 hover:text-error transition-colors"
                   >
                     <LogOut size={18} />
                     Sign Out
@@ -102,10 +102,10 @@ export function DashboardLayout() {
                       key={link.href}
                       to={link.href}
                       className={cn(
-                        'flex shrink-0 items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors',
+                        'flex shrink-0 items-center gap-2 rounded-none border-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors',
                         isActive
-                          ? 'bg-brand-olive text-brand-cream dark:bg-brand-cream dark:text-brand-olive'
-                          : 'bg-surface text-text-secondary hover:text-text',
+                          ? 'border-[#2b2f23] bg-[#2b2f23] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
+                          : 'border-[#2b2f23]/30 bg-[#FCFAF7] dark:border-[var(--color-border)] dark:bg-[var(--color-card)] text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[#2b2f23] dark:hover:text-[var(--color-text)]',
                       )}
                     >
                       <Icon size={16} />

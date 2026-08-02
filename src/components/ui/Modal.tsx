@@ -89,23 +89,23 @@ export function Modal({
             animate="visible"
             exit="exit"
             className={cn(
-              'relative w-full rounded-2xl border bg-card shadow-2xl',
+              'relative w-full rounded-none border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-[#FCFAF7] dark:bg-[var(--color-card)] shadow-[10px_10px_0px_0px_#2b2f23] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]',
               sizeStyles[size],
               className,
             )}
           >
             {/* Header */}
             {(title || showCloseButton) && (
-              <div className="flex items-center justify-between border-b px-6 py-4">
+              <div className="flex items-center justify-between border-b-2 border-[#2b2f23]/20 dark:border-[var(--color-border)] px-6 py-4">
                 {title && (
-                  <h2 className="text-lg font-semibold text-brand-olive dark:text-brand-cream">
+                  <h2 className="text-xs font-black uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)]">
                     {title}
                   </h2>
                 )}
                 {showCloseButton && (
                   <button
                     onClick={onClose}
-                    className="ml-auto rounded-lg p-1.5 text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5 transition-colors"
+                    className="ml-auto rounded-none p-1.5 text-text-secondary hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10 transition-colors"
                     aria-label="Close modal"
                   >
                     <X size={18} />

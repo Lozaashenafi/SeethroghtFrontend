@@ -1,6 +1,8 @@
 export const config = {
   api: {
-    baseURL: import.meta.env.VITE_API_BASE_URL as string,
+    // Fall back to '/api' so the Vite dev proxy (targets localhost:4000) is used
+    // when VITE_API_BASE_URL is unset.
+    baseURL: (import.meta.env.VITE_API_BASE_URL as string) || '/api',
     timeout: 10000,
   },
   app: {
