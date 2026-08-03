@@ -29,7 +29,7 @@ export function NotFoundPage() {
             <h1 className="text-6xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] mb-4">
               404
             </h1>
-            <p className="font-serif text-base text-stone-500 dark:text-[var(--color-text-secondary)] italic mb-2">
+            <p className="font-serif text-base text-stone-500 dark:text-[var(--color-text-secondary)] mb-2">
               "This page isn't visible through our lens."
             </p>
             <p className="text-xs font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase tracking-wider mb-8">

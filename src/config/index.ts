@@ -1,8 +1,9 @@
 export const config = {
   api: {
-    // Fall back to '/api' so the Vite dev proxy (targets localhost:4000) is used
-    // when VITE_API_BASE_URL is unset.
-    baseURL: (import.meta.env.VITE_API_BASE_URL as string) || '/api',
+    // Fall back to same-origin so the Vite dev proxy (targets localhost:4000)
+    // is used when VITE_API_BASE_URL is unset. Service URLs already include
+    // the /api/v1 prefix, so an empty baseURL resolves them correctly.
+    baseURL: (import.meta.env.VITE_API_BASE_URL as string) || '',
     timeout: 10000,
   },
   app: {

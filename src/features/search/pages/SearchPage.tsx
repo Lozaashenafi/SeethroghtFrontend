@@ -44,7 +44,7 @@ export function SearchPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)] italic">
+          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)]">
             Search Companies
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">
@@ -91,7 +91,7 @@ export function SearchPage() {
         ) : companies.length === 0 ? (
           <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <p className="font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase text-sm tracking-wider">
-              No companies found for <span className="italic font-black text-[#2b2f23] dark:text-[var(--color-text)]">&ldquo;{query}&rdquo;</span>
+              No companies found for <span className="font-black text-[#2b2f23] dark:text-[var(--color-text)]">&ldquo;{query}&rdquo;</span>
             </p>
             <p className="mt-3 text-xs text-stone-400 dark:text-[var(--color-text-secondary)] font-mono uppercase tracking-wide">
               Try a different search term.

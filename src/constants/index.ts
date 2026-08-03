@@ -12,7 +12,6 @@ export const ROUTES = {
   CREATE_COMPANY: '/company/new',
   admin: {
     ROOT: '/admin',
-    DASHBOARD: '/admin/dashboard',
     COMPANIES: '/admin/companies',
     REVIEWS: '/admin/reviews',
     USERS: '/admin/users',

@@ -96,7 +96,7 @@ export function WelcomeModal() {
                       {item.title}
                     </h3>
                   </div>
-                  <p className="text-sm font-serif italic leading-snug text-stone-600 dark:text-[var(--color-text-secondary)]">
+                  <p className="text-sm font-serif leading-snug text-stone-600 dark:text-[var(--color-text-secondary)]">
                     {item.description}
                   </p>
                 </div>

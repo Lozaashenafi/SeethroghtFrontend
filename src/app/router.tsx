@@ -38,7 +38,6 @@ export function AppRouter() {
         }
       >
         <Route path={ROUTES.admin.ROOT} element={<AdminPage />} />
-        <Route path={ROUTES.admin.DASHBOARD} element={<AdminPage />} />
         <Route path={ROUTES.admin.COMPANIES} element={<AdminPage />} />
         <Route path={ROUTES.admin.REVIEWS} element={<AdminPage />} />
         <Route path={ROUTES.admin.USERS} element={<AdminPage />} />

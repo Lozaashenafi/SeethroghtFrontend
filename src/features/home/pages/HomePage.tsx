@@ -84,7 +84,7 @@ function ReviewItem({ review }: { review: Review }) {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-2xl font-serif italic text-[#2b2f23] dark:text-[var(--color-text)] mb-4 leading-tight">
+          <h3 className="text-2xl font-serif text-[#2b2f23] dark:text-[var(--color-text)] mb-4 leading-tight">
             "{review.title}"
           </h3>
           <StarRating rating={review.overallRating} />

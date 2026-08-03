@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useLocation, useSearchParams } from 'react-route
 import { motion } from 'framer-motion';
 import { Shield, LogIn } from 'lucide-react';
 import { Container } from '@/components/common';
+import { AdminHeader, AdminFooter } from '@/components/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
@@ -54,14 +55,16 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
+    <div className="flex min-h-screen flex-col bg-[#F4F1EA] text-[#2b2f23] selection:bg-[#2b2f23] selection:text-stone-50 dark:bg-[var(--color-bg)] dark:text-[var(--color-text)] dark:selection:bg-[var(--color-text)] dark:selection:text-[var(--color-bg)]">
+      <AdminHeader />
+
       {/* Background Grid */}
       <div
-        className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
+        className="fixed inset-0 opacity-[0.03] pointer-events-none dark:opacity-[0.05]"
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="sm" className="relative z-10 flex min-h-[80vh] items-center justify-center">
+      <Container size="sm" className="relative z-10 flex flex-1 items-center justify-center py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -73,7 +76,7 @@ export function LoginPage() {
               <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center border-4 border-[#2b2f23] dark:border-[var(--color-text)]">
                 <Shield size={36} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
               </div>
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] italic">
+              <h1 className="text-3xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)]">
                 Admin Login
               </h1>
               <p className="mt-2 text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
@@ -130,6 +133,8 @@ export function LoginPage() {
           </div>
         </motion.div>
       </Container>
+
+      <AdminFooter />
     </div>
   );
 }

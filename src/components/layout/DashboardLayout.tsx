@@ -1,13 +1,11 @@
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
   Flag,
   Building2,
   MessageSquare,
   Users,
-  LogOut,
 } from 'lucide-react';
-import { Navbar } from '@/components/navigation/Navbar';
-import { Footer } from '@/components/navigation/Footer';
+import { AdminHeader, AdminFooter } from '@/components/navigation';
 import { Container } from '@/components/common';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/cn';
@@ -21,26 +19,20 @@ const adminNavLinks = [
 
 export function DashboardLayout() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { admin, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/admin/login');
-  };
+  const { admin } = useAuth();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      <AdminHeader />
       <div className="flex-1 py-8">
         <Container size="full" className="px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
             {/* Sidebar */}
             <aside className="hidden lg:block">
-              <nav className="sticky top-24 space-y-1" aria-label="Dashboard navigation">
+              <nav className="sticky top-28 space-y-1" aria-label="Dashboard navigation">
                 <div className="mb-4 flex items-center justify-between px-3">
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
-                    Admin Panel
+                    Admin Console
                   </p>
                 </div>
 
@@ -55,7 +47,7 @@ export function DashboardLayout() {
                   const Icon = link.icon;
                   const isActive =
                     link.href === '/admin'
-                      ? location.pathname === '/admin' || location.pathname === '/admin/dashboard'
+                      ? location.pathname === '/admin'
                       : location.pathname.startsWith(link.href);
 
                   return (
@@ -75,26 +67,17 @@ export function DashboardLayout() {
                   );
                 })}
 
-                <div className="pt-4">
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-3 rounded-none border-2 border-transparent px-3 py-2.5 text-xs font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-error hover:bg-error/5 hover:text-error transition-colors"
-                  >
-                    <LogOut size={18} />
-                    Sign Out
-                  </button>
-                </div>
               </nav>
             </aside>
 
             {/* Mobile sidebar toggle */}
-            <div className="lg:hidden mb-4">
+            <div className="md:hidden mb-4">
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {adminNavLinks.map((link) => {
                   const Icon = link.icon;
                   const isActive =
                     link.href === '/admin'
-                      ? location.pathname === '/admin' || location.pathname === '/admin/dashboard'
+                      ? location.pathname === '/admin'
                       : location.pathname.startsWith(link.href);
 
                   return (
@@ -123,7 +106,7 @@ export function DashboardLayout() {
           </div>
         </Container>
       </div>
-      <Footer />
+      <AdminFooter />
     </div>
   );
 }

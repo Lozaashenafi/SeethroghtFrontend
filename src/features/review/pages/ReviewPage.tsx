@@ -117,7 +117,7 @@ export function ReviewPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-10 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)] italic">
+          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)]">
             Recent Reviews
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">

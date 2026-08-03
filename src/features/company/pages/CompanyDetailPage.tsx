@@ -73,7 +73,7 @@ export function CompanyDetailPage() {
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-4">
-                <h1 className="text-5xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] italic leading-none">
+                <h1 className="text-5xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
                   {company.name}
                 </h1>
                 {company.verified && (
@@ -142,7 +142,7 @@ export function CompanyDetailPage() {
 
           {company.description && (
             <div className="mt-8 bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-              <p className="font-serif text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed italic">
+              <p className="font-serif text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed">
                 "{company.description}"
               </p>
             </div>

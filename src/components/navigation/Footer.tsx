@@ -33,14 +33,14 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link
               to={ROUTES.HOME}
-              className="mb-6 flex items-center gap-2 text-2xl font-black uppercase tracking-tighter italic text-[#2b2f23] dark:text-[var(--color-text)]"
+              className="mb-6 flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)]"
             >
               <div className="bg-[#2b2f23] dark:bg-[var(--color-text)] p-1">
                 <Eye size={20} className="text-white dark:text-[var(--color-bg)]" />
               </div>
               <span>See Through</span>
             </Link>
-            <p className="max-w-sm text-sm font-serif italic text-stone-500 dark:text-[var(--color-text-secondary)] leading-relaxed">
+            <p className="max-w-sm text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)] leading-relaxed">
               "{APP_TAGLINE}"
             </p>
           </div>

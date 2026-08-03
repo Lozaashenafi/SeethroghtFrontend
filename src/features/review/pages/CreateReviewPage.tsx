@@ -377,7 +377,7 @@ export function CreateReviewPage() {
         </Link>
 
         <header className="mb-10">
-          <h1 className="text-4xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] italic">
+          <h1 className="text-4xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)]">
             Write a Review
           </h1>
           <p className="mt-2 text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">

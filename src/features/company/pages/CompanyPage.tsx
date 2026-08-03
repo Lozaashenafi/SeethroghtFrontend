@@ -28,7 +28,7 @@ export function CompanyPage() {
       <Container size="lg" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 max-w-2xl">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)] italic">
+          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[#2b2f23] dark:text-[var(--color-text)]">
             Companies
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">

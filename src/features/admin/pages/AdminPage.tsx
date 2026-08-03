@@ -49,7 +49,7 @@ export function AdminPage() {
             <Shield size={24} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter italic text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+            <h1 className="text-2xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
               {tabConfig.label}
             </h1>
             <p className="mt-1 text-[11px] font-mono uppercase tracking-wider text-stone-500 dark:text-[var(--color-text-secondary)]">

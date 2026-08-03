@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Eye, Plus } from 'lucide-react';
+import { Menu, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchBar } from './SearchBar';
@@ -24,7 +24,7 @@ export function Navbar() {
          
           <Link
             to={ROUTES.HOME}
-            className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter italic text-[#2b2f23] dark:text-[var(--color-text)]"
+            className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)]"
           >
             <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
             <span>See Through</span>

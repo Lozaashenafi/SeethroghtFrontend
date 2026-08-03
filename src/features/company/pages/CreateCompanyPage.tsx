@@ -143,7 +143,7 @@ export function CreateCompanyPage() {
               <Building2 size={28} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
             </div>
             <div>
-              <h1 className="text-4xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] italic leading-none">
+              <h1 className="text-4xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
                 Add a Company
               </h1>
               <p className="mt-2 text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
