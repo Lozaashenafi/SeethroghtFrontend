@@ -29,9 +29,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // The admin session (JWT cookie) has expired or was revoked. The client
-      // profile in localStorage is no longer valid, so clear it and send admins
-      // back to the login screen. Full page load resets the auth context.
+      console.log(error + 'Unauthorized access detected. Logging out admin user and redirecting to login page.');
       if (typeof window !== 'undefined') {
         localStorage.removeItem(AUTH_ADMIN_KEY);
 
