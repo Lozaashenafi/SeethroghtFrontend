@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/axios';
+import { API_ENDPOINTS } from '@/constants';
 import type { ApiResponse } from '@/types';
 
 interface AdminProfile {
@@ -14,13 +15,13 @@ interface LoginResponse {
 const AUTH_ADMIN_KEY = 'see-through-admin-user';
 
 export async function adminLogin(email: string, password: string): Promise<LoginResponse> {
-  const { data } = await apiClient.post<ApiResponse<LoginResponse>>('/api/v1/auth/login', { email, password });
+  const { data } = await apiClient.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.AUTH_LOGIN, { email, password });
   if (!data.data) throw new Error('Login failed');
   return data.data;
 }
 
 export async function adminLogout(): Promise<void> {
-  await apiClient.post('/api/v1/auth/logout');
+  await apiClient.post(API_ENDPOINTS.AUTH_LOGOUT);
 }
 
 export function getAdminUser(): AdminProfile | null {

@@ -28,18 +28,18 @@ export function Providers({ children }: ProvidersProps) {
                 success: <CheckCircle2 size={18} className="text-emerald-700 dark:text-emerald-400" />,
                 error: <XCircle size={18} className="text-orange-700 dark:text-orange-400" />,
                 warning: <AlertTriangle size={18} className="text-orange-700 dark:text-orange-400" />,
-                info: <Info size={18} className="text-[#2b2f23] dark:text-[var(--color-text)]" />,
-                loading: <Loader2 size={18} className="animate-spin text-[#2b2f23] dark:text-[var(--color-text)]" />,
+                info: <Info size={18} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />,
+                loading: <Loader2 size={18} className="animate-spin text-[var(--color-text)] dark:text-[var(--color-text)]" />,
               }}
               toastOptions={{
                 style: {
-                  background: '#FCFAF7',
-                  color: '#2b2f23',
+                  background: 'var(--color-paper)',
+                  color: 'var(--color-text)',
                   // Theme-aware: --color-text is olive-black in light mode and
                   // cream in dark mode, matching the site's border language.
                   border: '2px solid var(--color-text)',
                   borderRadius: 0,
-                  boxShadow: '6px 6px 0px 0px #2b2f23',
+                  boxShadow: '6px 6px 0px 0px var(--color-text)',
                   fontFamily: 'inherit',
                   padding: '14px 16px',
                 },
@@ -49,7 +49,7 @@ export function Providers({ children }: ProvidersProps) {
                   description:
                     '!font-mono !text-[11px] !normal-case !tracking-normal !mt-1 !text-stone-500 dark:!text-[var(--color-text-secondary)]',
                   closeButton:
-                    '!bg-transparent !border-2 !border-[#2b2f23] dark:!border-[var(--color-text)] !rounded-none !p-1 !text-[#2b2f23] dark:!text-[var(--color-text)] hover:!bg-[#2b2f23] hover:!text-white dark:hover:!bg-[var(--color-text)] dark:hover:!text-[var(--color-bg)] !transition-colors',
+                    '!bg-transparent !border-2 !border-[var(--color-text)] dark:!border-[var(--color-text)] !rounded-none !p-1 !text-[var(--color-text)] dark:!text-[var(--color-text)] hover:!bg-[var(--color-text)] hover:!text-white dark:hover:!bg-[var(--color-text)] dark:hover:!text-[var(--color-bg)] !transition-colors',
                   success: '!border-emerald-700 dark:!border-emerald-400',
                   error: '!border-orange-700 dark:!border-orange-400',
                   warning: '!border-orange-700 dark:!border-orange-400',

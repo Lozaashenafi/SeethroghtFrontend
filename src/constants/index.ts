@@ -1,6 +1,8 @@
 export const APP_NAME = 'See Through';
 export const APP_TAGLINE = 'Honest insights. Anonymous voices.';
 
+export * from './api';
+
 export const ROUTES = {
   HOME: '/',
   SEARCH: '/search',

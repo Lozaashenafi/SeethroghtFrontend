@@ -14,7 +14,7 @@ export function CompanyDetailPage() {
 
   if (companyLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50">
+      <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
         <Container size="lg" className="relative z-10 py-16">
@@ -26,7 +26,7 @@ export function CompanyDetailPage() {
 
   if (companyError || !company) {
     return (
-      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50">
+      <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
         <Container size="sm" className="relative z-10 py-24 text-center">
@@ -34,7 +34,7 @@ export function CompanyDetailPage() {
             Company not found.
           </p>
           <Link to="/company" className="mt-6 inline-block">
-            <span className="inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
+            <span className="inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
               <ArrowLeft size={14} /> Back to Companies
             </span>
           </Link>
@@ -46,7 +46,7 @@ export function CompanyDetailPage() {
   const avgRating = company.averageRating ? Math.round(Number(company.averageRating)) : null;
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
+    <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
       {/* Background Grid */}
       <div
         className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
@@ -57,7 +57,7 @@ export function CompanyDetailPage() {
         {/* Back link */}
         <Link
           to="/company"
-          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] transition-colors"
+          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
         >
           <ArrowLeft size={14} />
           Back to Companies
@@ -66,18 +66,18 @@ export function CompanyDetailPage() {
         {/* Company Hero */}
         <div className="mb-10">
           <div className="flex items-start gap-6">
-            <div className="h-20 w-20 flex items-center justify-center border-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-              <span className="text-4xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+            <div className="h-20 w-20 flex items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
+              <span className="text-4xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {company.name.charAt(0)}
               </span>
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-4">
-                <h1 className="text-5xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+                <h1 className="text-5xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                   {company.name}
                 </h1>
                 {company.verified && (
-                  <span className="px-3 py-1 border-2 border-[#2b2f23] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[#2b2f23] dark:text-[var(--color-text)]">
+                  <span className="px-3 py-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Verified
                   </span>
                 )}
@@ -94,7 +94,7 @@ export function CompanyDetailPage() {
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 font-mono uppercase text-xs tracking-wider hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] transition-colors"
+                    className="flex items-center gap-1.5 font-mono uppercase text-xs tracking-wider hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
                   >
                     <Globe size={14} />
                     Website
@@ -112,8 +112,8 @@ export function CompanyDetailPage() {
 
           {/* Stats Cards */}
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {avgRating ? `${avgRating}/5` : 'N/A'}
               </div>
               {avgRating && <BrandStarRating rating={avgRating} size={14} className="justify-center mt-2" />}
@@ -121,16 +121,16 @@ export function CompanyDetailPage() {
                 Overall Rating
               </p>
             </div>
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {company.reviewCount}
               </div>
               <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Total Reviews
               </p>
             </div>
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="flex items-center justify-center gap-2 text-3xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="flex items-center justify-center gap-2 text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                 <ThumbsUp size={24} />
                 {company.recommendationRate}
               </div>
@@ -141,7 +141,7 @@ export function CompanyDetailPage() {
           </div>
 
           {company.description && (
-            <div className="mt-8 bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="mt-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <p className="font-serif text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed">
                 "{company.description}"
               </p>
@@ -151,7 +151,7 @@ export function CompanyDetailPage() {
 
         {/* Write Review CTA */}
         <Link to={`${ROUTES.CREATE_REVIEW}?company=${company.slug}`} className="block mb-12">
-          <div className="flex items-center justify-center gap-3 py-5 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-widest border-4 border-[#2b2f23] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_#2b2f23] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
+          <div className="flex items-center justify-center gap-3 py-5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-widest border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
             <Pencil size={18} />
             Write a Review for {company.name}
           </div>
@@ -159,8 +159,8 @@ export function CompanyDetailPage() {
 
         {/* Reviews Section */}
         <div>
-          <div className="flex items-center justify-between mb-8 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)] pb-3">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)]">
               Employee Reviews
             </h2>
             <span className="text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
@@ -171,7 +171,7 @@ export function CompanyDetailPage() {
           {reviewsLoading ? (
             <TornSkeleton count={3} height="h-48" />
           ) : reviewsData?.reviews.length === 0 ? (
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
               <p className="font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
                 No reviews yet for this company. Be the first.
               </p>
@@ -181,23 +181,23 @@ export function CompanyDetailPage() {
               {reviewsData?.reviews.map((review) => (
                 <Link key={review.publicId} to={`/review/${review.publicId}`} className="group block">
                   <div
-                    className="relative bg-[#FCFAF7] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
+                    className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
                     style={tornEffect}
                   >
                     <div className="flex justify-between items-start mb-5">
                       <div className="flex gap-4">
-                        <div className="h-10 w-10 flex items-center justify-center border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+                        <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                           {review.companyName?.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="font-black uppercase tracking-tight text-sm text-[#2b2f23] dark:text-[var(--color-text)]">{review.title}</h3>
+                          <h3 className="font-black uppercase tracking-tight text-sm text-[var(--color-text)] dark:text-[var(--color-text)]">{review.title}</h3>
                           <p className="text-[10px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-0.5 uppercase">
                             {review.jobTitle} // {formatDate(review.createdAt)}
                           </p>
                         </div>
                       </div>
                       {review.isVerified && (
-                        <span className="shrink-0 px-2 py-0.5 border border-[#2b2f23] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[#2b2f23] dark:text-[var(--color-text)]">
+                        <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
                           Verified
                         </span>
                       )}
@@ -224,7 +224,7 @@ export function CompanyDetailPage() {
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <span className="px-2 py-0.5 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+                        <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
                           {review.employmentStatus}
                         </span>
                       </div>

@@ -7,5 +7,5 @@ export const tornEffect = {
 
 /** Common shadow effect for cards */
 export const cardShadow = {
-  boxShadow: `8px 8px 0px 0px #2b2f2315`,
+  boxShadow: `8px 8px 0px 0px color-mix(in srgb, var(--color-text) 8%, transparent)`,
 };

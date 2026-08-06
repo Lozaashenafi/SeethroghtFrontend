@@ -45,7 +45,7 @@ function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onCl
           Why are you reporting this review? Your report is anonymous.
         </p>
         <div className="space-y-2">
-          <div className="border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+          <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
             <select
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -61,10 +61,10 @@ function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onCl
           </div>
         </div>
         <div className="space-y-1.5">
-          <label className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]">
+          <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
             Additional details
           </label>
-          <div className="border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+          <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -77,14 +77,14 @@ function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onCl
         <div className="flex justify-end gap-3 pt-2">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 font-black text-xs uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)] border-2 border-[#2b2f23] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors"
+            className="px-5 py-2.5 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!reason || createReport.isPending}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-2 border-[#2b2f23] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Flag size={14} />
             {createReport.isPending ? 'Submitting...' : 'Submit Report'}
@@ -141,7 +141,7 @@ export function ReviewDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)]">
+      <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)]">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
         <Container size="md" className="relative z-10 py-16">
@@ -153,7 +153,7 @@ export function ReviewDetailPage() {
 
   if (error || !review) {
     return (
-      <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)]">
+      <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)]">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
         <Container size="sm" className="relative z-10 py-24 text-center">
@@ -161,7 +161,7 @@ export function ReviewDetailPage() {
             Review not found.
           </p>
           <Link to="/review" className="mt-6 inline-block">
-            <span className="inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
+            <span className="inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
               <ArrowLeft size={14} /> Back to Reviews
             </span>
           </Link>
@@ -171,7 +171,7 @@ export function ReviewDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
+    <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
       {/* Background Grid */}
       <div
         className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
@@ -181,22 +181,22 @@ export function ReviewDetailPage() {
       <Container size="md" className="relative z-10 py-16">
         <Link
           to="/review"
-          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] transition-colors"
+          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
         >
           <ArrowLeft size={14} />
           Back to Reviews
         </Link>
 
         {/* Review Card */}
-        <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] mb-8" style={{ ...tornEffect, ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] mb-8" style={{ ...tornEffect, ...cardShadow }}>
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-6">
             <div className="flex gap-4">
-              <div className="h-14 w-14 flex items-center justify-center border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+              <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {review.companyName?.charAt(0) || 'R'}
               </div>
               <div>
-                <h1 className="text-2xl font-black uppercase tracking-tight text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+                <h1 className="text-2xl font-black uppercase tracking-tight text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                   {review.title}
                 </h1>
                 <p className="text-xs font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-1.5 uppercase">
@@ -205,7 +205,7 @@ export function ReviewDetailPage() {
               </div>
             </div>
             {review.isVerified && (
-              <span className="shrink-0 px-2 py-0.5 border border-[#2b2f23] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[#2b2f23] dark:text-[var(--color-text)]">
+              <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Verified
               </span>
             )}
@@ -214,7 +214,7 @@ export function ReviewDetailPage() {
           {/* Overall Rating */}
           <div className="flex items-center gap-3 mb-6">
             <BrandStarRating rating={review.overallRating} size={16} />
-            <span className="font-black text-lg text-[#2b2f23] dark:text-[var(--color-text)]">
+            <span className="font-black text-lg text-[var(--color-text)] dark:text-[var(--color-text)]">
               {review.overallRating ? `${review.overallRating}/5` : 'N/A'}
             </span>
           </div>
@@ -234,7 +234,7 @@ export function ReviewDetailPage() {
           {/* Pros & Cons Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-stone-200 dark:bg-[var(--color-border)] border border-stone-200 dark:border-[var(--color-border)] mb-6">
             {review.pros && (
-              <div className="bg-[#FCFAF7] dark:bg-[var(--color-surface)] p-5">
+              <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-5">
                 <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block mb-2 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">
                   The Good
                 </span>
@@ -242,7 +242,7 @@ export function ReviewDetailPage() {
               </div>
             )}
             {review.cons && (
-              <div className="bg-[#FCFAF7] dark:bg-[var(--color-surface)] p-5">
+              <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-5">
                 <span className="text-[10px] font-black uppercase tracking-widest text-orange-700 dark:text-orange-400 block mb-2 underline decoration-orange-200 dark:decoration-orange-900 underline-offset-4">
                   The Bad
                 </span>
@@ -254,11 +254,11 @@ export function ReviewDetailPage() {
           {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 pb-6 mb-6 border-b border-stone-200 dark:border-[var(--color-border)]">
             <span className="text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">{formatDate(review.createdAt)}</span>
-            <span className="px-2 py-0.5 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
               {review.employmentStatus}
             </span>
             {review.isCurrentEmployee && (
-              <span className="px-2 py-0.5 border border-[#2b2f23] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[#2b2f23] dark:text-[var(--color-text)]">
+              <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Current Employee
               </span>
             )}
@@ -285,7 +285,7 @@ export function ReviewDetailPage() {
             </div>
             <button
               onClick={() => setShowReportModal(true)}
-              className="flex items-center gap-2 font-black text-xs uppercase tracking-wider text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] transition-colors"
+              className="flex items-center gap-2 font-black text-xs uppercase tracking-wider text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
             >
               <Flag size={14} /> Report
             </button>
@@ -294,8 +294,8 @@ export function ReviewDetailPage() {
 
         {/* Comments Section */}
         <div>
-          <div className="flex items-center justify-between mb-6 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)] pb-3">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-between mb-6 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)]">
               Comments
             </h2>
             <span className="text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
@@ -304,9 +304,9 @@ export function ReviewDetailPage() {
           </div>
 
           {/* Comment Form */}
-          <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] mb-6" style={tornEffect}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] mb-6" style={tornEffect}>
             <div className="flex gap-3">
-              <div className="flex-1 border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+              <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                 <input
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
@@ -318,7 +318,7 @@ export function ReviewDetailPage() {
               <button
                 onClick={handleSubmitComment}
                 disabled={!commentText.trim() || createComment.isPending}
-                className="px-6 py-3 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-2 border-[#2b2f23] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <Send size={14} />
                 Post
@@ -330,7 +330,7 @@ export function ReviewDetailPage() {
           {commentsLoading ? (
             <TornSkeleton count={2} height="h-20" />
           ) : commentsData?.comments.length === 0 ? (
-            <div className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
               <p className="font-serif text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
                 No comments yet. Be the first to share your thoughts.
               </p>
@@ -338,7 +338,7 @@ export function ReviewDetailPage() {
           ) : (
             <div className="grid gap-4">
               {commentsData?.comments.map((comment) => (
-                <div key={comment.publicId} className="bg-[#FCFAF7] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)]" style={tornEffect}>
+                <div key={comment.publicId} className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)]" style={tornEffect}>
                   <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed">{comment.content}</p>
                   <div className="mt-3 flex items-center gap-4 text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
                     <span>Anonymous</span>

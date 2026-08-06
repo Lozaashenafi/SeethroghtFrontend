@@ -18,7 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-[11px] font-black uppercase tracking-wider text-[#2b2f23] dark:text-[var(--color-text)]"
+            className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]"
           >
             {label}
           </label>
@@ -33,8 +33,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              'w-full rounded-none border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[#2b2f23] dark:text-[var(--color-text)]',
-              'placeholder:text-[#2b2f23]/35 dark:placeholder:text-[var(--color-text-secondary)]/50',
+              'w-full rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] dark:text-[var(--color-text)]',
+              'placeholder:text-[var(--color-text)]/35 dark:placeholder:text-[var(--color-text-secondary)]/50',
               'transition-all duration-200',
               'focus:outline-none focus:ring-2 focus:ring-brand-navy/30 focus:border-brand-navy',
               'disabled:opacity-50 disabled:cursor-not-allowed',

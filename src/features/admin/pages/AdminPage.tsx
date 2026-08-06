@@ -45,11 +45,11 @@ export function AdminPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-1">
-          <div className="flex h-12 w-12 items-center justify-center border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
-            <Shield size={24} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
+          <div className="flex h-12 w-12 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
+            <Shield size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+            <h1 className="text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
               {tabConfig.label}
             </h1>
             <p className="mt-1 text-[11px] font-mono uppercase tracking-wider text-stone-500 dark:text-[var(--color-text-secondary)]">

@@ -26,16 +26,16 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-[#F4F1EA] dark:bg-[var(--color-bg)] pt-16 pb-8" role="contentinfo">
+    <footer className="border-t-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] pt-16 pb-8" role="contentinfo">
       <Container size="lg">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Logo and Tagline Section */}
           <div className="lg:col-span-2">
             <Link
               to={ROUTES.HOME}
-              className="mb-6 flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)]"
+              className="mb-6 flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]"
             >
-              <div className="bg-[#2b2f23] dark:bg-[var(--color-text)] p-1">
+              <div className="bg-[var(--color-text)] dark:bg-[var(--color-text)] p-1">
                 <Eye size={20} className="text-white dark:text-[var(--color-bg)]" />
               </div>
               <span>See Through</span>
@@ -48,7 +48,7 @@ export function Footer() {
           {/* Navigation Groups */}
           {footerLinks.map((group) => (
             <div key={group.title}>
-              <h3 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#2b2f23] dark:text-[var(--color-text)] border-b border-[#2b2f23]/20 dark:border-[var(--color-border)] pb-2">
+              <h3 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] border-b border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-2">
                 {group.title}
               </h3>
               <ul className="space-y-3">
@@ -56,9 +56,9 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-xs font-mono font-bold uppercase text-stone-500 dark:text-[var(--color-text-secondary)] transition-colors hover:text-[#2b2f23] dark:hover:text-[var(--color-text)] flex items-center gap-2 group"
+                      className="text-xs font-mono font-bold uppercase text-stone-500 dark:text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] flex items-center gap-2 group"
                     >
-                      <span className="h-1 w-1 bg-[#2b2f23] dark:bg-[var(--color-text)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <span className="h-1 w-1 bg-[var(--color-text)] dark:bg-[var(--color-text)] opacity-0 group-hover:opacity-100 transition-opacity" />
                       {link.label}
                     </Link>
                   </li>
@@ -69,19 +69,19 @@ export function Footer() {
         </div>
 
         {/* Bottom Section - "The Receipt" style */}
-        <div className="mt-20 border-t-2 border-[#2b2f23] dark:border-[var(--color-text)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-20 border-t-2 border-[var(--color-text)] dark:border-[var(--color-text)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-[10px] font-mono font-black uppercase tracking-widest text-stone-400 dark:text-[var(--color-text-secondary)]">
             Log Number: {year}-ST-BRUTALIST
           </div>
           
-          <div className="text-[10px] font-black uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)]">
+          <div className="text-[10px] font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
             &copy; {year} See Through Ledger. No Rights Reserved.
           </div>
 
           <div className="flex gap-4">
              {/* Small decorative blocks to enhance the ledger look */}
-             <div className="h-4 w-4 bg-[#2b2f23] dark:bg-[var(--color-text)]" />
-             <div className="h-4 w-4 border-2 border-[#2b2f23] dark:border-[var(--color-text)]" />
+             <div className="h-4 w-4 bg-[var(--color-text)] dark:bg-[var(--color-text)]" />
+             <div className="h-4 w-4 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" />
              <div className="h-4 w-4 bg-stone-300 dark:bg-[var(--color-card)]" />
           </div>
         </div>

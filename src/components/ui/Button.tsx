@@ -18,13 +18,13 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'typ
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-2 border-[#2b2f23] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_#2b2f23] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90',
+    'bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90',
   secondary:
-    'bg-[#FCFAF7] dark:bg-[var(--color-surface)] text-[#2b2f23] dark:text-[var(--color-text)] border-2 border-[#2b2f23] dark:border-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
+    'bg-[var(--color-paper)] dark:bg-[var(--color-surface)] text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-[var(--color-text)]/5 dark:hover:bg-[var(--color-text)]/10',
   outline:
-    'border-2 border-[#2b2f23] dark:border-[var(--color-text)] text-[#2b2f23] dark:text-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
+    'border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-[var(--color-text)]/5 dark:hover:bg-[var(--color-text)]/10',
   ghost:
-    'text-[#2b2f23] dark:text-[var(--color-text)] hover:bg-[#2b2f23]/5 dark:hover:bg-[var(--color-text)]/10',
+    'text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-[var(--color-text)]/5 dark:hover:bg-[var(--color-text)]/10',
   danger:
     'bg-error text-white border-2 border-error shadow-[4px_4px_0px_0px_rgba(220,38,38,0.35)] hover:brightness-110',
 };

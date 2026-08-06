@@ -31,7 +31,7 @@ function StarRating({ rating }: { rating: number | null }) {
           key={star}
           className={`h-3 w-3 rotate-45 border ${
             star <= rating 
-              ? 'bg-[#2b2f23] border-[#2b2f23] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]' 
+              ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]' 
               : 'bg-transparent border-stone-300 dark:border-[var(--color-border)]'
           }`}
         />
@@ -59,20 +59,20 @@ function ReviewItem({ review }: { review: Review }) {
   return (
     <div className="group relative">
       {/* Shadow element - uses primary color with low opacity instead of black */}
-      <div className="absolute inset-0 translate-x-1 translate-y-1 bg-[#2b2f23]/10 dark:bg-black/20" style={tornEffect} />
+      <div className="absolute inset-0 translate-x-1 translate-y-1 bg-[var(--color-text)]/10 dark:bg-black/20" style={tornEffect} />
       
       <Link
         to={`/review/${review.publicId}`}
-        className="relative block bg-[#FCFAF7] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
+        className="relative block bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
         style={tornEffect}
       >
         <div className="flex justify-between items-start mb-8">
           <div className="flex gap-4">
-            <div className="h-14 w-14 flex items-center justify-center border-2 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-black text-[#2b2f23] dark:text-[var(--color-text)]">
+            <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
               {review.companyName?.charAt(0)}
             </div>
             <div>
-              <h2 className="text-xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+              <h2 className="text-xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                 {review.companyName}
               </h2>
               <p className="text-xs font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 uppercase">
@@ -80,22 +80,22 @@ function ReviewItem({ review }: { review: Review }) {
               </p>
             </div>
           </div>
-          <ArrowUpRight className="text-stone-400 dark:text-[var(--color-text-secondary)] group-hover:text-[#2b2f23] dark:group-hover:text-[var(--color-text)] transition-colors" />
+          <ArrowUpRight className="text-stone-400 dark:text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)] dark:group-hover:text-[var(--color-text)] transition-colors" />
         </div>
 
         <div className="mb-6">
-          <h3 className="text-2xl font-serif text-[#2b2f23] dark:text-[var(--color-text)] mb-4 leading-tight">
+          <h3 className="text-2xl font-serif text-[var(--color-text)] dark:text-[var(--color-text)] mb-4 leading-tight">
             "{review.title}"
           </h3>
           <StarRating rating={review.overallRating} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-stone-200 dark:bg-[var(--color-border)] border border-stone-200 dark:border-[var(--color-border)] mb-8">
-          <div className="bg-[#FCFAF7] dark:bg-[var(--color-surface)] p-4">
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
             <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block mb-2 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">The Good</span>
             <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.pros}</p>
           </div>
-          <div className="bg-[#FCFAF7] dark:bg-[var(--color-surface)] p-4">
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
             <span className="text-[10px] font-black uppercase tracking-widest text-orange-700 dark:text-orange-400 block mb-2 underline decoration-orange-200 dark:decoration-orange-900 underline-offset-4">The Bad</span>
             <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.cons}</p>
           </div>
@@ -118,9 +118,9 @@ function ReviewItem({ review }: { review: Review }) {
           </div>
           <div className="flex gap-2">
             {review.isVerified && (
-               <span className="px-2 py-0.5 border border-[#2b2f23] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[#2b2f23] dark:text-[var(--color-text)]">Verified Dept.</span>
+               <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">Verified Dept.</span>
             )}
-            <span className="px-2 py-0.5 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
               {review.employmentStatus}
             </span>
           </div>
@@ -140,7 +140,7 @@ export function HomePage() {
   const pagination = data?.pagination;
 
   return (
-    <Page className="min-h-screen bg-[#F4F1EA] dark:bg-[var(--color-bg)] text-[#2b2f23] dark:text-[var(--color-text)] selection:bg-[#2b2f23] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
+    <Page className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
       {/* Background Grid Pattern - color based on theme text */}
       <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
            style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
@@ -152,8 +152,8 @@ export function HomePage() {
 
         <main className="max-w-4xl mx-auto">
           {/* Sharp Search Bar - Using Primary Light for the border/button */}
-          <div className="flex border-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-16 shadow-[8px_8px_0px_0px_#2b2f23] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
-            <div className="flex-1 flex items-center px-6 border-r-4 border-[#2b2f23] dark:border-[var(--color-text)]">
+          <div className="flex border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-16 shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
+            <div className="flex-1 flex items-center px-6 border-r-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Search size={20} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-4" />
               <input
                 ref={searchInputRef}
@@ -164,14 +164,14 @@ export function HomePage() {
               />
             </div>
             <Link to={ROUTES.CREATE_REVIEW} className="hidden sm:block">
-              <button className="h-full px-8 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-colors flex items-center gap-2">
+              <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-colors flex items-center gap-2">
                 <Plus size={16} /> Post Review
               </button>
             </Link>
           </div>
 
           {/* Filtering Header */}
-          <div className="flex items-center justify-between mb-12 border-b-2 border-[#2b2f23] dark:border-[var(--color-text)] pb-4">
+          <div className="flex items-center justify-between mb-12 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-4">
             <div className="flex gap-8">
               {(['engagement', 'recent'] as const).map((sort) => (
                 <button
@@ -179,12 +179,12 @@ export function HomePage() {
                   onClick={() => { setSortBy(sort); setPage(1); }}
                   className={`text-xs font-black uppercase tracking-[0.2em] transition-all relative ${
                     sortBy === sort 
-                      ? 'text-[#2b2f23] dark:text-[var(--color-text)]' 
+                      ? 'text-[var(--color-text)] dark:text-[var(--color-text)]' 
                       : 'text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-stone-600 dark:hover:text-[var(--color-text)]'
                   }`}
                 >
                   {sort === 'recent' ? 'Latest' : 'Trending'}
-                  {sortBy === sort && <div className="absolute -bottom-[18px] left-0 right-0 h-1 bg-[#2b2f23] dark:bg-[var(--color-text)]" />}
+                  {sortBy === sort && <div className="absolute -bottom-[18px] left-0 right-0 h-1 bg-[var(--color-text)] dark:bg-[var(--color-text)]" />}
                 </button>
               ))}
             </div>
@@ -214,18 +214,18 @@ export function HomePage() {
                 variant="ghost"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[#2b2f23] dark:text-[var(--color-text)]"
+                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
                 <ChevronLeft className="mr-2" /> Previous
               </Button>
-              <div className="font-mono text-sm font-bold bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
+              <div className="font-mono text-sm font-bold bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
                 {pagination.page} / {pagination.totalPages}
               </div>
               <Button
                 variant="ghost"
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= pagination.totalPages}
-                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[#2b2f23] dark:text-[var(--color-text)]"
+                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
                 Next <ChevronRight className="ml-2" />
               </Button>

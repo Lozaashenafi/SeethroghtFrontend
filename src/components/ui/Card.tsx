@@ -34,14 +34,14 @@ export function Card({
     : {};
 
   const base = cn(
-    'bg-[#FCFAF7] dark:bg-[var(--color-card)] transition-colors duration-200',
+    'bg-[var(--color-paper)] dark:bg-[var(--color-card)] transition-colors duration-200',
     paddingStyles[padding],
   );
 
   if (!torn) {
     return (
       <motion.div
-        className={cn('border-2 border-[#2b2f23] dark:border-[var(--color-text)]', base, className)}
+        className={cn('border-2 border-[var(--color-text)] dark:border-[var(--color-text)]', base, className)}
         style={cardShadow}
         {...motionProps}
         {...(props as HTMLMotionProps<'div'>)}
@@ -60,7 +60,7 @@ export function Card({
       {/* Shadow layer */}
       <div
         aria-hidden
-        className="absolute inset-0 translate-x-1 translate-y-1 bg-[#2b2f23]/10 dark:bg-black/25"
+        className="absolute inset-0 translate-x-1 translate-y-1 bg-[var(--color-text)]/10 dark:bg-black/25"
         style={tornEffect}
       />
       <div

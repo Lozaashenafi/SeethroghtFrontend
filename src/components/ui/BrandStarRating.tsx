@@ -17,7 +17,7 @@ export function BrandStarRating({ rating, size = 12, className }: StarRatingProp
           className={cn(
             'rotate-45 border',
             star <= rating
-              ? 'bg-[#2b2f23] border-[#2b2f23] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]'
+              ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]'
               : 'bg-transparent border-stone-300 dark:border-[var(--color-border)]',
           )}
         />

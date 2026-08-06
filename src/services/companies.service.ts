@@ -1,4 +1,5 @@
 import { apiClient } from '@/lib/axios';
+import { API_ENDPOINTS } from '@/constants';
 import type { ApiResponse, Company, Pagination } from '@/types';
 
 interface ListCompaniesParams {
@@ -16,12 +17,12 @@ interface ListCompaniesResponse {
 }
 
 export async function getCompanies(params: ListCompaniesParams = {}): Promise<ListCompaniesResponse> {
-  const { data } = await apiClient.get<ApiResponse<ListCompaniesResponse>>('/api/v1/companies', { params });
+  const { data } = await apiClient.get<ApiResponse<ListCompaniesResponse>>(API_ENDPOINTS.COMPANIES, { params });
   return data.data ?? { companies: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0 } };
 }
 
 export async function getCompanyBySlug(slug: string): Promise<Company> {
-  const { data } = await apiClient.get<ApiResponse<Company>>(`/api/v1/companies/${slug}`);
+  const { data } = await apiClient.get<ApiResponse<Company>>(`${API_ENDPOINTS.COMPANIES}/${slug}`);
   if (!data.data) throw new Error('Company not found');
   return data.data;
 }
@@ -35,7 +36,7 @@ export async function createCompany(input: {
   city?: string;
   description?: string;
 }): Promise<Company> {
-  const { data } = await apiClient.post<ApiResponse<Company>>('/api/v1/companies', input);
+  const { data } = await apiClient.post<ApiResponse<Company>>(API_ENDPOINTS.COMPANIES, input);
   if (!data.data) throw new Error('Failed to create company');
   return data.data;
 }
@@ -50,7 +51,7 @@ export interface ScrapedCompanyData {
 }
 
 export async function scrapeCompanyWebsite(website: string): Promise<ScrapedCompanyData> {
-  const { data } = await apiClient.post<ApiResponse<ScrapedCompanyData>>('/api/v1/companies/scrape', {
+  const { data } = await apiClient.post<ApiResponse<ScrapedCompanyData>>(API_ENDPOINTS.COMPANIES_SCRAPE, {
     website,
   });
   if (!data.data) throw new Error('Failed to scrape website');

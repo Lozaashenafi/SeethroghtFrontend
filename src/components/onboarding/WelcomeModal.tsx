@@ -15,7 +15,7 @@ const guidelines = [
     icon: Eye,
     title: 'See Through the Surface',
     description: 'Read honest, anonymous reviews from real employees before you apply.',
-    color: 'text-[#2b2f23] dark:text-[var(--color-text)]',
+    color: 'text-[var(--color-text)] dark:text-[var(--color-text)]',
   },
   {
     icon: Shield,
@@ -58,23 +58,23 @@ export function WelcomeModal() {
       <div className="relative">
         {/* Shadow layer */}
         <div 
-          className="absolute inset-0 translate-x-2 translate-y-2 bg-[#2b2f23]/10 dark:bg-black/40" 
+          className="absolute inset-0 translate-x-2 translate-y-2 bg-[var(--color-text)]/10 dark:bg-black/40" 
           style={tornEffect} 
         />
         
         {/* Main Content Card */}
         <div 
-          className="relative bg-[#FCFAF7] dark:bg-[var(--color-card)] border-4 border-[#2b2f23] dark:border-[var(--color-text)] p-8 md:p-10"
+          className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] border-4 border-[var(--color-text)] dark:border-[var(--color-text)] p-8 md:p-10"
           style={tornEffect}
         >
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex h-16 w-16 items-center justify-center border-4 border-[#2b2f23] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-6 rotate-3">
-              <Eye size={32} className="text-[#2b2f23] dark:text-[var(--color-text)]" />
+            <div className="inline-flex h-16 w-16 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-6 rotate-3">
+              <Eye size={32} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <h2 className="text-3xl font-black uppercase tracking-tighter text-[#2b2f23] dark:text-[var(--color-text)] leading-none">
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
               Welcome to <br/>
-              <span className="bg-[#2b2f23] text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] px-2">See Through</span>
+              <span className="bg-[var(--color-text)] text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] px-2">See Through</span>
             </h2>
             <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
               Establishing the ground rules
@@ -88,11 +88,11 @@ export function WelcomeModal() {
               return (
                 <div 
                   key={item.title}
-                  className="p-4 border-2 border-[#2b2f23]/10 dark:border-[var(--color-border)] bg-white/50 dark:bg-[var(--color-surface)]/50"
+                  className="p-4 border-2 border-[var(--color-text)]/10 dark:border-[var(--color-border)] bg-white/50 dark:bg-[var(--color-surface)]/50"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon size={18} className={item.color} />
-                    <h3 className="text-xs font-black uppercase tracking-widest text-[#2b2f23] dark:text-[var(--color-text)]">
+                    <h3 className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
                       {item.title}
                     </h3>
                   </div>
@@ -108,7 +108,7 @@ export function WelcomeModal() {
           <div className="space-y-4">
             <button
               onClick={handleDismiss}
-              className="w-full py-4 bg-[#2b2f23] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-[0.3em] hover:opacity-90 transition-transform active:scale-[0.98] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
+              className="w-full py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-[0.3em] hover:opacity-90 transition-transform active:scale-[0.98] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
             >
               I Understand. Enter.
             </button>
