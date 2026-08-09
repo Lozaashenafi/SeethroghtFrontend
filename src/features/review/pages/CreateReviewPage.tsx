@@ -28,7 +28,6 @@ const employmentOptions = [
 type EmploymentStatusValue = (typeof employmentOptions)[number]['value'];
 
 const ratingLabels: Record<string, string> = {
-  overallRating: 'Overall Rating',
   workLifeBalance: 'Work/Life Balance',
   culture: 'Culture',
   management: 'Management',
@@ -37,7 +36,6 @@ const ratingLabels: Record<string, string> = {
 };
 
 const ratingDescriptions: Record<string, string> = {
-  overallRating: 'Your overall experience with this company',
   workLifeBalance: 'How well does the company support work/life balance?',
   culture: 'How would you rate the company culture?',
   management: 'How effective is the management team?',
@@ -293,7 +291,6 @@ export function CreateReviewPage() {
   const [title, setTitle] = useState('');
   const [pros, setPros] = useState('');
   const [cons, setCons] = useState('');
-  const [overallRating, setOverallRating] = useState<number | null>(null);
   const [workLifeBalance, setWorkLifeBalance] = useState<number | null>(null);
   const [culture, setCulture] = useState<number | null>(null);
   const [management, setManagement] = useState<number | null>(null);
@@ -304,6 +301,28 @@ export function CreateReviewPage() {
   const [jobTitle, setJobTitle] = useState('');
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // The overall rating is not entered directly — it is derived as the average of
+  // the five category ratings, so it always reflects what the reviewer actually
+  // selected. Rounded to the nearest whole number (the backend stores an int).
+  const subRatingFields = [
+    { key: 'workLifeBalance', value: workLifeBalance, setter: setWorkLifeBalance },
+    { key: 'culture', value: culture, setter: setCulture },
+    { key: 'management', value: management, setter: setManagement },
+    { key: 'compensation', value: compensation, setter: setCompensation },
+    { key: 'opportunities', value: opportunities, setter: setOpportunities },
+  ] as const;
+
+  const filledSubRatings = subRatingFields
+    .map((field) => field.value)
+    .filter((rating): rating is number => rating !== null);
+
+  const computedOverallRating: number | null =
+    filledSubRatings.length > 0
+      ? Math.round(
+          filledSubRatings.reduce((sum, rating) => sum + rating, 0) / filledSubRatings.length,
+        )
+      : null;
 
   const validate = useCallback((): Record<string, string> => {
     const newErrors: Record<string, string> = {};
@@ -341,7 +360,7 @@ export function CreateReviewPage() {
         title: title.trim(),
         pros: pros.trim() || undefined,
         cons: cons.trim() || undefined,
-        overallRating: overallRating ?? undefined,
+        overallRating: computedOverallRating ?? undefined,
         workLifeBalance: workLifeBalance ?? undefined,
         culture: culture ?? undefined,
         management: management ?? undefined,
@@ -405,32 +424,53 @@ export function CreateReviewPage() {
               <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Ratings
               </h2>
-              <div className="space-y-6">
-                {Object.entries(ratingLabels).map(([key, label]) => (
+              <div className="space-y-2">
+                {subRatingFields.map((field) => (
                   <DiamondRatingInput
-                    key={key}
-                    label={label}
-                    description={ratingDescriptions[key]}
-                    value={
-                      key === 'overallRating' ? overallRating :
-                      key === 'workLifeBalance' ? workLifeBalance :
-                      key === 'culture' ? culture :
-                      key === 'management' ? management :
-                      key === 'compensation' ? compensation :
-                      opportunities
-                    }
-                    onChange={(rating) => {
-                      const setter =
-                        key === 'overallRating' ? setOverallRating :
-                        key === 'workLifeBalance' ? setWorkLifeBalance :
-                        key === 'culture' ? setCulture :
-                        key === 'management' ? setManagement :
-                        key === 'compensation' ? setCompensation :
-                        setOpportunities;
-                      setter(rating);
-                    }}
+                    key={field.key}
+                    label={ratingLabels[field.key]}
+                    description={ratingDescriptions[field.key]}
+                    value={field.value}
+                    onChange={(rating) => field.setter(rating)}
                   />
                 ))}
+              </div>
+
+              {/* Calculated overall — read-only, derived from the categories above */}
+              <div className="mt-6 flex items-center justify-between border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
+                <div>
+                  <span className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    Overall Rating
+                  </span>
+                  <span className="block text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                    Calculated from your five category ratings above
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {computedOverallRating ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <div
+                            key={star}
+                            className={`h-3.5 w-3.5 rotate-45 border-2 ${
+                              star <= computedOverallRating
+                                ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]'
+                                : 'bg-transparent border-stone-300 dark:border-[var(--color-border)]'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                        {computedOverallRating}/5
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-[11px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                      Select category ratings to compute
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

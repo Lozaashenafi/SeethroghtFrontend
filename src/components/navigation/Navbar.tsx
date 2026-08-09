@@ -67,10 +67,7 @@ export function Navbar() {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-4">
-            <div className="hidden sm:block">
-               {/* Custom styled search for navbar to match brutalist input */}
-               <SearchBar className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]" />
-            </div>
+           
             
             <ThemeToggle className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)] transition-colors" />
             
