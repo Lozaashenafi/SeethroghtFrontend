@@ -31,15 +31,15 @@ export function DashboardLayout() {
             <aside className="hidden lg:block">
               <nav className="sticky top-28 space-y-1" aria-label="Dashboard navigation">
                 <div className="mb-4 flex items-center justify-between px-3">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
+                  <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                     Admin Console
                   </p>
                 </div>
 
                 {admin && (
                   <div className="mb-4 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] px-4 py-3 shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
-                    <p className="text-sm font-black uppercase tracking-wide text-[var(--color-text)] dark:text-[var(--color-text)] truncate">{admin.name}</p>
-                    <p className="mt-0.5 text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] truncate">{admin.email}</p>
+                    <p className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate">{admin.name}</p>
+                    <p className="mt-0.5 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] truncate">{admin.email}</p>
                   </div>
                 )}
 
@@ -55,7 +55,7 @@ export function DashboardLayout() {
                       key={link.href}
                       to={link.href}
                       className={cn(
-                        'flex items-center gap-3 rounded-none border-2 px-3 py-2.5 text-xs font-black uppercase tracking-widest transition-colors',
+                        'flex items-center gap-3 rounded-none border-2 px-3 py-2.5 text-xs font-medium tracking-normal transition-colors',
                         isActive
                           ? 'border-[var(--color-text)] bg-[var(--color-text)] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
                           : 'border-transparent text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-[var(--color-text)]/30 hover:text-[var(--color-text)] dark:hover:border-[var(--color-text)]/30 dark:hover:text-[var(--color-text)]',
@@ -85,7 +85,7 @@ export function DashboardLayout() {
                       key={link.href}
                       to={link.href}
                       className={cn(
-                        'flex shrink-0 items-center gap-2 rounded-none border-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors',
+                        'flex shrink-0 items-center gap-2 rounded-none border-2 px-4 py-2 text-[10px] font-medium tracking-normal transition-colors',
                         isActive
                           ? 'border-[var(--color-text)] bg-[var(--color-text)] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
                           : 'border-[var(--color-text)]/30 bg-[var(--color-paper)] dark:border-[var(--color-border)] dark:bg-[var(--color-card)] text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)]',

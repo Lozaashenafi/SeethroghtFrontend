@@ -68,14 +68,14 @@ function ReviewItem({ review }: { review: Review }) {
       >
         <div className="flex justify-between items-start mb-8">
           <div className="flex gap-4">
-            <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
               {review.companyName?.charAt(0)}
             </div>
             <div>
-              <h2 className="text-xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+              <h2 className="text-xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                 {review.companyName}
               </h2>
-              <p className="text-xs font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 uppercase">
+              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 ">
                 {review.jobTitle} // {formatDate(review.createdAt)}
               </p>
             </div>
@@ -84,7 +84,7 @@ function ReviewItem({ review }: { review: Review }) {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-2xl font-serif text-[var(--color-text)] dark:text-[var(--color-text)] mb-4 leading-tight">
+          <h3 className="text-2xl text-[var(--color-text)] dark:text-[var(--color-text)] mb-4 leading-tight">
             "{review.title}"
           </h3>
           <StarRating rating={review.overallRating} />
@@ -92,11 +92,11 @@ function ReviewItem({ review }: { review: Review }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-stone-200 dark:bg-[var(--color-border)] border border-stone-200 dark:border-[var(--color-border)] mb-8">
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 block mb-2 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">The Good</span>
+            <span className="text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400 block mb-2 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">The Good</span>
             <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.pros}</p>
           </div>
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
-            <span className="text-[10px] font-black uppercase tracking-widest text-orange-700 dark:text-orange-400 block mb-2 underline decoration-orange-200 dark:decoration-orange-900 underline-offset-4">The Bad</span>
+            <span className="text-[10px] font-medium tracking-normal text-orange-700 dark:text-orange-400 block mb-2 underline decoration-orange-200 dark:decoration-orange-900 underline-offset-4">The Bad</span>
             <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.cons}</p>
           </div>
         </div>
@@ -108,19 +108,19 @@ function ReviewItem({ review }: { review: Review }) {
                 onClick={handleVote}
                 disabled={vote.isPending}
                 aria-label="Mark review as helpful"
-                className="flex items-center gap-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50 transition-colors cursor-pointer"
+                className="flex items-center gap-2 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50 transition-colors cursor-pointer"
              >
                 <ThumbsUp size={14} /> {review.helpfulCount || 0}
              </button>
-             <div className="flex items-center gap-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
+             <div className="flex items-center gap-2 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
                 <MessageSquareText size={14} /> DISCUSS
              </div>
           </div>
           <div className="flex gap-2">
             {review.isVerified && (
-               <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">Verified Dept.</span>
+               <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">Verified Dept.</span>
             )}
-            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
               {review.employmentStatus}
             </span>
           </div>
@@ -135,7 +135,7 @@ export function HomePage() {
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<'engagement' | 'recent'>('engagement');
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { data, isLoading } = useReviews({ sortBy, page, limit: 10 });
+  const { data, isLoading, isError } = useReviews({ sortBy, page, limit: 10 });
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
 
@@ -158,13 +158,13 @@ export function HomePage() {
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="FIND A COMPANY..."
-                className="w-full py-5 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
-                onKeyDown={(e) => e.key === 'Enter' && navigate(`/search?q=${searchInputRef.current?.value}`)}
+                placeholder="Find a company..."
+                className="w-full py-5 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                onKeyDown={(e) => e.key === 'Enter' && navigate(`/search?q=${encodeURIComponent(searchInputRef.current?.value ?? '')}`)}
               />
             </div>
             <Link to={ROUTES.CREATE_REVIEW} className="hidden sm:block">
-              <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-colors flex items-center gap-2">
+              <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center gap-2">
                 <Plus size={16} /> Post Review
               </button>
             </Link>
@@ -177,7 +177,7 @@ export function HomePage() {
                 <button
                   key={sort}
                   onClick={() => { setSortBy(sort); setPage(1); }}
-                  className={`text-xs font-black uppercase tracking-[0.2em] transition-all relative ${
+                  className={`text-xs font-medium tracking-normal transition-all relative ${
                     sortBy === sort 
                       ? 'text-[var(--color-text)] dark:text-[var(--color-text)]' 
                       : 'text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-stone-600 dark:hover:text-[var(--color-text)]'
@@ -188,7 +188,7 @@ export function HomePage() {
                 </button>
               ))}
             </div>
-            <div className="text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+            <div className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
               Viewing {reviews.length} entries
             </div>
           </div>
@@ -199,6 +199,24 @@ export function HomePage() {
                 {[1, 2, 3].map(i => (
                   <div key={i} className="h-80 w-full bg-stone-200 dark:bg-[var(--color-card)] animate-pulse border border-stone-300 dark:border-[var(--color-border)]" style={tornEffect} />
                 ))}
+              </div>
+            ) : isError ? (
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
+                <p className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  Couldn&rsquo;t load reviews right now.
+                </p>
+                <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
+                  Please try again in a moment.
+                </p>
+              </div>
+            ) : reviews.length === 0 ? (
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
+                <p className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  No reviews yet.
+                </p>
+                <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
+                  Be the first to write one.
+                </p>
               </div>
             ) : (
               reviews.map((review) => (
@@ -214,18 +232,18 @@ export function HomePage() {
                 variant="ghost"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
+                className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
                 <ChevronLeft className="mr-2" /> Previous
               </Button>
-              <div className="font-mono text-sm font-bold bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
+              <div className=" text-sm font-medium bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
                 {pagination.page} / {pagination.totalPages}
               </div>
               <Button
                 variant="ghost"
                 onClick={() => setPage(p => p + 1)}
                 disabled={page >= pagination.totalPages}
-                className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
+                className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
                 Next <ChevronRight className="ml-2" />
               </Button>

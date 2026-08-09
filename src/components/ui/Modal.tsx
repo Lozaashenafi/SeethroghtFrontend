@@ -98,7 +98,7 @@ export function Modal({
             {(title || showCloseButton) && (
               <div className="flex items-center justify-between border-b-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] px-6 py-4">
                 {title && (
-                  <h2 className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     {title}
                   </h2>
                 )}

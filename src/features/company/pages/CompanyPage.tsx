@@ -28,10 +28,10 @@ export function CompanyPage() {
       <Container size="lg" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 max-w-2xl">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Companies
           </h1>
-          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">
+          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
             Browse the ledger — read unfiltered reviews from employees.
           </p>
         </header>
@@ -45,13 +45,13 @@ export function CompanyPage() {
                 type="text"
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                placeholder="FIND COMPANY..."
-                className="w-full py-4 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                placeholder="Find a company..."
+                className="w-full py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
               />
             </div>
           </div>
           <Link to="/company/new">
-            <button className="px-6 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-colors flex items-center gap-2 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)]">
+            <button className="px-6 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center gap-2 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)]">
               <Plus size={16} /> Add Company
             </button>
           </Link>
@@ -66,7 +66,7 @@ export function CompanyPage() {
           </div>
         ) : error ? (
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-            <p className="font-mono text-sm text-stone-500 dark:text-[var(--color-text-secondary)] uppercase tracking-wider">
+            <p className=" text-sm text-stone-500 dark:text-[var(--color-text-secondary)] tracking-normal">
               Failed to load companies. Try again later.
             </p>
           </div>
@@ -75,17 +75,17 @@ export function CompanyPage() {
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Building2 size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <p className="font-black uppercase text-sm tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <p className="font-medium text-sm tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
               {search ? 'No companies found' : 'No companies added yet'}
             </p>
-            <p className="mt-2 text-xs font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase tracking-wide">
+            <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)] tracking-normal">
               {search ? 'Try a different search term.' : 'Be the first to add one.'}
             </p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
-              <p className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <p className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Showing {companies.length} entries
               </p>
             </div>
@@ -100,24 +100,24 @@ export function CompanyPage() {
                     <div className="flex flex-col gap-4 h-full">
                       <div className="flex items-center gap-4">
                         <div className="h-12 w-12 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-                          <span className="text-lg font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+                          <span className="text-lg font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                             {company.name.charAt(0)}
                           </span>
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="font-black uppercase tracking-tight text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">
+                            <h3 className="font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">
                               {company.name}
                             </h3>
                             {company.verified && (
-                              <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
+                              <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                                 Verified
                               </span>
                             )}
                           </div>
                           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                             {(company.city || company.country) && (
-                              <span className="flex items-center gap-1 text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">
+                              <span className="flex items-center gap-1 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] ">
                                 <MapPin size={10} />
                                 {company.city ?? company.country}
                               </span>
@@ -125,7 +125,7 @@ export function CompanyPage() {
                             {company.averageRating && (
                               <BrandStarRating rating={Math.round(Number(company.averageRating))} size={10} />
                             )}
-                            <span className="text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">
+                            <span className="text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] ">
                               {formatNumber(company.reviewCount)} review{company.reviewCount !== 1 ? 's' : ''}
                             </span>
                           </div>
@@ -146,17 +146,17 @@ export function CompanyPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
+                  className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
                 >
                   <ChevronLeft size={16} /> Previous
                 </button>
-                <span className="font-mono text-sm font-bold bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
+                <span className=" text-sm font-medium bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
                   {pagination.page} / {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= pagination.totalPages}
-                  className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
+                  className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
                 >
                   Next <ChevronRight size={16} />
                 </button>

@@ -26,10 +26,10 @@
   --color-error: #dc2626;
 
   /* Typography */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-heading: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-mono: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
 }
 
 /* ─── Dark Theme ─── */

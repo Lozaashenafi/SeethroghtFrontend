@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Building2,
   Plus,
@@ -19,7 +20,7 @@ import { formatNumber } from '@/utils';
 import { toast } from 'sonner';
 import type { Company } from '@/types';
 
-function CompanyEditModal({ company, onClose, onSaved }: { company: Company | null; onClose: () => void; onSaved: () => void }) {
+function CompanyEditModal({ company, onClose, onSaved }: { company: Company | null; onClose: () => void; onSaved: (company: Company | null) => void }) {
   const [name, setName] = useState(company?.name ?? '');
   const [slug, setSlug] = useState(company?.slug ?? '');
   const [website, setWebsite] = useState(company?.website ?? '');
@@ -55,7 +56,7 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
           { loading: 'Creating...', success: 'Company created!', error: 'Failed to create' }
         );
       }
-      onSaved();
+      onSaved(company);
       onClose();
     } finally {
       setIsLoading(false);
@@ -65,7 +66,7 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div className="w-full max-w-lg rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 shadow-[10px_10px_0px_0px_var(--color-text)] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]" onClick={e => e.stopPropagation()}>
-        <h2 className="mb-4 text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+        <h2 className="mb-4 text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
           {isEditing ? `Edit ${company.name}` : 'Add Company'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -79,7 +80,7 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
           </div>
           {!isEditing && (
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">Industry</label>
+              <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">Industry</label>
               <select value={industryId} onChange={e => setIndustryId(e.target.value)} required
                 className="w-full rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] dark:text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-brand-navy/30"
               >
@@ -89,7 +90,7 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
             </div>
           )}
           <div className="space-y-1.5">
-            <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">Description</label>
+            <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">Description</label>
             <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3}
               className="w-full rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] dark:text-[var(--color-text)] placeholder:text-[var(--color-text)]/35 dark:placeholder:text-[var(--color-text-secondary)]/50 focus:outline-none focus:ring-2 focus:ring-brand-navy/30 resize-y"
             />
@@ -103,7 +104,7 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
               >
                 {verified && <Check size={12} className="text-white dark:text-[var(--color-bg)]" />}
               </div>
-              <span className="text-xs font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">Verified company</span>
+              <span className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">Verified company</span>
             </label>
           )}
           <div className="flex justify-end gap-3 pt-2">
@@ -117,16 +118,28 @@ function CompanyEditModal({ company, onClose, onSaved }: { company: Company | nu
 }
 
 export function CompaniesTab() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
-  const { data, isLoading } = useCompanies({ search: debouncedSearch || undefined, page, limit: 10 });
+  const { data, isLoading, isError } = useCompanies({ search: debouncedSearch || undefined, page, limit: 10 });
   const deleteCompany = useAdminDeleteCompany();
   const companies = data?.companies ?? [];
   const pagination = data?.pagination;
   const [deleteTarget, setDeleteTarget] = useState<Company | null>(null);
+
+  const handleModalSaved = (updated: Company | null) => {
+    // Reflect the create/edit in the list immediately — otherwise the admin
+    // table shows stale data until a manual refetch.
+    queryClient.invalidateQueries({ queryKey: ['companies'] });
+    if (updated?.slug) {
+      queryClient.invalidateQueries({ queryKey: ['company', updated.slug] });
+    }
+    setShowCreateModal(false);
+    setEditingCompany(null);
+  };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -157,6 +170,8 @@ export function CompaniesTab() {
 
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[var(--color-text)]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
+      ) : isError ? (
+        <Card padding="lg" className="text-center"><p className="text-text-secondary">Couldn&rsquo;t load companies. Please try again.</p></Card>
       ) : companies.length === 0 ? (
         <Card padding="lg" className="text-center"><p className="text-text-secondary">No companies found.</p></Card>
       ) : (
@@ -204,7 +219,7 @@ export function CompaniesTab() {
         <CompanyEditModal
           company={editingCompany}
           onClose={() => { setShowCreateModal(false); setEditingCompany(null); }}
-          onSaved={() => { setShowCreateModal(false); setEditingCompany(null); }}
+          onSaved={handleModalSaved}
         />
       )}
 

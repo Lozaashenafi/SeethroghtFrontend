@@ -97,7 +97,7 @@ export function ReportsTab() {
       <div className="mb-6 flex items-center gap-2 border-b-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-4">
         {['pending', 'resolved', 'dismissed', 'all'].map((filter) => (
           <button key={filter} onClick={() => { setStatusFilter(filter === 'all' ? '' : filter); setPage(1); }}
-            className={`rounded-none border-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest transition-colors ${
+            className={`rounded-none border-2 px-4 py-2 text-[10px] font-medium tracking-normal transition-colors ${
               (filter === 'all' && !statusFilter) || statusFilter === filter
                 ? 'border-[var(--color-text)] bg-[var(--color-text)] text-white dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]'
                 : 'border-[var(--color-text)]/30 text-stone-500 dark:border-[var(--color-border)] dark:text-[var(--color-text-secondary)] hover:border-[var(--color-text)] hover:text-[var(--color-text)] dark:hover:border-[var(--color-text)] dark:hover:text-[var(--color-text)]'

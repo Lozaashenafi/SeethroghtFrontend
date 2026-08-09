@@ -60,11 +60,11 @@ function DiamondRatingInput({
 
   return (
     <div className="space-y-1.5">
-      <span className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+      <span className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
         {label}
       </span>
       {description && (
-        <span className="block text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+        <span className="block text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
           {description}
         </span>
       )}
@@ -89,7 +89,7 @@ function DiamondRatingInput({
           </button>
         ))}
         {value && (
-          <span className="ml-2 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
+          <span className="ml-2 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
             {value}/5
           </span>
         )}
@@ -137,7 +137,7 @@ function CompanySearchSelect({
 
   return (
     <div className="space-y-1.5">
-      <span className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+      <span className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
         Company
       </span>
       <div className="relative">
@@ -145,7 +145,7 @@ function CompanySearchSelect({
           <div className="flex items-center justify-between border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
             <div className="flex items-center gap-2">
               <Building2 size={16} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
-              <span className="text-sm font-black uppercase tracking-tight text-[var(--color-text)] dark:text-[var(--color-text)]">{selectedName}</span>
+              <span className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">{selectedName}</span>
             </div>
             <button
               type="button"
@@ -170,8 +170,8 @@ function CompanySearchSelect({
                     handleSelect(companies[0].slug, companies[0].name);
                   }
                 }}
-                placeholder="SEARCH COMPANY..."
-                className="flex-1 px-4 py-3 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                placeholder="Search a company..."
+                className="flex-1 px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
               />
             </div>
             {isOpen && (
@@ -179,17 +179,17 @@ function CompanySearchSelect({
                 <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
                 <div className="absolute z-20 mt-2 w-full bg-white dark:bg-[var(--color-card)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
                   {isLoading ? (
-                    <div className="p-4 text-center text-sm font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">Searching...</div>
+                    <div className="p-4 text-center text-sm text-stone-500 dark:text-[var(--color-text-secondary)] ">Searching...</div>
                   ) : companies.length === 0 ? (
                     <div className="p-4 text-center">
-                      <p className="text-sm font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">
+                      <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)] ">
                         {search ? `No results for "${search}"` : 'Type to search'}
                       </p>
                       {search && (
                         <Link
                           to={`${ROUTES.CREATE_COMPANY}?name=${encodeURIComponent(search)}`}
                           onClick={() => setIsOpen(false)}
-                          className="mt-3 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity"
+                          className="mt-3 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity"
                         >
                           <Building2 size={14} />
                           Create &ldquo;{search}&rdquo; as new
@@ -205,13 +205,13 @@ function CompanySearchSelect({
                           onClick={() => handleSelect(company.slug, company.name)}
                           className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-stone-100 dark:hover:bg-[var(--color-surface)] transition-colors border-b border-stone-200 dark:border-[var(--color-border)] last:border-0"
                         >
-                          <div className="h-8 w-8 flex items-center justify-center border border-[var(--color-text)] dark:border-[var(--color-text)] text-sm font-black text-[var(--color-text)] dark:text-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+                          <div className="h-8 w-8 flex items-center justify-center border border-[var(--color-text)] dark:border-[var(--color-text)] text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                             {company.name.charAt(0)}
                           </div>
                           <div>
-                            <span className="font-black uppercase text-xs tracking-wide text-[var(--color-text)] dark:text-[var(--color-text)]">{company.name}</span>
+                            <span className="font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">{company.name}</span>
                             {(company.city || company.country) && (
-                              <span className="ml-2 text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+                              <span className="ml-2 text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
                                 {company.city ?? company.country}
                               </span>
                             )}
@@ -249,10 +249,10 @@ function TagSelector({
 
   return (
     <div className="space-y-1.5">
-      <span className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+      <span className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
         Tags
       </span>
-      <span className="block text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+      <span className="block text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
         Select up to 10 tags
       </span>
       <div className="flex flex-wrap gap-2">
@@ -263,7 +263,7 @@ function TagSelector({
               key={tag.id}
               type="button"
               onClick={() => toggleTag(tag.id)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-black uppercase tracking-wider border-2 transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium tracking-normal border-2 transition-all ${
                 isSelected
                   ? 'bg-[var(--color-text)] border-[var(--color-text)] text-white dark:bg-[var(--color-text)] dark:border-[var(--color-text)] dark:text-[var(--color-bg)]'
                   : 'bg-transparent border-[var(--color-text)] dark:border-[var(--color-text)] text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)]'
@@ -370,17 +370,17 @@ export function CreateReviewPage() {
       <Container size="md" className="relative z-10 py-16">
         <Link
           to="/review"
-          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+          className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
         >
           <ArrowLeft size={14} />
           Back to Reviews
         </Link>
 
         <header className="mb-10">
-          <h1 className="text-4xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-4xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
             Write a Review
           </h1>
-          <p className="mt-2 text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
+          <p className="mt-2 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
             Share your anonymous experience. No retaliation, no regrets.
           </p>
         </header>
@@ -390,19 +390,19 @@ export function CreateReviewPage() {
             {/* Company */}
             {/* NOTE: no tornEffect clipPath on this card because the dropdown would be clipped */}
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" data-field="company" style={{ ...cardShadow }}>
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+              <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Company
               </h2>
               <CompanySearchSelect
                 presetName={prefillCompany?.name}
                 onChange={(slug) => { setCompanySlug(slug); if (slug) setErrors(p => ({ ...p, company: '' })); }}
               />
-              {errors.company && <p className="mt-1.5 text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.company}</p>}
+              {errors.company && <p className="mt-1.5 text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.company}</p>}
             </div>
 
             {/* Ratings */}
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+              <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Ratings
               </h2>
               <div className="space-y-6">
@@ -436,28 +436,28 @@ export function CreateReviewPage() {
 
             {/* Review Details */}
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+              <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Your Review
               </h2>
               <div className="space-y-5">
                 <div className="space-y-1.5" data-field="title">
-                  <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Review Title *
                   </label>
                   <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                     <input
                       value={title}
                       onChange={(e) => { setTitle(e.target.value); if (errors.title) setErrors(p => ({ ...p, title: '' })); }}
-                      placeholder="SUMMARIZE YOUR EXPERIENCE..."
+                      placeholder="Summarize your experience..."
                       maxLength={200}
-                      className="w-full px-4 py-3 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                      className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                     />
                   </div>
-                  {errors.title && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.title}</p>}
+                  {errors.title && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.title}</p>}
                 </div>
 
                 <div className="space-y-1.5" data-field="pros">
-                  <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Pros
                   </label>
                   <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
@@ -470,11 +470,11 @@ export function CreateReviewPage() {
                       className="w-full px-4 py-3 text-sm outline-none bg-transparent resize-y dark:placeholder-[var(--color-text-secondary)]"
                     />
                   </div>
-                  {errors.pros && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.pros}</p>}
+                  {errors.pros && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.pros}</p>}
                 </div>
 
                 <div className="space-y-1.5" data-field="cons">
-                  <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Cons
                   </label>
                   <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
@@ -487,19 +487,19 @@ export function CreateReviewPage() {
                       className="w-full px-4 py-3 text-sm outline-none bg-transparent resize-y dark:placeholder-[var(--color-text-secondary)]"
                     />
                   </div>
-                  {errors.cons && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.cons}</p>}
+                  {errors.cons && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.cons}</p>}
                 </div>
               </div>
             </div>
 
             {/* Job Details */}
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+              <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Job Details
               </h2>
               <div className="space-y-5">
                 <div className="space-y-1.5" data-field="jobTitle">
-                  <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Job Title
                   </label>
                   <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] flex items-center px-4">
@@ -509,21 +509,21 @@ export function CreateReviewPage() {
                       onChange={(e) => { setJobTitle(e.target.value); if (errors.jobTitle) setErrors(p => ({ ...p, jobTitle: '' })); }}
                       placeholder="e.g. SOFTWARE ENGINEER"
                       maxLength={100}
-                      className="w-full py-3 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                      className="w-full py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                     />
                   </div>
-                  {errors.jobTitle && <p className="text-[11px] font-black uppercase tracking-wider text-orange-700 dark:text-orange-400">{errors.jobTitle}</p>}
+                  {errors.jobTitle && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.jobTitle}</p>}
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Employment Status
                   </label>
                   <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                     <select
                       value={employmentStatus}
                       onChange={(e) => setEmploymentStatus(e.target.value as EmploymentStatusValue)}
-                      className="w-full px-4 py-3 text-sm font-black uppercase tracking-wider outline-none bg-transparent dark:text-[var(--color-text)]"
+                      className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:text-[var(--color-text)]"
                     >
                       {employmentOptions.map((opt) => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -543,7 +543,7 @@ export function CreateReviewPage() {
                   >
                     {isCurrentEmployee && <Check size={14} className="text-white dark:text-[var(--color-bg)]" />}
                   </div>
-                  <span className="text-xs font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <span className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     I currently work here
                   </span>
                 </label>
@@ -553,7 +553,7 @@ export function CreateReviewPage() {
             {/* Tags */}
             {tags.length > 0 && (
               <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-                <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+                <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                   Tags
                 </h2>
                 <TagSelector tags={tags} selectedIds={selectedTagIds} onChange={setSelectedTagIds} />
@@ -563,13 +563,13 @@ export function CreateReviewPage() {
             {/* Submit */}
             <div className="flex justify-end gap-4 pt-4">
               <Link to={ROUTES.REVIEW}>
-                <span className="inline-flex items-center gap-2 px-6 py-4 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
+                <span className="inline-flex items-center gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
                   Cancel
                 </span>
               </Link>
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {createReview.isPending ? (
                   <><svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Posting...</>

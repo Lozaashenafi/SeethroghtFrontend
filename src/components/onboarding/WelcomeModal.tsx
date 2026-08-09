@@ -72,11 +72,11 @@ export function WelcomeModal() {
             <div className="inline-flex h-16 w-16 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-6 rotate-3">
               <Eye size={32} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <h2 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+            <h2 className="text-3xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
               Welcome to <br/>
               <span className="bg-[var(--color-text)] text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] px-2">See Through</span>
             </h2>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-stone-500 dark:text-[var(--color-text-secondary)]">
+            <p className="mt-4 text-[10px] tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
               Establishing the ground rules
             </p>
           </div>
@@ -92,11 +92,11 @@ export function WelcomeModal() {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon size={18} className={item.color} />
-                    <h3 className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    <h3 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                       {item.title}
                     </h3>
                   </div>
-                  <p className="text-sm font-serif leading-snug text-stone-600 dark:text-[var(--color-text-secondary)]">
+                  <p className="text-sm leading-snug text-stone-600 dark:text-[var(--color-text-secondary)]">
                     {item.description}
                   </p>
                 </div>
@@ -108,11 +108,11 @@ export function WelcomeModal() {
           <div className="space-y-4">
             <button
               onClick={handleDismiss}
-              className="w-full py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-[0.3em] hover:opacity-90 transition-transform active:scale-[0.98] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
+              className="w-full py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-sm tracking-normal hover:opacity-90 transition-transform active:scale-[0.98] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
             >
               I Understand. Enter.
             </button>
-            <p className="text-center text-[10px] font-mono uppercase text-stone-400 dark:text-[var(--color-text-secondary)]">
+            <p className="text-center text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
               Verification is required for posting, not browsing.
             </p>
           </div>

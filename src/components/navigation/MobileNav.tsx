@@ -99,7 +99,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
               {/* Navigation links */}
               <div className="border-t pt-4">
-                <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-text-secondary/50">
+                <p className="mb-2 text-[11px] font-medium tracking-normal text-text-secondary/50">
                   Browse
                 </p>
                 <ul className="space-y-0.5">

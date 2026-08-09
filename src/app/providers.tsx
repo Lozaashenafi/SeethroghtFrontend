@@ -45,9 +45,9 @@ export function Providers({ children }: ProvidersProps) {
                 },
                 classNames: {
                   toast: 'dark:!bg-[var(--color-card)] dark:!text-[var(--color-text)] dark:!shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)]',
-                  title: '!text-[11px] !font-black !uppercase !tracking-widest !leading-tight',
+                  title: '!text-[11px] !font-medium !tracking-normal !leading-tight',
                   description:
-                    '!font-mono !text-[11px] !normal-case !tracking-normal !mt-1 !text-stone-500 dark:!text-[var(--color-text-secondary)]',
+                    '!text-[11px] !normal-case !tracking-normal !mt-1 !text-stone-500 dark:!text-[var(--color-text-secondary)]',
                   closeButton:
                     '!bg-transparent !border-2 !border-[var(--color-text)] dark:!border-[var(--color-text)] !rounded-none !p-1 !text-[var(--color-text)] dark:!text-[var(--color-text)] hover:!bg-[var(--color-text)] hover:!text-white dark:hover:!bg-[var(--color-text)] dark:hover:!text-[var(--color-bg)] !transition-colors',
                   success: '!border-emerald-700 dark:!border-emerald-400',

@@ -76,17 +76,17 @@ export function LoginPage() {
               <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 <Shield size={36} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
               </div>
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <h1 className="text-3xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Admin Login
               </h1>
-              <p className="mt-2 text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
+              <p className="mt-2 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Sign in to manage the platform
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                   Email
                 </label>
                 <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
@@ -103,7 +103,7 @@ export function LoginPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-[11px] font-black uppercase tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+                <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                   Password
                 </label>
                 <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
@@ -121,7 +121,7 @@ export function LoginPage() {
               <button
                 type="submit"
                 disabled={!email.trim() || !password.trim() || isLoading}
-                className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <><svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Signing in...</>

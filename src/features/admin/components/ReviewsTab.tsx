@@ -9,7 +9,7 @@ import type { Review } from '@/types';
 
 export function ReviewsTab() {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useAdminReviews({ page, limit: 10 });
+  const { data, isLoading, isError } = useAdminReviews({ page, limit: 10 });
   const deleteReview = useAdminDeleteReview();
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
@@ -36,6 +36,8 @@ export function ReviewsTab() {
     <div>
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[var(--color-text)]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
+      ) : isError ? (
+        <Card padding="lg" className="text-center"><p className="text-text-secondary">Couldn&rsquo;t load reviews. Please try again.</p></Card>
       ) : reviews.length === 0 ? (
         <Card padding="lg" className="text-center"><p className="text-text-secondary">No reviews found.</p></Card>
       ) : (

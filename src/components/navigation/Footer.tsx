@@ -33,14 +33,14 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link
               to={ROUTES.HOME}
-              className="mb-6 flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]"
+              className="mb-6 flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
             >
               <div className="bg-[var(--color-text)] dark:bg-[var(--color-text)] p-1">
                 <Eye size={20} className="text-white dark:text-[var(--color-bg)]" />
               </div>
               <span>See Through</span>
             </Link>
-            <p className="max-w-sm text-sm font-serif text-stone-500 dark:text-[var(--color-text-secondary)] leading-relaxed">
+            <p className="max-w-sm text-sm text-stone-500 dark:text-[var(--color-text-secondary)] leading-relaxed">
               "{APP_TAGLINE}"
             </p>
           </div>
@@ -48,7 +48,7 @@ export function Footer() {
           {/* Navigation Groups */}
           {footerLinks.map((group) => (
             <div key={group.title}>
-              <h3 className="mb-6 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] border-b border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-2">
+              <h3 className="mb-6 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-b border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-2">
                 {group.title}
               </h3>
               <ul className="space-y-3">
@@ -56,7 +56,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       to={link.href}
-                      className="text-xs font-mono font-bold uppercase text-stone-500 dark:text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] flex items-center gap-2 group"
+                      className="text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] flex items-center gap-2 group"
                     >
                       <span className="h-1 w-1 bg-[var(--color-text)] dark:bg-[var(--color-text)] opacity-0 group-hover:opacity-100 transition-opacity" />
                       {link.label}
@@ -70,11 +70,11 @@ export function Footer() {
 
         {/* Bottom Section - "The Receipt" style */}
         <div className="mt-20 border-t-2 border-[var(--color-text)] dark:border-[var(--color-text)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-[10px] font-mono font-black uppercase tracking-widest text-stone-400 dark:text-[var(--color-text-secondary)]">
+          <div className="text-[10px] font-medium tracking-normal text-stone-400 dark:text-[var(--color-text-secondary)]">
             Log Number: {year}-ST-BRUTALIST
           </div>
           
-          <div className="text-[10px] font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
             &copy; {year} See Through Ledger. No Rights Reserved.
           </div>
 

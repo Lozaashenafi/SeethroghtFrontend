@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      console.log(error + 'Unauthorized access detected. Logging out admin user and redirecting to login page.');
+      console.error('Unauthorized access detected. Logging out admin user and redirecting to login page.', error);
       if (typeof window !== 'undefined') {
         localStorage.removeItem(AUTH_ADMIN_KEY);
 

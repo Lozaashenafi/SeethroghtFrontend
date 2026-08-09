@@ -26,17 +26,17 @@ export function NotFoundPage() {
             <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Eye size={40} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <h1 className="text-6xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] mb-4">
+            <h1 className="text-6xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-4">
               404
             </h1>
-            <p className="font-serif text-base text-stone-500 dark:text-[var(--color-text-secondary)] mb-2">
+            <p className=" text-base text-stone-500 dark:text-[var(--color-text-secondary)] mb-2">
               "This page isn't visible through our lens."
             </p>
-            <p className="text-xs font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase tracking-wider mb-8">
+            <p className="text-xs text-stone-400 dark:text-[var(--color-text-secondary)] tracking-normal mb-8">
               The page you're looking for doesn't exist or has been moved.
             </p>
             <Link to={ROUTES.HOME}>
-              <span className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
+              <span className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
                 <ArrowLeft size={16} /> Back to Home
               </span>
             </Link>

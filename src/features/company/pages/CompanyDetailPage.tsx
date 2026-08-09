@@ -10,7 +10,7 @@ import { tornEffect, cardShadow } from '@/constants/brand';
 export function CompanyDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { data: company, isLoading: companyLoading, error: companyError } = useCompany(slug);
-  const { data: reviewsData, isLoading: reviewsLoading } = useReviews({ companySlug: slug, limit: 20 });
+  const { data: reviewsData, isLoading: reviewsLoading, isError: reviewsError } = useReviews({ companySlug: slug, limit: 20 });
 
   if (companyLoading) {
     return (
@@ -30,11 +30,11 @@ export function CompanyDetailPage() {
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
         <Container size="sm" className="relative z-10 py-24 text-center">
-          <p className="font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase text-sm tracking-wider">
+          <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
             Company not found.
           </p>
           <Link to="/company" className="mt-6 inline-block">
-            <span className="inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
+            <span className="inline-flex items-center gap-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
               <ArrowLeft size={14} /> Back to Companies
             </span>
           </Link>
@@ -57,7 +57,7 @@ export function CompanyDetailPage() {
         {/* Back link */}
         <Link
           to="/company"
-          className="mb-8 inline-flex items-center gap-2 font-black text-xs uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+          className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
         >
           <ArrowLeft size={14} />
           Back to Companies
@@ -67,24 +67,24 @@ export function CompanyDetailPage() {
         <div className="mb-10">
           <div className="flex items-start gap-6">
             <div className="h-20 w-20 flex items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-              <span className="text-4xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <span className="text-4xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {company.name.charAt(0)}
               </span>
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-4">
-                <h1 className="text-5xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+                <h1 className="text-5xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                   {company.name}
                 </h1>
                 {company.verified && (
-                  <span className="px-3 py-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <span className="px-3 py-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Verified
                   </span>
                 )}
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
                 {(company.city || company.country) && (
-                  <span className="flex items-center gap-1.5 font-mono uppercase text-xs tracking-wider">
+                  <span className="flex items-center gap-1.5 text-xs tracking-normal">
                     <MapPin size={14} />
                     {[company.city, company.country].filter(Boolean).join(', ')}
                   </span>
@@ -94,14 +94,14 @@ export function CompanyDetailPage() {
                     href={company.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 font-mono uppercase text-xs tracking-wider hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+                    className="flex items-center gap-1.5 text-xs tracking-normal hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
                   >
                     <Globe size={14} />
                     Website
                   </a>
                 )}
                 {company.reviewCount > 0 && (
-                  <span className="flex items-center gap-1.5 font-mono uppercase text-xs tracking-wider">
+                  <span className="flex items-center gap-1.5 text-xs tracking-normal">
                     <Briefcase size={14} />
                     {company.reviewCount} review{company.reviewCount !== 1 ? 's' : ''}
                   </span>
@@ -113,28 +113,28 @@ export function CompanyDetailPage() {
           {/* Stats Cards */}
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <div className="text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {avgRating ? `${avgRating}/5` : 'N/A'}
               </div>
               {avgRating && <BrandStarRating rating={avgRating} size={14} className="justify-center mt-2" />}
-              <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)]">
+              <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Overall Rating
               </p>
             </div>
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <div className="text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {company.reviewCount}
               </div>
-              <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)]">
+              <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Total Reviews
               </p>
             </div>
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="flex items-center justify-center gap-2 text-3xl font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <div className="flex items-center justify-center gap-2 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 <ThumbsUp size={24} />
                 {company.recommendationRate}
               </div>
-              <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-stone-500 dark:text-[var(--color-text-secondary)]">
+              <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Recommended %
               </p>
             </div>
@@ -142,7 +142,7 @@ export function CompanyDetailPage() {
 
           {company.description && (
             <div className="mt-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
-              <p className="font-serif text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed">
+              <p className=" text-stone-600 dark:text-[var(--color-text-secondary)] leading-relaxed">
                 "{company.description}"
               </p>
             </div>
@@ -151,7 +151,7 @@ export function CompanyDetailPage() {
 
         {/* Write Review CTA */}
         <Link to={`${ROUTES.CREATE_REVIEW}?company=${company.slug}`} className="block mb-12">
-          <div className="flex items-center justify-center gap-3 py-5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-sm uppercase tracking-widest border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
+          <div className="flex items-center justify-center gap-3 py-5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-sm tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
             <Pencil size={18} />
             Write a Review for {company.name}
           </div>
@@ -160,19 +160,25 @@ export function CompanyDetailPage() {
         {/* Reviews Section */}
         <div>
           <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
               Employee Reviews
             </h2>
-            <span className="text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+            <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
               {reviewsData?.reviews.length ?? 0} entries
             </span>
           </div>
 
           {reviewsLoading ? (
             <TornSkeleton count={3} height="h-48" />
+          ) : reviewsError ? (
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <p className=" text-stone-500 dark:text-[var(--color-text-secondary)]">
+                Couldn&rsquo;t load reviews. Please try again.
+              </p>
+            </div>
           ) : reviewsData?.reviews.length === 0 ? (
             <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <p className="font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
+              <p className=" text-stone-500 dark:text-[var(--color-text-secondary)]">
                 No reviews yet for this company. Be the first.
               </p>
             </div>
@@ -186,18 +192,18 @@ export function CompanyDetailPage() {
                   >
                     <div className="flex justify-between items-start mb-5">
                       <div className="flex gap-4">
-                        <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+                        <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                           {review.companyName?.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="font-black uppercase tracking-tight text-sm text-[var(--color-text)] dark:text-[var(--color-text)]">{review.title}</h3>
-                          <p className="text-[10px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-0.5 uppercase">
+                          <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)]">{review.title}</h3>
+                          <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-0.5 ">
                             {review.jobTitle} // {formatDate(review.createdAt)}
                           </p>
                         </div>
                       </div>
                       {review.isVerified && (
-                        <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
+                        <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                           Verified
                         </span>
                       )}
@@ -207,7 +213,7 @@ export function CompanyDetailPage() {
 
                     {review.pros && (
                       <div className="mb-3">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">
+                        <span className="text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">
                           The Good
                         </span>
                         <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mt-1">{review.pros}</p>
@@ -215,7 +221,7 @@ export function CompanyDetailPage() {
                     )}
 
                     <div className="flex items-center justify-between pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
-                      <div className="flex items-center gap-4 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
+                      <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
                         <span className="flex items-center gap-1.5">
                           <ThumbsUp size={12} /> {review.helpfulCount || 0}
                         </span>
@@ -224,7 +230,7 @@ export function CompanyDetailPage() {
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+                        <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
                           {review.employmentStatus}
                         </span>
                       </div>

@@ -39,11 +39,11 @@ export function AdminHeader() {
     <header className="sticky top-0 z-30 border-b-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)]">
       {/* Admin accent strip */}
       <div className="flex items-center justify-between bg-[var(--color-text)] px-4 py-1 text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] sm:px-6 lg:px-8">
-        <p className="flex items-center gap-2 whitespace-nowrap text-[9px] font-mono font-black uppercase tracking-[0.25em]">
+        <p className="flex items-center gap-2 whitespace-nowrap text-[9px] font-medium tracking-[0.25em]">
           <Shield size={10} />
           Admin Console &middot; Restricted Access
         </p>
-        <p className="hidden whitespace-nowrap text-[9px] font-mono font-black uppercase tracking-[0.25em] sm:block">
+        <p className="hidden whitespace-nowrap text-[9px] font-medium tracking-[0.25em] sm:block">
           Authorized Personnel Only
         </p>
       </div>
@@ -53,12 +53,12 @@ export function AdminHeader() {
         <div className="flex items-center gap-3">
           <Link
             to={ROUTES.HOME}
-            className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]"
+            className="flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
           >
             <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
             <span className="hidden sm:inline">See Through</span>
           </Link>
-          <span className="flex items-center gap-1.5 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-[3px_3px_0px_0px_rgba(43,47,35,0.25)] dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] dark:shadow-[3px_3px_0px_0px_rgba(255,239,205,0.15)]">
+          <span className="flex items-center gap-1.5 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-2.5 py-1 text-[10px] font-medium tracking-normal text-white shadow-[3px_3px_0px_0px_rgba(43,47,35,0.25)] dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] dark:shadow-[3px_3px_0px_0px_rgba(255,239,205,0.15)]">
             <Shield size={12} />
             Admin
           </span>
@@ -75,7 +75,7 @@ export function AdminHeader() {
                   key={link.href}
                   to={link.href}
                   className={cn(
-                    'relative flex h-full items-center gap-1.5 text-xs font-black uppercase tracking-[0.2em] transition-colors duration-200',
+                    'relative flex h-full items-center gap-1.5 text-xs font-medium tracking-normal transition-colors duration-200',
                     active
                       ? 'text-[var(--color-text)] dark:text-[var(--color-text)]'
                       : 'text-stone-400 hover:text-[var(--color-text)] dark:text-[var(--color-text-secondary)] dark:hover:text-[var(--color-text)]',
@@ -96,7 +96,7 @@ export function AdminHeader() {
         <div className="flex items-center gap-3">
           <Link
             to={ROUTES.HOME}
-            className="hidden items-center gap-1.5 border-2 border-[var(--color-text)]/30 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-stone-500 transition-colors hover:border-[var(--color-text)] hover:text-[var(--color-text)] dark:border-[var(--color-border)] dark:text-[var(--color-text-secondary)] dark:hover:border-[var(--color-text)] dark:hover:text-[var(--color-text)] md:flex"
+            className="hidden items-center gap-1.5 border-2 border-[var(--color-text)]/30 px-3 py-2 text-[10px] font-medium tracking-normal text-stone-500 transition-colors hover:border-[var(--color-text)] hover:text-[var(--color-text)] dark:border-[var(--color-border)] dark:text-[var(--color-text-secondary)] dark:hover:border-[var(--color-text)] dark:hover:text-[var(--color-text)] md:flex"
           >
             <ArrowUpRight size={13} />
             View Site
@@ -107,7 +107,7 @@ export function AdminHeader() {
           {admin && (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:opacity-90 active:translate-y-0.5 dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]"
+              className="flex items-center gap-2 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-4 py-2 text-[10px] font-medium tracking-normal text-white transition-all hover:opacity-90 active:translate-y-0.5 dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]"
             >
               <LogOut size={14} />
               <span className="hidden sm:inline">Sign Out</span>

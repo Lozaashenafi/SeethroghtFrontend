@@ -13,7 +13,7 @@ export function SearchPage() {
   const query = searchParams.get('q') ?? '';
   const [inputValue, setInputValue] = useState(query);
 
-  const { data, isLoading } = useCompanies(
+  const { data, isLoading, isError } = useCompanies(
     query ? { search: query, limit: 20 } : undefined,
   );
 
@@ -44,10 +44,10 @@ export function SearchPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Search Companies
           </h1>
-          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">
+          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
             Find companies and read unfiltered employee reviews.
           </p>
         </header>
@@ -60,8 +60,8 @@ export function SearchPage() {
               type="text"
               value={inputValue}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="SEARCH COMPANY..."
-              className="w-full py-5 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+              placeholder="Search a company..."
+              className="w-full py-5 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
             />
             {inputValue && (
               <button onClick={clearSearch} className="ml-2 p-1 hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors">
@@ -70,7 +70,7 @@ export function SearchPage() {
             )}
           </div>
           <Link to={ROUTES.CREATE_COMPANY} className="hidden sm:block">
-            <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-black text-xs uppercase tracking-widest hover:opacity-90 transition-colors flex items-center gap-2">
+            <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center gap-2">
               <Plus size={16} /> Add
             </button>
           </Link>
@@ -82,28 +82,37 @@ export function SearchPage() {
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Search size={32} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <p className="font-serif text-stone-500 dark:text-[var(--color-text-secondary)] text-sm">
+            <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm">
               Enter a company name to find reviews and insights.
             </p>
           </div>
         ) : isLoading ? (
           <TornSkeleton count={3} height="h-24" />
+        ) : isError ? (
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
+              Couldn&rsquo;t load search results right now.
+            </p>
+            <p className="mt-3 text-xs text-stone-400 dark:text-[var(--color-text-secondary)] tracking-normal">
+              Please try again in a moment.
+            </p>
+          </div>
         ) : companies.length === 0 ? (
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-            <p className="font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase text-sm tracking-wider">
-              No companies found for <span className="font-black text-[var(--color-text)] dark:text-[var(--color-text)]">&ldquo;{query}&rdquo;</span>
+            <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
+              No companies found for <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">&ldquo;{query}&rdquo;</span>
             </p>
-            <p className="mt-3 text-xs text-stone-400 dark:text-[var(--color-text-secondary)] font-mono uppercase tracking-wide">
+            <p className="mt-3 text-xs text-stone-400 dark:text-[var(--color-text-secondary)] tracking-normal">
               Try a different search term.
             </p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
-              <p className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
-                Found <span className="font-mono">{formatNumber(data?.pagination?.total ?? 0)}</span> result{(data?.pagination?.total ?? 0) !== 1 ? 's' : ''}
+              <p className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                Found <span className="">{formatNumber(data?.pagination?.total ?? 0)}</span> result{(data?.pagination?.total ?? 0) !== 1 ? 's' : ''}
               </p>
-              <span className="text-[10px] font-mono text-stone-400 dark:text-[var(--color-text-secondary)] uppercase">
+              <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
                 for &ldquo;{query}&rdquo;
               </span>
             </div>
@@ -117,24 +126,24 @@ export function SearchPage() {
                   >
                     <div className="flex items-center gap-5">
                       <div className="h-12 w-12 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-                        <span className="text-lg font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+                        <span className="text-lg font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                           {company.name.charAt(0)}
                         </span>
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-3">
-                          <h3 className="font-black uppercase tracking-tight text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">
+                          <h3 className="font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">
                             {company.name}
                           </h3>
                           {company.verified && (
-                            <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
+                            <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                               Verified
                             </span>
                           )}
                         </div>
                         <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
                           {(company.city || company.country) && (
-                            <span className="flex items-center gap-1 text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">
+                            <span className="flex items-center gap-1 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] ">
                               <MapPin size={10} />
                               {company.city ?? company.country}
                             </span>
@@ -142,7 +151,7 @@ export function SearchPage() {
                           {company.averageRating && (
                             <BrandStarRating rating={Math.round(Number(company.averageRating))} size={10} />
                           )}
-                          <span className="text-[11px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase">
+                          <span className="text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] ">
                             {formatNumber(company.reviewCount)} review{company.reviewCount !== 1 ? 's' : ''}
                           </span>
                         </div>

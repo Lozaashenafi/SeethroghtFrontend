@@ -26,14 +26,14 @@ function ReviewCard({ review }: { review: Review }) {
       >
         <div className="flex justify-between items-start mb-5">
           <div className="flex gap-4">
-            <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-black text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
               {review.companyName?.charAt(0) || 'R'}
             </div>
             <div>
-              <h3 className="font-black uppercase tracking-tight text-sm text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+              <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
                 {review.title}
               </h3>
-              <p className="text-[10px] font-mono text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 uppercase">
+              <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 ">
                 {review.companyName} @ {review.jobTitle} // {formatDate(review.createdAt)}
               </p>
             </div>
@@ -45,7 +45,7 @@ function ReviewCard({ review }: { review: Review }) {
 
         {review.pros && (
           <div className="mb-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">
+            <span className="text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">
               The Good
             </span>
             <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mt-1">{review.pros}</p>
@@ -53,7 +53,7 @@ function ReviewCard({ review }: { review: Review }) {
         )}
 
         <div className="flex items-center justify-between pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
-          <div className="flex items-center gap-4 text-xs font-mono font-bold text-stone-500 dark:text-[var(--color-text-secondary)]">
+          <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
             <span className="flex items-center gap-1.5">
               <ThumbsUp size={12} /> {review.helpfulCount || 0}
             </span>
@@ -61,7 +61,7 @@ function ReviewCard({ review }: { review: Review }) {
               <MessageSquareText size={12} /> DISCUSS
             </span>
           </div>
-          <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-black uppercase">
+          <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
             {review.employmentStatus}
           </span>
         </div>
@@ -117,10 +117,10 @@ export function ReviewPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-10 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-black uppercase tracking-tighter mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Recent Reviews
           </h1>
-          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] font-serif text-base">
+          <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
             The latest dispatches from the front lines of corporate culture.
           </p>
         </header>
@@ -130,7 +130,7 @@ export function ReviewPage() {
           {selectedCompanyName ? (
             <div className="flex items-center gap-3 bg-[var(--color-paper)] dark:bg-[var(--color-card)] px-5 py-4 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Building2 size={16} className="text-[var(--color-text)] dark:text-[var(--color-text)] shrink-0" />
-              <span className="text-sm font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase flex-1">
+              <span className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)] flex-1">
                 Showing reviews for <strong className="text-[var(--color-text)] dark:text-[var(--color-text)]">{selectedCompanyName}</strong>
               </span>
               <button
@@ -149,8 +149,8 @@ export function ReviewPage() {
                     type="text"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="SEARCH BY COMPANY NAME..."
-                    className="w-full py-4 text-sm font-black uppercase tracking-widest outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                    placeholder="Search by company name..."
+                    className="w-full py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                   />
                 </div>
               </div>
@@ -163,10 +163,10 @@ export function ReviewPage() {
                       onClick={() => selectCompany(company.slug, company.name)}
                       className="flex w-full items-center gap-3 px-5 py-3 text-left text-sm hover:bg-stone-100 dark:hover:bg-[var(--color-surface)] transition-colors border-b border-stone-200 dark:border-[var(--color-border)] last:border-0"
                     >
-                      <div className="h-7 w-7 flex items-center justify-center border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-black text-[var(--color-text)] dark:text-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+                      <div className="h-7 w-7 flex items-center justify-center border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                         {company.name.charAt(0)}
                       </div>
-                      <span className="font-black uppercase text-xs tracking-wide text-[var(--color-text)] dark:text-[var(--color-text)]">
+                      <span className="font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                         {company.name}
                       </span>
                     </button>
@@ -182,7 +182,7 @@ export function ReviewPage() {
           <TornSkeleton count={3} height="h-48" />
         ) : error ? (
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-            <p className="font-mono text-sm text-stone-500 dark:text-[var(--color-text-secondary)] uppercase tracking-wider">
+            <p className=" text-sm text-stone-500 dark:text-[var(--color-text-secondary)] tracking-normal">
               Failed to load reviews.
             </p>
           </div>
@@ -191,19 +191,19 @@ export function ReviewPage() {
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <MessageSquareText size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <p className="font-black uppercase text-sm tracking-wider text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <p className="font-medium text-sm tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
               {selectedCompanyName
                 ? `No reviews for ${selectedCompanyName} yet.`
                 : 'No reviews posted yet.'}
             </p>
-            <p className="mt-2 text-xs font-mono text-stone-500 dark:text-[var(--color-text-secondary)] uppercase tracking-wide">
+            <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)] tracking-normal">
               {selectedCompanyName ? 'Be the first to share your experience.' : 'Check back soon.'}
             </p>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
-              <p className="text-xs font-black uppercase tracking-widest text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <p className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Showing {reviews.length} entries
               </p>
             </div>
@@ -219,17 +219,17 @@ export function ReviewPage() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
+                  className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
                 >
                   <ChevronLeft size={16} /> Previous
                 </button>
-                <span className="font-mono text-sm font-bold bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
+                <span className=" text-sm font-medium bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
                   {pagination.page} / {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPage(p => p + 1)}
                   disabled={page >= pagination.totalPages}
-                  className="font-black text-xs uppercase tracking-widest hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
+                  className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)] disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-2 flex items-center gap-2"
                 >
                   Next <ChevronRight size={16} />
                 </button>

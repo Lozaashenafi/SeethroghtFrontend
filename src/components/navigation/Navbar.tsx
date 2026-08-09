@@ -24,7 +24,7 @@ export function Navbar() {
          
           <Link
             to={ROUTES.HOME}
-            className="flex items-center gap-2 text-2xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)]"
+            className="flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
           >
             <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
             <span>See Through</span>
@@ -39,7 +39,7 @@ export function Navbar() {
                   key={link.href}
                   to={link.href}
                   className={cn(
-                    'relative flex h-full items-center text-xs font-black uppercase tracking-[0.2em] transition-colors duration-200',
+                    'relative flex h-full items-center text-xs font-medium tracking-normal transition-colors duration-200',
                     isActive
                       ? 'text-[var(--color-text)] dark:text-[var(--color-text)]'
                       : 'text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)]',
@@ -55,7 +55,7 @@ export function Navbar() {
             
             <div className="ml-4 h-10 border-l-2 border-[var(--color-text)]/10 dark:border-[var(--color-border)] pl-8 flex items-center">
               <Link to={ROUTES.CREATE_REVIEW}>
-                <button className="flex items-center gap-2 bg-[var(--color-text)] dark:bg-[var(--color-text)] px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-all active:translate-y-0.5">
+                <button className="flex items-center gap-2 bg-[var(--color-text)] dark:bg-[var(--color-text)] px-5 py-2.5 text-[10px] font-medium tracking-normal text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-all active:translate-y-0.5">
                   <Plus size={14} />
                   Write Review
                 </button>

@@ -22,12 +22,12 @@ export function Page({ children, title, description, className }: PageProps) {
       {(title || description) && (
         <div className="mx-auto max-w-2xl px-4 pt-10 text-center sm:px-6 lg:px-8">
           {title && (
-            <h1 className="text-3xl font-black uppercase tracking-tighter text-[var(--color-text)] dark:text-[var(--color-text)] sm:text-4xl">
+            <h1 className="text-3xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] sm:text-4xl">
               {title}
             </h1>
           )}
           {description && (
-            <p className="mt-3 font-serif text-stone-500 dark:text-[var(--color-text-secondary)]">
+            <p className="mt-3 text-stone-500 dark:text-[var(--color-text-secondary)]">
               {description}
             </p>
           )}
