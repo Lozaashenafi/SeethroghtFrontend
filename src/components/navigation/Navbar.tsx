@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { Logo } from '@/components/ui';
 import { ThemeToggle } from './ThemeToggle';
 import { SearchBar } from './SearchBar';
 import { MobileNav } from './MobileNav';
@@ -11,6 +12,7 @@ const navLinks = [
   { label: 'Home', href: ROUTES.HOME },
   { label: 'Companies', href: ROUTES.COMPANY },
   { label: 'Reviews', href: ROUTES.REVIEW },
+  { label: 'About', href: ROUTES.ABOUT },
 ];
 
 export function Navbar() {
@@ -26,7 +28,7 @@ export function Navbar() {
             to={ROUTES.HOME}
             className="flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
           >
-            <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <span>See Through</span>
           </Link>
 

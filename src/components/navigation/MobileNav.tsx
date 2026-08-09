@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Search, Building2, MessageSquareText, Pencil, Plus } from 'lucide-react';
+import { X, Home, Search, Building2, MessageSquareText, Info, Pencil, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { ThemeToggle } from './ThemeToggle';
 import { ROUTES } from '@/constants';
@@ -16,6 +16,7 @@ const navLinks = [
   { label: 'Search', href: ROUTES.SEARCH, icon: Search },
   { label: 'Companies', href: ROUTES.COMPANY, icon: Building2 },
   { label: 'Reviews', href: ROUTES.REVIEW, icon: MessageSquareText },
+  { label: 'About', href: ROUTES.ABOUT, icon: Info },
 ];
 
 const actionLinks = [

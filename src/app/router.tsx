@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { ROUTES } from '@/constants';
 
 import { HomePage } from '@/features/home/pages/HomePage';
+import { AboutPage } from '@/features/about/pages/AboutPage';
 import { SearchPage } from '@/features/search/pages/SearchPage';
 import { CompanyPage } from '@/features/company/pages/CompanyPage';
 import { CompanyDetailPage } from '@/features/company/pages/CompanyDetailPage';
@@ -21,6 +22,7 @@ export function AppRouter() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route path={ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={ROUTES.SEARCH} element={<SearchPage />} />
         <Route path={ROUTES.COMPANY} element={<CompanyPage />} />
         <Route path={ROUTES.COMPANY_DETAIL} element={<CompanyDetailPage />} />

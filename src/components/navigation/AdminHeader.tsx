@@ -9,6 +9,7 @@ import {
   Users,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { Logo } from '@/components/ui';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '@/context/AuthContext';
 import { ROUTES } from '@/constants';
@@ -55,7 +56,7 @@ export function AdminHeader() {
             to={ROUTES.HOME}
             className="flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
           >
-            <img src="/logo.jpg" alt="See Through Logo" className="h-8 w-8" />
+            <Logo className="h-8 w-8" />
             <span className="hidden sm:inline">See Through</span>
           </Link>
           <span className="flex items-center gap-1.5 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-2.5 py-1 text-[10px] font-medium tracking-normal text-white shadow-[3px_3px_0px_0px_rgba(43,47,35,0.25)] dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] dark:shadow-[3px_3px_0px_0px_rgba(255,239,205,0.15)]">

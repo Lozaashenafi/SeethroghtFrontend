@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Eye } from 'lucide-react';
 import { Container } from '@/components/common';
+import { Logo } from '@/components/ui';
 import { ROUTES, APP_TAGLINE } from '@/constants';
 
 const footerLinks = [
@@ -10,6 +10,7 @@ const footerLinks = [
       { label: 'Home', href: ROUTES.HOME },
       { label: 'Companies', href: ROUTES.COMPANY },
       { label: 'Reviews', href: ROUTES.REVIEW },
+      { label: 'About', href: ROUTES.ABOUT },
     ],
   },
   {
@@ -35,9 +36,7 @@ export function Footer() {
               to={ROUTES.HOME}
               className="mb-6 flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
             >
-              <div className="bg-[var(--color-text)] dark:bg-[var(--color-text)] p-1">
-                <Eye size={20} className="text-white dark:text-[var(--color-bg)]" />
-              </div>
+              <Logo className="h-8 w-8" />
               <span>See Through</span>
             </Link>
             <p className="max-w-sm text-sm text-stone-500 dark:text-[var(--color-text-secondary)] leading-relaxed">

@@ -5,6 +5,7 @@ export * from './api';
 
 export const ROUTES = {
   HOME: '/',
+  ABOUT: '/about',
   SEARCH: '/search',
   COMPANY: '/company',
   COMPANY_DETAIL: '/company/:slug',

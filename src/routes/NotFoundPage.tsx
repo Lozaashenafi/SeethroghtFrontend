@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Eye, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Container } from '@/components/common';
+import { Logo } from '@/components/ui';
 import { ROUTES } from '@/constants';
 import { tornEffect } from '@/constants/brand';
 
@@ -24,7 +25,7 @@ export function NotFoundPage() {
           {/* Torn-edge card */}
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)]" style={tornEffect}>
             <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
-              <Eye size={40} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
+              <Logo className="h-16 w-16" />
             </div>
             <h1 className="text-6xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-4">
               404
