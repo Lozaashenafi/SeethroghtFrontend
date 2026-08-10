@@ -16,7 +16,9 @@ export const ROUTES = {
   admin: {
     ROOT: '/admin',
     COMPANIES: '/admin/companies',
+    COMPANY_DETAIL: '/admin/companies/:slug',
     REVIEWS: '/admin/reviews',
+    REVIEW_DETAIL: '/admin/reviews/:publicId',
     USERS: '/admin/users',
   },
   NOT_FOUND: '/404',

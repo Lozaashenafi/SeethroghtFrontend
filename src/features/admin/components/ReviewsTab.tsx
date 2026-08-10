@@ -65,6 +65,7 @@ export function ReviewsTab() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  <Link to={`/admin/reviews/${review.publicId}`}><Button variant="outline" size="sm">View</Button></Link>
                   <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
                   <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
                     onClick={() => setDeleteTarget(review)}

@@ -4,7 +4,6 @@ import { Menu, Plus } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Logo } from '@/components/ui';
 import { ThemeToggle } from './ThemeToggle';
-import { SearchBar } from './SearchBar';
 import { MobileNav } from './MobileNav';
 import { ROUTES } from '@/constants';
 
