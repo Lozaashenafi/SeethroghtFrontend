@@ -15,6 +15,7 @@ import { CreateReviewPage } from '@/features/review/pages/CreateReviewPage';
 import { AdminPage } from '@/features/admin/pages/AdminPage';
 import { AdminCompanyDetailPage } from '@/features/admin/pages/AdminCompanyDetailPage';
 import { AdminReviewDetailPage } from '@/features/admin/pages/AdminReviewDetailPage';
+import { AdminUserDetailPage } from '@/features/admin/pages/AdminUserDetailPage';
 import { LoginPage } from '@/features/admin/pages/LoginPage';
 import { CreateCompanyPage } from '@/features/company/pages/CreateCompanyPage';
 import { NotFoundPage } from '@/routes/NotFoundPage';
@@ -47,6 +48,7 @@ export function AppRouter() {
         <Route path={ROUTES.admin.REVIEWS} element={<AdminPage />} />
         <Route path={ROUTES.admin.REVIEW_DETAIL} element={<AdminReviewDetailPage />} />
         <Route path={ROUTES.admin.USERS} element={<AdminPage />} />
+        <Route path={ROUTES.admin.USER_DETAIL} element={<AdminUserDetailPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

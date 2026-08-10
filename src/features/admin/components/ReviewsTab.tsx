@@ -7,9 +7,18 @@ import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 import type { Review } from '@/types';
 
+type StatusFilter = 'all' | 'published' | 'pending' | 'rejected';
+
+const statusVariant: Record<'published' | 'pending' | 'rejected', 'success' | 'warning' | 'error'> = {
+  published: 'success',
+  pending: 'warning',
+  rejected: 'error',
+};
+
 export function ReviewsTab() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useAdminReviews({ page, limit: 10 });
+  const [status, setStatus] = useState<StatusFilter>('all');
+  const { data, isLoading, isError } = useAdminReviews({ page, limit: 10, status });
   const deleteReview = useAdminDeleteReview();
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
@@ -32,8 +41,32 @@ export function ReviewsTab() {
     }
   };
 
+  const tabs: { key: StatusFilter; label: string }[] = [
+    { key: 'all', label: 'All' },
+    { key: 'pending', label: 'Pending' },
+    { key: 'published', label: 'Published' },
+    { key: 'rejected', label: 'Rejected' },
+  ];
+
   return (
     <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => { setStatus(tab.key); setPage(1); }}
+            className={`px-3 py-1.5 text-xs font-medium tracking-normal border-2 transition-colors ${
+              status === tab.key
+                ? 'bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-[var(--color-text)]'
+                : 'border-[var(--color-text)]/30 text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-[var(--color-text)]'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[var(--color-text)]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
       ) : isError ? (
@@ -51,6 +84,9 @@ export function ReviewsTab() {
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-text truncate">{review.title}</span>
                       {review.isVerified && <Badge variant="success" dot className="shrink-0" />}
+                      {review.status && review.status !== 'published' && (
+                        <Badge variant={statusVariant[review.status]} dot className="shrink-0">{review.status}</Badge>
+                      )}
                       {review.overallRating && (
                         <span className="flex items-center gap-1 text-xs shrink-0">
                           <Star size={10} className="fill-amber-400 text-amber-400" />
@@ -59,6 +95,7 @@ export function ReviewsTab() {
                       )}
                     </div>
                     <p className="text-xs text-text-secondary/60 mt-0.5">
+                      {review.nickname && <>{review.nickname} · </>}
                       {review.jobTitle && <>{review.jobTitle} · </>}
                       {formatDate(review.createdAt)} · {review.helpfulCount} helpful
                     </p>
@@ -66,7 +103,9 @@ export function ReviewsTab() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Link to={`/admin/reviews/${review.publicId}`}><Button variant="outline" size="sm">View</Button></Link>
-                  <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
+                  {review.status === 'published' && (
+                    <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
+                  )}
                   <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
                     onClick={() => setDeleteTarget(review)}
                     leftIcon={<Trash2 size={14} />}

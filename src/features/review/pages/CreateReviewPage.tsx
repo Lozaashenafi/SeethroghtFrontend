@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { useCreateReview, useCompanies, useCompany, useTags, useDebounce } from '@/hooks';
+import { useAnonymous } from '@/context/AnonymousContext';
 import { ROUTES } from '@/constants';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
@@ -286,6 +287,20 @@ export function CreateReviewPage() {
   const createReview = useCreateReview();
   const { data: tagsData } = useTags();
   const tags = tagsData ?? [];
+  const { identity, regenerate } = useAnonymous();
+  const [regenerating, setRegenerating] = useState(false);
+
+  const handleRegenerateNickname = async () => {
+    setRegenerating(true);
+    try {
+      await regenerate();
+      toast.success('Your display name has been changed');
+    } catch {
+      toast.error(getApiErrorMessage(new Error('nickname'), 'Failed to change display name. It can only be changed once.'));
+    } finally {
+      setRegenerating(false);
+    }
+  };
 
   const [companySlug, setCompanySlug] = useState(prefillCompanySlug ?? '');
   const [title, setTitle] = useState('');
@@ -403,6 +418,41 @@ export function CreateReviewPage() {
             Share your anonymous experience. No retaliation, no regrets.
           </p>
         </header>
+
+        {identity?.nickname && (
+          <div className="mb-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" style={cardShadow}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
+                  YOU ARE POSTING AS
+                </p>
+                <p className="mt-1 text-lg font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  {identity.nickname}
+                </p>
+              </div>
+              {!identity.nicknameRegeneratedAt && (
+                <button
+                  type="button"
+                  onClick={handleRegenerateNickname}
+                  disabled={regenerating}
+                  className="inline-flex items-center gap-2 px-4 py-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <svg className={`h-4 w-4 ${regenerating ? 'animate-spin' : ''}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                  {regenerating ? 'Changing...' : 'Change display name'}
+                </button>
+              )}
+            </div>
+            {identity.nicknameRegeneratedAt ? (
+              <p className="mt-2 text-[11px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                Your display name can only be changed once.
+              </p>
+            ) : (
+              <p className="mt-2 text-[11px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                This name is shown next to your review. You can change it once.
+              </p>
+            )}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-8">

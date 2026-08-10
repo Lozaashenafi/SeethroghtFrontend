@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 import { CheckCircle2, XCircle, AlertTriangle, Info, Loader2 } from 'lucide-react';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { AnonymousProvider } from '@/context/AnonymousContext';
 import { queryClient } from '@/lib/queryClient';
 
 interface ProvidersProps {
@@ -17,7 +18,8 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <BrowserRouter>
+          <AnonymousProvider>
+            <BrowserRouter>
             {children}
             <Toaster
               position="bottom-right"
@@ -57,6 +59,7 @@ export function Providers({ children }: ProvidersProps) {
               }}
             />
           </BrowserRouter>
+          </AnonymousProvider>
         </AuthProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />

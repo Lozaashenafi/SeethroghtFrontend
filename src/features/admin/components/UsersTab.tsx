@@ -1,29 +1,42 @@
 import { useState } from 'react';
-import { Users, Ban, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, Ban, Check, TimerReset, Search } from 'lucide-react';
 import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
 import {
   useAdminIdentities,
   useAdminBlockIdentity,
   useAdminUnblockIdentity,
+  useAdminTempBlockIdentity,
+  useAdminClearTempBlockIdentity,
 } from '@/hooks/useAdmin';
+import { useDebounce } from '@/hooks';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 
 interface PendingAction {
   publicId: string;
-  action: 'block' | 'unblock';
+  action: 'block' | 'unblock' | 'temp-block' | 'clear-temp-block';
 }
 
 export function UsersTab() {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError } = useAdminIdentities({ page, limit: 10 });
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
+  const { data, isLoading, isError } = useAdminIdentities({
+    page,
+    limit: 10,
+    search: debouncedSearch || undefined,
+  });
   const blockUser = useAdminBlockIdentity();
   const unblockUser = useAdminUnblockIdentity();
+  const tempBlock = useAdminTempBlockIdentity();
+  const clearTempBlock = useAdminClearTempBlockIdentity();
   const identities = data?.identities ?? [];
   const pagination = data?.pagination;
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
-  const isActionPending = blockUser.isPending || unblockUser.isPending;
+  const isActionPending =
+    blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending;
 
   const handleConfirm = async () => {
     if (!pendingAction) return;
@@ -32,20 +45,22 @@ export function UsersTab() {
       if (action === 'block') {
         await toast.promise(
           blockUser.mutateAsync(publicId),
-          {
-            loading: 'Blocking user...',
-            success: 'User blocked',
-            error: 'Failed to block user',
-          },
+          { loading: 'Blocking user...', success: 'User blocked', error: 'Failed to block user' },
+        );
+      } else if (action === 'unblock') {
+        await toast.promise(
+          unblockUser.mutateAsync(publicId),
+          { loading: 'Unblocking user...', success: 'User unblocked', error: 'Failed to unblock user' },
+        );
+      } else if (action === 'temp-block') {
+        await toast.promise(
+          tempBlock.mutateAsync({ publicId, hours: 24 }),
+          { loading: 'Restricting user...', success: 'User restricted for 24 hours', error: 'Failed to restrict user' },
         );
       } else {
         await toast.promise(
-          unblockUser.mutateAsync(publicId),
-          {
-            loading: 'Unblocking user...',
-            success: 'User unblocked',
-            error: 'Failed to unblock user',
-          },
+          clearTempBlock.mutateAsync(publicId),
+          { loading: 'Lifting restriction...', success: 'Restriction lifted', error: 'Failed to lift restriction' },
         );
       }
       setPendingAction(null);
@@ -54,8 +69,25 @@ export function UsersTab() {
     }
   };
 
+  // Captured once per mount (lazy initializer keeps Date.now out of the render
+  // path so a pure-function lint rule is satisfied) and used only for display.
+  const [now] = useState(() => Date.now());
+
+  const isTempBlocked = (identity: typeof identities[number]) =>
+    !!identity.tempBlockedUntil && new Date(identity.tempBlockedUntil).getTime() > now;
+
   return (
     <div>
+      <div className="relative mb-4">
+        <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
+        <input
+          type="text"
+          value={search}
+          onChange={e => { setSearch(e.target.value); setPage(1); }}
+          placeholder="Search by nickname or ID"
+          className="w-full border-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] bg-surface py-2 pl-9 pr-3 text-sm outline-none focus:border-[var(--color-text)] dark:focus:border-[var(--color-text)] transition-colors"
+        />
+      </div>
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="animate-pulse border-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] bg-surface p-4"><div className="h-5 w-48 bg-[var(--color-text)]/10 dark:bg-[var(--color-border)]" /></div>)}</div>
       ) : isError ? (
@@ -70,17 +102,35 @@ export function UsersTab() {
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <Users size={18} className="shrink-0 text-text-secondary" />
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className=" text-xs text-text">{identity.publicId.slice(0, 16)}...</span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Link
+                        to={`/admin/users/${identity.publicId}`}
+                        className="text-xs text-text font-medium hover:underline underline-offset-2"
+                      >
+                        {identity.nickname ?? identity.publicId.slice(0, 16) + '...'}
+                      </Link>
                       {identity.isBlocked && <Badge variant="error" dot className="shrink-0">Blocked</Badge>}
-                      {!identity.isBlocked && <Badge variant="success" dot className="shrink-0">Active</Badge>}
+                      {!identity.isBlocked && isTempBlocked(identity) && <Badge variant="warning" dot className="shrink-0">Temp restricted</Badge>}
+                      {!identity.isBlocked && !isTempBlocked(identity) && <Badge variant="success" dot className="shrink-0">Active</Badge>}
                     </div>
                     <p className="text-xs text-text-secondary/60 mt-0.5">
                       Risk score: {identity.riskScore} · Last seen: {formatDate(identity.lastSeenAt)}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                  {!identity.isBlocked && isTempBlocked(identity) && (
+                    <Button variant="outline" size="sm" onClick={() => setPendingAction({ publicId: identity.publicId, action: 'clear-temp-block' })}
+                      leftIcon={<TimerReset size={14} />} className="text-warning border-warning hover:bg-warning/5">
+                      Lift Restriction
+                    </Button>
+                  )}
+                  {!identity.isBlocked && !isTempBlocked(identity) && (
+                    <Button variant="outline" size="sm" onClick={() => setPendingAction({ publicId: identity.publicId, action: 'temp-block' })}
+                      leftIcon={<TimerReset size={14} />} className="text-warning border-warning hover:bg-warning/5">
+                      Restrict 24h
+                    </Button>
+                  )}
                   {identity.isBlocked ? (
                     <Button variant="outline" size="sm" onClick={() => setPendingAction({ publicId: identity.publicId, action: 'unblock' })}
                       leftIcon={<Check size={14} />} className="text-success border-success hover:bg-success/5">
@@ -109,13 +159,25 @@ export function UsersTab() {
 
       <ConfirmDialog
         isOpen={!!pendingAction}
-        title={pendingAction?.action === 'unblock' ? 'Unblock user' : 'Block user'}
+        title={
+          pendingAction?.action === 'unblock' ? 'Unblock user'
+            : pendingAction?.action === 'block' ? 'Block user'
+            : pendingAction?.action === 'temp-block' ? 'Restrict user' : 'Lift restriction'
+        }
         description={
           pendingAction?.action === 'unblock'
             ? 'This user will be able to post reviews, comments, and votes again. You can block them again at any time.'
-            : 'This user will no longer be able to post reviews, comments, or votes. Their existing content will remain visible. This can be undone later.'
+            : pendingAction?.action === 'block'
+              ? 'This user will no longer be able to post reviews, comments, or votes. Their existing content will remain visible. This can be undone later.'
+              : pendingAction?.action === 'temp-block'
+                ? 'This user will be temporarily restricted from posting for 24 hours. They can still browse. This can be lifted early.'
+                : 'This user will be able to post reviews, comments, and votes again immediately.'
         }
-        confirmLabel={pendingAction?.action === 'unblock' ? 'Unblock' : 'Block'}
+        confirmLabel={
+          pendingAction?.action === 'unblock' ? 'Unblock'
+            : pendingAction?.action === 'block' ? 'Block'
+            : pendingAction?.action === 'temp-block' ? 'Restrict' : 'Lift'
+        }
         isLoading={isActionPending}
         onConfirm={handleConfirm}
         onClose={() => setPendingAction(null)}

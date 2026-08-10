@@ -61,6 +61,7 @@ export interface Company {
 export interface Review {
   publicId: string;
   companyId: string;
+  nickname: string | null;
   companyName: string | null;
   companySlug: string | null;
   title: string;
@@ -76,6 +77,7 @@ export interface Review {
   employmentStatus: string | null;
   jobTitle: string | null;
   isVerified: boolean;
+  status?: 'published' | 'pending' | 'rejected';
   helpfulCount: number;
   unhelpfulCount: number;
   createdAt: string;

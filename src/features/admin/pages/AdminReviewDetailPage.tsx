@@ -3,15 +3,17 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   Building2,
+  Check,
   ExternalLink,
   MessageSquare,
   Star,
   Trash2,
   ThumbsUp,
   ThumbsDown,
+  X,
 } from 'lucide-react';
 import { Card, Badge, Button, BrandStarRating, ConfirmDialog } from '@/components/ui';
-import { useReview, useComments, useAdminDeleteReview } from '@/hooks';
+import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview } from '@/hooks';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 import type { Review } from '@/types';
@@ -26,15 +28,27 @@ function SubRating({ label, rating }: { label: string; rating: number | null }) 
   );
 }
 
+function StatusBadge({ status }: { status?: Review['status'] }) {
+  if (!status) return null;
+  const map: Record<NonNullable<Review['status']>, { label: string; variant: 'success' | 'warning' | 'error' }> = {
+    published: { label: 'Published', variant: 'success' },
+    pending: { label: 'Pending', variant: 'warning' },
+    rejected: { label: 'Rejected', variant: 'error' },
+  };
+  const { label, variant } = map[status];
+  return <Badge variant={variant} dot>{label}</Badge>;
+}
+
 export function AdminReviewDetailPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const navigate = useNavigate();
 
   const [deleteReviewTarget, setDeleteReviewTarget] = useState<Review | null>(null);
 
-  const { data: review, isLoading, isError } = useReview(publicId);
+  const { data: review, isLoading, isError } = useAdminReview(publicId);
   const { data: commentsData, isLoading: commentsLoading } = useComments(publicId);
   const deleteReview = useAdminDeleteReview();
+  const moderate = useAdminModerateReview();
 
   const handleDeleteReview = async () => {
     if (!deleteReviewTarget) return;
@@ -45,6 +59,22 @@ export function AdminReviewDetailPage() {
       );
       setDeleteReviewTarget(null);
       navigate('/admin/reviews');
+    } catch {
+      // toast.promise already surfaced the error
+    }
+  };
+
+  const handleModerate = async (status: 'published' | 'rejected') => {
+    if (!review) return;
+    try {
+      await toast.promise(
+        moderate.mutateAsync({ publicId: review.publicId, status }),
+        {
+          loading: status === 'published' ? 'Approving review...' : 'Rejecting review...',
+          success: status === 'published' ? 'Review approved' : 'Review rejected',
+          error: 'Failed to update review status',
+        },
+      );
     } catch {
       // toast.promise already surfaced the error
     }
@@ -97,6 +127,7 @@ export function AdminReviewDetailPage() {
                 {review.title}
               </h1>
               {review.isVerified && <Badge variant="success" dot>Verified</Badge>}
+              <StatusBadge status={review.status} />
               {review.overallRating && (
                 <span className="flex items-center gap-1 text-xs">
                   <Star size={10} className="fill-amber-400 text-amber-400" />
@@ -105,6 +136,7 @@ export function AdminReviewDetailPage() {
               )}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
+              {review.nickname && <span>{review.nickname}</span>}
               {review.companySlug && (
                 <Link
                   to={`/admin/companies/${review.companySlug}`}
@@ -122,6 +154,24 @@ export function AdminReviewDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
+          {review.status === 'pending' && (
+            <>
+              <Button variant="outline" size="sm" className="text-success hover:bg-success/5"
+                onClick={() => handleModerate('published')}
+                disabled={moderate.isPending}
+                leftIcon={<Check size={14} />}
+              >
+                Approve
+              </Button>
+              <Button variant="outline" size="sm" className="text-error hover:bg-error/5"
+                onClick={() => handleModerate('rejected')}
+                disabled={moderate.isPending}
+                leftIcon={<X size={14} />}
+              >
+                Reject
+              </Button>
+            </>
+          )}
           <Link to={`/review/${review.publicId}`}>
             <Button variant="outline" size="sm" rightIcon={<ExternalLink size={14} />}>View Public Page</Button>
           </Link>
@@ -209,6 +259,10 @@ export function AdminReviewDetailPage() {
           <div>
             <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">Verified</p>
             <p className="mt-0.5 text-sm text-[var(--color-text)] dark:text-[var(--color-text)]">{review.isVerified ? 'Yes' : 'No'}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">Status</p>
+            <p className="mt-0.5 text-sm text-[var(--color-text)] dark:text-[var(--color-text)] capitalize">{review.status ?? 'published'}</p>
           </div>
         </div>
       </Card>

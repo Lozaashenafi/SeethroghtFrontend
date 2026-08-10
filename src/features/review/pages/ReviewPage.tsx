@@ -34,7 +34,7 @@ function ReviewCard({ review }: { review: Review }) {
                 {review.title}
               </h3>
               <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 ">
-                {review.companyName} @ {review.jobTitle} // {formatDate(review.createdAt)}
+                {review.nickname ?? 'Anonymous'} @ {review.companyName} // {formatDate(review.createdAt)}
               </p>
             </div>
           </div>
