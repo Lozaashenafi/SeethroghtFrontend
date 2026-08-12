@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, Search, MapPin, Plus, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { Container } from '@/components/common';
-import { BrandStarRating } from '@/components/ui';
+import { BrandStarRating, CompanyLogo } from '@/components/ui';
 import { useCompanies, useDebounce } from '@/hooks';
 import { formatNumber } from '@/utils';
 import { tornEffect, cardShadow } from '@/constants/brand';
@@ -99,11 +99,7 @@ export function CompanyPage() {
                   >
                     <div className="flex flex-col gap-4 h-full">
                       <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-                          <span className="text-lg font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                            {company.name.charAt(0)}
-                          </span>
-                        </div>
+                        <CompanyLogo name={company.name} logoUrl={company.logoUrl} />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             <h3 className="font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">

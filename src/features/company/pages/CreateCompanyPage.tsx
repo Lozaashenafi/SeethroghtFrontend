@@ -1,22 +1,27 @@
 import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Building2, ArrowLeft, Send, Globe, Search, Loader2, Sparkles } from 'lucide-react';
+import { Building2, ArrowLeft, Send, Globe, Search, Loader2, Sparkles, AlertTriangle, Info } from 'lucide-react';
 import { Container } from '@/components/common';
-import { useIndustries } from '@/hooks';
+import { CompanyLogo } from '@/components/ui';
+import { useIndustries, useDebounce, useCompanyDuplicateCheck } from '@/hooks';
 import { createCompany, scrapeCompanyWebsite, type ScrapedCompanyData } from '@/services/companies.service';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 
-export function CreateCompanyPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const prefillName = searchParams.get('name') || '';
-  const prefillSlug = prefillName
+function slugify(value: string): string {
+  return value
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+export function CreateCompanyPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const prefillName = searchParams.get('name') || '';
+  const prefillSlug = slugify(prefillName);
 
   const { data: industries } = useIndustries();
   const [isLoading, setIsLoading] = useState(false);
@@ -30,17 +35,20 @@ export function CreateCompanyPage() {
   const [description, setDescription] = useState('');
   const [industryId, setIndustryId] = useState('');
   const [scrapeUrl, setScrapeUrl] = useState('');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+  // ─── Duplicate detection ────────────────────────────────────────────────
+  const debouncedName = useDebounce(name, 700);
+  const debouncedWebsite = useDebounce(website, 700);
+  const {
+    data: dupCheck,
+    isFetching: isCheckingDup,
+  } = useCompanyDuplicateCheck(debouncedWebsite, debouncedName);
 
   const handleNameChange = (value: string) => {
     setName(value);
-    if (!slug || slug === name.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '')) {
-      setSlug(
-        value
-          .toLowerCase()
-          .replace(/[^a-z0-9-]/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-|-$/g, '')
-      );
+    if (!slug || slug === slugify(name)) {
+      setSlug(slugify(value));
     }
   };
 
@@ -78,8 +86,10 @@ export function CreateCompanyPage() {
         }
       }
       if (data.logoUrl) {
-        // Logo is scraped but not stored as a form field;
-        // we could use it for preview in the future
+        setLogoUrl(data.logoUrl);
+        filledCount++;
+      } else {
+        setLogoUrl(null);
       }
 
       setWebsite(scrapeUrl.trim());
@@ -100,6 +110,10 @@ export function CreateCompanyPage() {
       toast.error('Please fill in all required fields');
       return;
     }
+    if (showWebsiteWarning) {
+      toast.error('This website is already registered to another company in the ledger.');
+      return;
+    }
     setIsLoading(true);
     try {
       await createCompany({
@@ -107,6 +121,7 @@ export function CreateCompanyPage() {
         slug: slug.trim(),
         industryId,
         website: website.trim() || undefined,
+        logoUrl,
         country: country.trim() || undefined,
         city: city.trim() || undefined,
         description: description.trim() || undefined,
@@ -119,6 +134,14 @@ export function CreateCompanyPage() {
       setIsLoading(false);
     }
   };
+
+  const hasWebsiteMatch = (dupCheck?.websiteMatches.length ?? 0) > 0;
+  const hasNameMatch = (dupCheck?.nameMatches.length ?? 0) > 0;
+
+  // Warnings only reflect live field values, so stale results never linger
+  // after the user edits or clears the fields.
+  const showWebsiteWarning = hasWebsiteMatch && (name.trim().length >= 2 || website.trim().length >= 3);
+  const showNameWarning = hasNameMatch && !showWebsiteWarning && (name.trim().length >= 2 || website.trim().length >= 3);
 
   return (
     <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
@@ -191,6 +214,19 @@ export function CreateCompanyPage() {
                   {isScraping ? 'Scraping...' : 'Scrape Data'}
                 </button>
               </div>
+              {logoUrl && (
+                <div className="mt-5 flex items-center gap-4 border-2 border-dashed border-stone-300 dark:border-[var(--color-border)] p-4">
+                  <CompanyLogo name={name || 'Company'} logoUrl={logoUrl} size="h-14 w-14" fallbackTextSize="text-2xl" />
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                      Logo found — it will be saved with the company
+                    </p>
+                    <p className="mt-0.5 truncate text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">
+                      {logoUrl}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Basic Info */}
@@ -212,6 +248,12 @@ export function CreateCompanyPage() {
                       className="w-full px-4 py-3 text-sm font-medium outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                     />
                   </div>
+                  {isCheckingDup && (name.trim().length >= 2 || website.trim().length >= 3) && (
+                    <p className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] mt-1 flex items-center gap-1.5">
+                      <Loader2 size={10} className="animate-spin" />
+                      Checking for existing companies...
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -267,6 +309,70 @@ export function CreateCompanyPage() {
                     />
                   </div>
                 </div>
+
+                {/* ─── Duplicate warnings ─── */}
+                {showWebsiteWarning && (
+                  <div className="border-2 border-red-500 dark:border-red-500 bg-red-50 dark:bg-red-500/10 p-5">
+                    <div className="flex items-start gap-3">
+                      <AlertTriangle size={18} className="text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-medium tracking-normal text-red-700 dark:text-red-300">
+                          This website is already registered to a company in the ledger
+                        </p>
+                        <ul className="mt-3 space-y-2">
+                          {dupCheck?.websiteMatches.map((company) => (
+                            <li key={company.id}>
+                              <Link
+                                to={`/company/${company.slug}`}
+                                className="inline-flex items-center gap-2 text-sm font-medium text-red-700 dark:text-red-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
+                              >
+                                {company.name}
+                                <span className="text-[10px] font-normal text-red-500 dark:text-red-400">
+                                  ({company.reviewCount} review{company.reviewCount === 1 ? '' : 's'})
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="mt-3 text-[10px] text-red-500 dark:text-red-400">
+                          This company can't be added while this website is in the ledger. If it's the same company,
+                          you don't need to add it again — leave a review on its page instead.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {showNameWarning && (
+                  <div className="border-2 border-amber-500 dark:border-amber-500 bg-amber-50 dark:bg-amber-500/10 p-5">
+                    <div className="flex items-start gap-3">
+                      <Info size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-medium tracking-normal text-amber-700 dark:text-amber-300">
+                          A company with a similar name already exists
+                        </p>
+                        <ul className="mt-3 space-y-2">
+                          {dupCheck?.nameMatches.map(({ company, similarity }) => (
+                            <li key={company.id}>
+                              <Link
+                                to={`/company/${company.slug}`}
+                                className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300 underline underline-offset-4 hover:opacity-70 transition-opacity"
+                              >
+                                {company.name}
+                                <span className="text-[10px] font-normal text-amber-500 dark:text-amber-400">
+                                  {Math.round(similarity * 100)}% match
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="mt-3 text-[10px] text-amber-500 dark:text-amber-400">
+                          Did you mean one of these? You can still add this company if it's genuinely different.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -335,7 +441,7 @@ export function CreateCompanyPage() {
               </Link>
               <button
                 type="submit"
-                disabled={!name.trim() || !slug.trim() || !industryId}
+                disabled={!name.trim() || !slug.trim() || !industryId || showWebsiteWarning}
                 className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
@@ -344,7 +450,10 @@ export function CreateCompanyPage() {
                     Adding...
                   </span>
                 ) : (
-                  <><Send size={16} /> Add Company</>
+                  <>
+                    <Send size={16} />
+                    {showWebsiteWarning ? 'Website Already in Ledger' : 'Add Company'}
+                  </>
                 )}
               </button>
             </div>

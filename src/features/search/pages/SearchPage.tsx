@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, X, MapPin, Plus, ArrowUpRight } from 'lucide-react';
 import { Container } from '@/components/common';
-import { BrandStarRating, TornSkeleton } from '@/components/ui';
+import { BrandStarRating, TornSkeleton, CompanyLogo } from '@/components/ui';
 import { useCompanies } from '@/hooks';
 import { formatNumber } from '@/utils';
 import { ROUTES } from '@/constants';
@@ -125,11 +125,7 @@ export function SearchPage() {
                     style={tornEffect}
                   >
                     <div className="flex items-center gap-5">
-                      <div className="h-12 w-12 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-                        <span className="text-lg font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                          {company.name.charAt(0)}
-                        </span>
-                      </div>
+                      <CompanyLogo name={company.name} logoUrl={company.logoUrl} />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-3">
                           <h3 className="font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate text-sm">

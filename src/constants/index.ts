@@ -11,7 +11,9 @@ export const ROUTES = {
   COMPANY_DETAIL: '/company/:slug',
   REVIEW: '/review',
   REVIEW_DETAIL: '/review/:publicId',
+  EDIT_REVIEW: '/review/:publicId/edit',
   CREATE_REVIEW: '/review/new',
+  PROFILE: '/profile',
   CREATE_COMPANY: '/company/new',
   admin: {
     ROOT: '/admin',

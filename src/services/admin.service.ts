@@ -37,6 +37,7 @@ export async function adminUpdateReportStatus(publicId: string, status: 'resolve
 export async function adminUpdateCompany(slug: string, input: Partial<{
   name: string;
   website: string | null;
+  logoUrl: string | null;
   country: string | null;
   city: string | null;
   description: string | null;

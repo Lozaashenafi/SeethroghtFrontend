@@ -32,6 +32,7 @@ export async function createCompany(input: {
   slug: string;
   industryId: string;
   website?: string;
+  logoUrl?: string | null;
   country?: string;
   city?: string;
   description?: string;
@@ -39,6 +40,21 @@ export async function createCompany(input: {
   const { data } = await apiClient.post<ApiResponse<Company>>(API_ENDPOINTS.COMPANIES, input);
   if (!data.data) throw new Error('Failed to create company');
   return data.data;
+}
+
+export interface DuplicateCheckResult {
+  websiteMatches: Company[];
+  nameMatches: Array<{ company: Company; similarity: number }>;
+}
+
+export async function checkCompanyDuplicate(params: {
+  website?: string;
+  name?: string;
+}): Promise<DuplicateCheckResult> {
+  const { data } = await apiClient.get<ApiResponse<DuplicateCheckResult>>(API_ENDPOINTS.COMPANIES_CHECK, {
+    params,
+  });
+  return data.data ?? { websiteMatches: [], nameMatches: [] };
 }
 
 export interface ScrapedCompanyData {

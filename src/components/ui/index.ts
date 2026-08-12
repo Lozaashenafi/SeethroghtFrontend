@@ -7,3 +7,4 @@ export { ConfirmDialog } from './ConfirmDialog';
 export { BrandStarRating } from './BrandStarRating';
 export { TornSkeleton } from './TornSkeleton';
 export { Logo } from './Logo';
+export { CompanyLogo } from './CompanyLogo';

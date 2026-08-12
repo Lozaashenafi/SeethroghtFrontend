@@ -118,6 +118,9 @@ export interface CreateReviewInput {
   tagIds?: number[];
 }
 
+/** Fields an author may change on their own review (company is fixed). */
+export type UpdateReviewInput = Omit<CreateReviewInput, 'companySlug'>;
+
 export interface CreateCommentInput {
   reviewPublicId: string;
   content: string;

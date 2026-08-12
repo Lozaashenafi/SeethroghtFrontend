@@ -1,6 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getReviews, getReviewByPublicId, createReview } from '@/services';
-import type { CreateReviewInput } from '@/types';
+import {
+  getReviews,
+  getReviewByPublicId,
+  createReview,
+  updateReview,
+  getMyReviews,
+  getMyReview,
+  getReviewTags,
+} from '@/services';
+import type { CreateReviewInput, UpdateReviewInput } from '@/types';
 
 interface UseReviewsParams {
   companySlug?: string;
@@ -31,6 +39,47 @@ export function useCreateReview() {
     mutationFn: (input: CreateReviewInput) => createReview(input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
     },
+  });
+}
+
+/** The current identity's own reviews — shown on the profile page. */
+export function useMyReviews(params: { page?: number; limit?: number } = {}) {
+  return useQuery({
+    queryKey: ['my-reviews', params],
+    queryFn: () => getMyReviews(params),
+  });
+}
+
+/** A single own review by publicId (any status) — powers the edit page. */
+export function useMyReview(publicId: string | undefined) {
+  return useQuery({
+    queryKey: ['my-review', publicId],
+    queryFn: () => getMyReview(publicId!),
+    enabled: !!publicId,
+  });
+}
+
+export function useUpdateReview(publicId: string | undefined) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: UpdateReviewInput) =>
+      updateReview(publicId!, input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['review', publicId] });
+    },
+  });
+}
+
+/** Tag ids of a review, used to prefill the edit form. */
+export function useReviewTags(publicId: string | undefined) {
+  return useQuery({
+    queryKey: ['review-tags', publicId],
+    queryFn: () => getReviewTags(publicId!),
+    enabled: !!publicId,
   });
 }

@@ -12,6 +12,8 @@ import { CompanyDetailPage } from '@/features/company/pages/CompanyDetailPage';
 import { ReviewPage } from '@/features/review/pages/ReviewPage';
 import { ReviewDetailPage } from '@/features/review/pages/ReviewDetailPage';
 import { CreateReviewPage } from '@/features/review/pages/CreateReviewPage';
+import { EditReviewPage } from '@/features/review/pages/EditReviewPage';
+import { ProfilePage } from '@/features/profile/pages/ProfilePage';
 import { AdminPage } from '@/features/admin/pages/AdminPage';
 import { AdminCompanyDetailPage } from '@/features/admin/pages/AdminCompanyDetailPage';
 import { AdminReviewDetailPage } from '@/features/admin/pages/AdminReviewDetailPage';
@@ -32,6 +34,8 @@ export function AppRouter() {
         <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
         <Route path={ROUTES.CREATE_REVIEW} element={<CreateReviewPage />} />
         <Route path={ROUTES.REVIEW_DETAIL} element={<ReviewDetailPage />} />
+        <Route path={ROUTES.EDIT_REVIEW} element={<EditReviewPage />} />
+        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
         <Route path={ROUTES.CREATE_COMPANY} element={<CreateCompanyPage />} />
       </Route>
       <Route path="/admin/login" element={<LoginPage />} />

@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Plus } from 'lucide-react';
+import { Menu, Plus, User, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { Logo } from '@/components/ui';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileNav } from './MobileNav';
 import { ROUTES } from '@/constants';
 
-const navLinks = [
+const navLinks: Array<{ label: string; href: string; icon?: LucideIcon }> = [
   { label: 'Home', href: ROUTES.HOME },
   { label: 'Companies', href: ROUTES.COMPANY },
   { label: 'Reviews', href: ROUTES.REVIEW },
   { label: 'About', href: ROUTES.ABOUT },
+  { label: 'My Profile', href: ROUTES.PROFILE, icon: User },
 ];
 
 export function Navbar() {
@@ -40,12 +41,13 @@ export function Navbar() {
                   key={link.href}
                   to={link.href}
                   className={cn(
-                    'relative flex h-full items-center text-xs font-medium tracking-normal transition-colors duration-200',
+                    'relative flex h-full items-center gap-1.5 text-xs font-medium tracking-normal transition-colors duration-200',
                     isActive
                       ? 'text-[var(--color-text)] dark:text-[var(--color-text)]'
                       : 'text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)]',
                   )}
                 >
+                  {link.icon && <link.icon size={13} />}
                   {link.label}
                   {isActive && (
                     <div className="absolute bottom-[-4px] left-0 right-0 h-1 bg-[var(--color-text)] dark:bg-[var(--color-text)]" />

@@ -6,6 +6,7 @@ import { Button, Input } from '@/components/ui';
 import { useIndustries } from '@/hooks';
 import { adminUpdateCompany } from '@/services/admin.service';
 import { createCompany } from '@/services/companies.service';
+import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import type { Company } from '@/types';
 
@@ -19,6 +20,7 @@ export function CompanyEditModal({ company, onClose, onSaved }: CompanyEditModal
   const [name, setName] = useState(company?.name ?? '');
   const [slug, setSlug] = useState(company?.slug ?? '');
   const [website, setWebsite] = useState(company?.website ?? '');
+  const [logoUrl, setLogoUrl] = useState(company?.logoUrl ?? '');
   const [country, setCountry] = useState(company?.country ?? '');
   const [city, setCity] = useState(company?.city ?? '');
   const [description, setDescription] = useState(company?.description ?? '');
@@ -38,17 +40,26 @@ export function CompanyEditModal({ company, onClose, onSaved }: CompanyEditModal
           adminUpdateCompany(company.slug, {
             name: name || undefined,
             website: website || null,
+            logoUrl: logoUrl || null,
             country: country || null,
             city: city || null,
             description: description || null,
             verified,
           }),
-          { loading: 'Updating...', success: 'Company updated!', error: 'Failed to update' }
+          {
+            loading: 'Updating...',
+            success: 'Company updated!',
+            error: (err: unknown) => getApiErrorMessage(err, 'Failed to update'),
+          }
         );
       } else {
         await toast.promise(
-          createCompany({ name, slug, website: website || undefined, country: country || undefined, city: city || undefined, description: description || undefined, industryId }),
-          { loading: 'Creating...', success: 'Company created!', error: 'Failed to create' }
+          createCompany({ name, slug, website: website || undefined, logoUrl: logoUrl || undefined, country: country || undefined, city: city || undefined, description: description || undefined, industryId }),
+          {
+            loading: 'Creating...',
+            success: 'Company created!',
+            error: (err: unknown) => getApiErrorMessage(err, 'Failed to create'),
+          }
         );
       }
       onSaved(company);
@@ -69,6 +80,7 @@ export function CompanyEditModal({ company, onClose, onSaved }: CompanyEditModal
           <Input label="Slug" value={slug} onChange={e => setSlug(e.target.value)} required={!isEditing}
             placeholder="my-company" disabled={isEditing} helperText="Lowercase with dashes" />
           <Input label="Website" value={website} onChange={e => setWebsite(e.target.value)} placeholder="https://..." />
+          <Input label="Logo URL" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://.../logo.png (optional)" helperText="Shown next to the company name" />
           <div className="grid grid-cols-2 gap-3">
             <Input label="Country" value={country} onChange={e => setCountry(e.target.value)} />
             <Input label="City" value={city} onChange={e => setCity(e.target.value)} />

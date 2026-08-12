@@ -3,8 +3,16 @@ export { useDebounce } from './useDebounce';
 export { useLocalStorage } from './useLocalStorage';
 export { useClickOutside } from './useClickOutside';
 
-export { useCompanies, useCompany } from './useCompanies';
-export { useReviews, useReview, useCreateReview } from './useReviews';
+export { useCompanies, useCompany, useCompanyDuplicateCheck } from './useCompanies';
+export {
+  useReviews,
+  useReview,
+  useCreateReview,
+  useMyReviews,
+  useMyReview,
+  useUpdateReview,
+  useReviewTags,
+} from './useReviews';
 export { useComments, useCreateComment } from './useComments';
 export { useVoteOnReview } from './useVotes';
 export { useCreateReport } from './useReports';

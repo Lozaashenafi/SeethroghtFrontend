@@ -1,5 +1,19 @@
-export { getCompanies, getCompanyBySlug, createCompany } from './companies.service';
-export { getReviews, getReviewByPublicId, createReview } from './reviews.service';
+export {
+  getCompanies,
+  getCompanyBySlug,
+  createCompany,
+  checkCompanyDuplicate,
+  type DuplicateCheckResult,
+} from './companies.service';
+export {
+  getReviews,
+  getReviewByPublicId,
+  createReview,
+  updateReview,
+  getMyReviews,
+  getMyReview,
+  getReviewTags,
+} from './reviews.service';
 export { getComments, createComment } from './comments.service';
 export { voteOnReview } from './votes.service';
 export { createReport } from './reports.service';

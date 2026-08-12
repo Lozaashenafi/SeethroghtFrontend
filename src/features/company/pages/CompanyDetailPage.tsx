@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { Globe, MapPin, ArrowLeft, ThumbsUp, Briefcase, Pencil, MessageSquareText } from 'lucide-react';
 import { Container } from '@/components/common';
-import { BrandStarRating, TornSkeleton } from '@/components/ui';
+import { BrandStarRating, TornSkeleton, CompanyLogo } from '@/components/ui';
 import { useCompany, useReviews } from '@/hooks';
 import { formatDate } from '@/utils';
 import { ROUTES } from '@/constants';
@@ -66,11 +66,13 @@ export function CompanyDetailPage() {
         {/* Company Hero */}
         <div className="mb-10">
           <div className="flex items-start gap-6">
-            <div className="h-20 w-20 flex items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shrink-0">
-              <span className="text-4xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                {company.name.charAt(0)}
-              </span>
-            </div>
+            <CompanyLogo
+              name={company.name}
+              logoUrl={company.logoUrl}
+              size="h-20 w-20"
+              fallbackTextSize="text-4xl"
+              className="border-4"
+            />
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-4">
                 <h1 className="text-5xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
