@@ -9,6 +9,7 @@ import {
   adminUnblockIdentity,
   adminTempBlockIdentity,
   adminClearTempBlockIdentity,
+  adminDeleteIdentity,
   adminDeleteCompany,
   adminGetReports,
   adminUpdateReportStatus,
@@ -159,6 +160,19 @@ export function useAdminClearTempBlockIdentity() {
     mutationFn: (publicId: string) => adminClearTempBlockIdentity(publicId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
+    },
+  });
+}
+
+export function useAdminDeleteIdentity() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (publicId: string) => adminDeleteIdentity(publicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-user-activity'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-user-all-reviews'] });
     },
   });
 }

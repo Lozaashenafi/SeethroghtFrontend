@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Flag,
@@ -25,6 +26,7 @@ const statusBadgeVariant: Record<string, 'warning' | 'success' | 'error' | 'defa
 };
 
 function ReportCard({ report, onUpdate }: { report: Report; onUpdate: (publicId: string, status: 'resolved' | 'dismissed') => void }) {
+  const targetLabel = report.reviewTitle ?? report.commentContent;
   return (
     <motion.div variants={fadeInUp}>
       <Card padding="md">
@@ -47,6 +49,27 @@ function ReportCard({ report, onUpdate }: { report: Report; onUpdate: (publicId:
                 </p>
               </div>
             </div>
+            {targetLabel && (
+              <div className="ml-12 border-l-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] pl-3">
+                {report.reviewPublicId ? (
+                  <Link
+                    to={`/admin/reviews/${report.reviewPublicId}`}
+                    className="block text-sm hover:underline underline-offset-2"
+                  >
+                    <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                      {report.reviewTitle ?? 'Review'}
+                    </span>
+                    {report.companyName && (
+                      <span className="text-xs text-text-secondary"> · {report.companyName}</span>
+                    )}
+                  </Link>
+                ) : (
+                  <p className="text-sm text-text-secondary italic line-clamp-2">
+                    &ldquo;{report.commentContent}&rdquo;
+                  </p>
+                )}
+              </div>
+            )}
             {report.description && (
               <p className="text-sm text-text-secondary leading-relaxed pl-12">{report.description}</p>
             )}

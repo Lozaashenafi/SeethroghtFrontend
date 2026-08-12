@@ -158,6 +158,11 @@ export async function adminBlockIdentity(publicId: string): Promise<void> {
   await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/block`, {});
 }
 
+/** Permanently delete an identity and ALL of its content (reviews, comments, votes, reports). */
+export async function adminDeleteIdentity(publicId: string): Promise<void> {
+  await apiClient.delete(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}`);
+}
+
 export async function adminUnblockIdentity(publicId: string): Promise<void> {
   await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/unblock`, {});
 }

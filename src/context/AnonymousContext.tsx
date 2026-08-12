@@ -2,6 +2,7 @@ import { createContext, useState, useCallback, useContext, useEffect, type React
 import {
   getAnonymousIdentity,
   regenerateNickname,
+  updateNickname,
   type AnonymousIdentity,
 } from '@/services/anonymous.service';
 
@@ -9,6 +10,7 @@ interface AnonymousContextType {
   identity: AnonymousIdentity | null;
   isReady: boolean;
   regenerate: () => Promise<void>;
+  setNickname: (nickname: string) => Promise<void>;
 }
 
 const AnonymousContext = createContext<AnonymousContextType | null>(null);
@@ -39,8 +41,13 @@ export function AnonymousProvider({ children }: { children: ReactNode }) {
     setIdentity(id);
   }, []);
 
+  const setNickname = useCallback(async (nickname: string) => {
+    const id = await updateNickname(nickname);
+    setIdentity(id);
+  }, []);
+
   return (
-    <AnonymousContext.Provider value={{ identity, isReady, regenerate }}>
+    <AnonymousContext.Provider value={{ identity, isReady, regenerate, setNickname }}>
       {children}
     </AnonymousContext.Provider>
   );

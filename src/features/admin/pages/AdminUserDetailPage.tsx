@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   Ban,
@@ -10,6 +10,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   TimerReset,
+  Trash2,
   Users,
 } from 'lucide-react';
 import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
@@ -20,13 +21,14 @@ import {
   useAdminUnblockIdentity,
   useAdminTempBlockIdentity,
   useAdminClearTempBlockIdentity,
+  useAdminDeleteIdentity,
 } from '@/hooks/useAdmin';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 
 interface PendingAction {
-  action: 'block' | 'unblock' | 'temp-block' | 'clear-temp-block';
+  action: 'block' | 'unblock' | 'temp-block' | 'clear-temp-block' | 'delete';
 }
 
 const statusVariant: Record<string, 'success' | 'warning' | 'error'> = {
@@ -38,6 +40,7 @@ const statusVariant: Record<string, 'success' | 'warning' | 'error'> = {
 export function AdminUserDetailPage() {
   const { publicId } = useParams<{ publicId: string }>();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data, isLoading, isError } = useAdminUserActivity(publicId);
   const { data: allReviews } = useAdminUserAllReviews(publicId);
@@ -45,11 +48,12 @@ export function AdminUserDetailPage() {
   const unblockUser = useAdminUnblockIdentity();
   const tempBlock = useAdminTempBlockIdentity();
   const clearTempBlock = useAdminClearTempBlockIdentity();
+  const deleteUser = useAdminDeleteIdentity();
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const identity = data?.identity;
   const isActionPending =
-    blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending;
+    blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending || deleteUser.isPending;
 
   const [now] = useState(() => Date.now());
   const isTempBlocked = !!identity?.tempBlockedUntil && new Date(identity.tempBlockedUntil).getTime() > now;
@@ -72,9 +76,13 @@ export function AdminUserDetailPage() {
       } else if (action === 'temp-block') {
         await toast.promise(tempBlock.mutateAsync({ publicId, hours: 24 }),
           { loading: 'Restricting user...', success: 'User restricted for 24 hours', error: 'Failed to restrict user' });
-      } else {
+      } else if (action === 'clear-temp-block') {
         await toast.promise(clearTempBlock.mutateAsync(publicId),
           { loading: 'Lifting restriction...', success: 'Restriction lifted', error: 'Failed to lift restriction' });
+      } else {
+        await toast.promise(deleteUser.mutateAsync(publicId),
+          { loading: 'Deleting user...', success: 'User deleted', error: 'Failed to delete user' });
+        navigate('/admin/users');
       }
       invalidateActivity();
       setPendingAction(null);
@@ -176,6 +184,10 @@ export function AdminUserDetailPage() {
               Block
             </Button>
           )}
+          <Button variant="outline" size="sm" className="text-error border-error hover:bg-error/5"
+            onClick={() => setPendingAction({ action: 'delete' })} leftIcon={<Trash2 size={14} />}>
+            Delete User
+          </Button>
         </div>
       </div>
 
@@ -321,7 +333,9 @@ export function AdminUserDetailPage() {
         title={
           pendingAction?.action === 'unblock' ? 'Unblock user'
             : pendingAction?.action === 'block' ? 'Block user'
-            : pendingAction?.action === 'temp-block' ? 'Restrict user' : 'Lift restriction'
+            : pendingAction?.action === 'temp-block' ? 'Restrict user'
+            : pendingAction?.action === 'delete' ? 'Delete user permanently'
+            : 'Lift restriction'
         }
         description={
           pendingAction?.action === 'unblock'
@@ -330,12 +344,16 @@ export function AdminUserDetailPage() {
               ? 'This user will no longer be able to post reviews, comments, or votes. Their existing content will remain visible. This can be undone later.'
               : pendingAction?.action === 'temp-block'
                 ? 'This user will be temporarily restricted from posting for 24 hours. They can still browse. This can be lifted early.'
-                : 'This user will be able to post reviews, comments, and votes again immediately.'
+                : pendingAction?.action === 'delete'
+                  ? 'This permanently removes the user and ALL of their reviews, comments, votes, and reports. This cannot be undone — the same browser will return as a brand-new anonymous user.'
+                  : 'This user will be able to post reviews, comments, and votes again immediately.'
         }
         confirmLabel={
           pendingAction?.action === 'unblock' ? 'Unblock'
             : pendingAction?.action === 'block' ? 'Block'
-            : pendingAction?.action === 'temp-block' ? 'Restrict' : 'Lift'
+            : pendingAction?.action === 'temp-block' ? 'Restrict'
+            : pendingAction?.action === 'delete' ? 'Delete Permanently'
+            : 'Lift'
         }
         isLoading={isActionPending}
         onConfirm={handleConfirm}

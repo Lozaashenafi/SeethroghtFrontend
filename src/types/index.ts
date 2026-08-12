@@ -87,7 +87,7 @@ export interface Review {
 export interface Comment {
   publicId: string;
   reviewId: number;
-  parentId: number | null;
+  parentPublicId: string | null;
   content: string;
   helpfulCount: number;
   createdAt: string;
@@ -121,7 +121,7 @@ export interface CreateReviewInput {
 export interface CreateCommentInput {
   reviewPublicId: string;
   content: string;
-  parentId?: number;
+  parentPublicId?: string;
 }
 
 export interface CreateReportInput {
@@ -143,4 +143,11 @@ export interface Report {
   status: 'pending' | 'resolved' | 'dismissed';
   createdAt: string;
   resolvedAt?: string | null;
+  // Context about the reported target (populated for the admin queue).
+  reviewPublicId?: string | null;
+  reviewTitle?: string | null;
+  companyName?: string | null;
+  companySlug?: string | null;
+  commentPublicId?: string | null;
+  commentContent?: string | null;
 }

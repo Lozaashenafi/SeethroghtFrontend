@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Ban, Check, TimerReset, Search } from 'lucide-react';
+import { Users, Ban, Check, TimerReset, Trash2, Search } from 'lucide-react';
 import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
 import {
   useAdminIdentities,
@@ -8,6 +8,7 @@ import {
   useAdminUnblockIdentity,
   useAdminTempBlockIdentity,
   useAdminClearTempBlockIdentity,
+  useAdminDeleteIdentity,
 } from '@/hooks/useAdmin';
 import { useDebounce } from '@/hooks';
 import { formatDate } from '@/utils';
@@ -15,7 +16,7 @@ import { toast } from 'sonner';
 
 interface PendingAction {
   publicId: string;
-  action: 'block' | 'unblock' | 'temp-block' | 'clear-temp-block';
+  action: 'block' | 'unblock' | 'temp-block' | 'clear-temp-block' | 'delete';
 }
 
 export function UsersTab() {
@@ -31,12 +32,13 @@ export function UsersTab() {
   const unblockUser = useAdminUnblockIdentity();
   const tempBlock = useAdminTempBlockIdentity();
   const clearTempBlock = useAdminClearTempBlockIdentity();
+  const deleteUser = useAdminDeleteIdentity();
   const identities = data?.identities ?? [];
   const pagination = data?.pagination;
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const isActionPending =
-    blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending;
+    blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending || deleteUser.isPending;
 
   const handleConfirm = async () => {
     if (!pendingAction) return;
@@ -57,10 +59,15 @@ export function UsersTab() {
           tempBlock.mutateAsync({ publicId, hours: 24 }),
           { loading: 'Restricting user...', success: 'User restricted for 24 hours', error: 'Failed to restrict user' },
         );
-      } else {
+      } else if (action === 'clear-temp-block') {
         await toast.promise(
           clearTempBlock.mutateAsync(publicId),
           { loading: 'Lifting restriction...', success: 'Restriction lifted', error: 'Failed to lift restriction' },
+        );
+      } else {
+        await toast.promise(
+          deleteUser.mutateAsync(publicId),
+          { loading: 'Deleting user...', success: 'User deleted', error: 'Failed to delete user' },
         );
       }
       setPendingAction(null);
@@ -142,6 +149,10 @@ export function UsersTab() {
                       Block
                     </Button>
                   )}
+                  <Button variant="outline" size="sm" onClick={() => setPendingAction({ publicId: identity.publicId, action: 'delete' })}
+                    leftIcon={<Trash2 size={14} />} className="text-error border-error hover:bg-error/5" aria-label="Delete user">
+                    Delete
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -162,7 +173,9 @@ export function UsersTab() {
         title={
           pendingAction?.action === 'unblock' ? 'Unblock user'
             : pendingAction?.action === 'block' ? 'Block user'
-            : pendingAction?.action === 'temp-block' ? 'Restrict user' : 'Lift restriction'
+            : pendingAction?.action === 'temp-block' ? 'Restrict user'
+            : pendingAction?.action === 'delete' ? 'Delete user permanently'
+            : 'Lift restriction'
         }
         description={
           pendingAction?.action === 'unblock'
@@ -171,12 +184,16 @@ export function UsersTab() {
               ? 'This user will no longer be able to post reviews, comments, or votes. Their existing content will remain visible. This can be undone later.'
               : pendingAction?.action === 'temp-block'
                 ? 'This user will be temporarily restricted from posting for 24 hours. They can still browse. This can be lifted early.'
-                : 'This user will be able to post reviews, comments, and votes again immediately.'
+                : pendingAction?.action === 'delete'
+                  ? 'This permanently removes the user and ALL of their reviews, comments, votes, and reports. This cannot be undone — the same browser will return as a brand-new anonymous user.'
+                  : 'This user will be able to post reviews, comments, and votes again immediately.'
         }
         confirmLabel={
           pendingAction?.action === 'unblock' ? 'Unblock'
             : pendingAction?.action === 'block' ? 'Block'
-            : pendingAction?.action === 'temp-block' ? 'Restrict' : 'Lift'
+            : pendingAction?.action === 'temp-block' ? 'Restrict'
+            : pendingAction?.action === 'delete' ? 'Delete Permanently'
+            : 'Lift'
         }
         isLoading={isActionPending}
         onConfirm={handleConfirm}

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   MessageSquareText,
@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { Page, Container } from '@/components/common';
 import { Button } from '@/components/ui';
-import { WelcomeModal } from '@/components/onboarding';
+import { WelcomeModal, NicknameModal } from '@/components/onboarding';
 import type { Review } from '@/types';
 import { useReviews, useVoteOnReview } from '@/hooks';
 import { formatDate } from '@/utils';
@@ -134,7 +134,12 @@ export function HomePage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<'engagement' | 'recent'>('engagement');
+  const [showNicknameModal, setShowNicknameModal] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Stable callback so NicknameModal's auto-close effect doesn't re-run on
+  // every HomePage render (the inline arrow would change identity each time).
+  const handleNicknameModalClose = useCallback(() => setShowNicknameModal(false), []);
   const { data, isLoading, isError } = useReviews({ sortBy, page, limit: 10 });
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
@@ -145,7 +150,8 @@ export function HomePage() {
       <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
            style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
 
-      <WelcomeModal />
+      <WelcomeModal onDismissed={() => setShowNicknameModal(true)} />
+      <NicknameModal isOpen={showNicknameModal} onClose={handleNicknameModalClose} />
 
       <Container size="lg" className="relative z-10 py-16">
         

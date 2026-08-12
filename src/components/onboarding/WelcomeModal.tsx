@@ -37,13 +37,19 @@ const guidelines = [
   },
 ];
 
-export function WelcomeModal() {
+interface WelcomeModalProps {
+  /** Called right after the user dismisses the welcome modal (e.g. to open the nickname step). */
+  onDismissed?: () => void;
+}
+
+export function WelcomeModal({ onDismissed }: WelcomeModalProps) {
   const [hasSeenWelcome, setHasSeenWelcome] = useLocalStorage(WELCOME_SEEN_KEY, false);
   const [isOpen, setIsOpen] = useState(!hasSeenWelcome);
 
   const handleDismiss = () => {
     setHasSeenWelcome(true);
     setIsOpen(false);
+    onDismissed?.();
   };
 
   return (

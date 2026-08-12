@@ -5,4 +5,4 @@ export { voteOnReview } from './votes.service';
 export { createReport } from './reports.service';
 export { getIndustries } from './industries.service';
 export { getTags } from './tags.service';
-export { getAnonymousIdentity, regenerateNickname } from './anonymous.service';
+export { getAnonymousIdentity, regenerateNickname, updateNickname } from './anonymous.service';
