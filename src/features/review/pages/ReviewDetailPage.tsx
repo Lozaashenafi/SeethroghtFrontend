@@ -10,7 +10,7 @@ import {
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useReview, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
-import { formatDate } from '@/utils';
+import { formatDate, profanityError } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
@@ -110,6 +110,7 @@ export function ReviewDetailPage() {
   const { data: review, isLoading, error } = useReview(publicId);
   const { data: commentsData, isLoading: commentsLoading } = useComments(publicId);
   const [commentText, setCommentText] = useState('');
+  const [commentError, setCommentError] = useState('');
   const [showReportModal, setShowReportModal] = useState(false);
 
   const createComment = useCreateComment();
@@ -117,6 +118,15 @@ export function ReviewDetailPage() {
 
   const handleSubmitComment = async () => {
     if (!publicId || !commentText.trim()) return;
+
+    // Profanity gate — warn and block until the comment is cleaned up.
+    const profanity = profanityError(commentText);
+    if (profanity) {
+      setCommentError(profanity);
+      return;
+    }
+    setCommentError('');
+
     try {
       await createComment.mutateAsync({
         reviewPublicId: publicId,
@@ -309,7 +319,7 @@ export function ReviewDetailPage() {
               <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                 <input
                   value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
+                  onChange={(e) => { setCommentText(e.target.value); if (commentError) setCommentError(''); }}
                   placeholder="Share your thoughts..."
                   className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment()}
@@ -324,6 +334,11 @@ export function ReviewDetailPage() {
                 Post
               </button>
             </div>
+            {commentError && (
+              <p className="mt-2 text-[11px] font-medium tracking-normal text-red-700 dark:text-red-400">
+                {commentError}
+              </p>
+            )}
           </div>
 
           {/* Comments List */}

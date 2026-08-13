@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Building2, Briefcase, Send, Check, X } from 'lucide-react';
 import { useCompanies, useTags, useDebounce } from '@/hooks';
 import { ROUTES } from '@/constants';
-import { getApiErrorMessage } from '@/utils';
+import { getApiErrorMessage, profanityError } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import type { CreateReviewInput, Tag, UpdateReviewInput } from '@/types';
@@ -360,6 +360,17 @@ export function ReviewForm({
     if (pros && pros.length > 2000) newErrors.pros = 'Pros must be at most 2000 characters';
     if (cons && cons.length > 2000) newErrors.cons = 'Cons must be at most 2000 characters';
     if (jobTitle && jobTitle.length > 100) newErrors.jobTitle = 'Job title must be at most 100 characters';
+
+    // Profanity gate — warn inline and block submission until the text is fixed.
+    const titleProfanity = profanityError(title);
+    if (titleProfanity) newErrors.title = titleProfanity;
+    const prosProfanity = profanityError(pros);
+    if (prosProfanity) newErrors.pros = prosProfanity;
+    const consProfanity = profanityError(cons);
+    if (consProfanity) newErrors.cons = consProfanity;
+    const jobTitleProfanity = profanityError(jobTitle);
+    if (jobTitleProfanity) newErrors.jobTitle = jobTitleProfanity;
+
     setErrors(newErrors);
     return newErrors;
   }, [mode, companySlug, title, pros, cons, jobTitle]);

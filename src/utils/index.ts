@@ -5,3 +5,4 @@ export { slugify } from './slugify';
 export { debounce } from './debounce';
 export { copyToClipboard } from './copyToClipboard';
 export { getApiErrorMessage } from './errorMessage';
+export { findBadWords, profanityError } from './profanity';
