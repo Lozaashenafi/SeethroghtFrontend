@@ -53,12 +53,14 @@ export function CreateReviewPage() {
                   {identity.nickname}
                 </p>
               </div>
-              <Link
-                to={ROUTES.PROFILE}
-                className="inline-flex items-center gap-2 px-4 py-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors"
-              >
-                Change display name
-              </Link>
+              {!identity.nicknameRegeneratedAt && (
+                <Link
+                  to={ROUTES.PROFILE}
+                  className="inline-flex items-center gap-2 px-4 py-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors"
+                >
+                  Change display name
+                </Link>
+              )}
             </div>
             <p className="mt-2 text-[11px] text-stone-400 dark:text-[var(--color-text-secondary)]">
               {identity.nicknameRegeneratedAt

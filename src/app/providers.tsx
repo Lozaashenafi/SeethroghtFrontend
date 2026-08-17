@@ -16,9 +16,11 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <AnonymousProvider>
+      {/* AnonymousProvider sits above ThemeProvider so the theme can react to
+          identity changes (a fresh identity = fresh start in light mode). */}
+      <AnonymousProvider>
+        <ThemeProvider>
+          <AuthProvider>
             <BrowserRouter>
             {children}
             <Toaster
@@ -59,9 +61,9 @@ export function Providers({ children }: ProvidersProps) {
               }}
             />
           </BrowserRouter>
-          </AnonymousProvider>
-        </AuthProvider>
-      </ThemeProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </AnonymousProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

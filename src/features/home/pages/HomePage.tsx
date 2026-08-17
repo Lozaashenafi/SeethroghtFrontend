@@ -12,6 +12,7 @@ import {
 import { Page, Container } from '@/components/common';
 import { Button } from '@/components/ui';
 import { WelcomeModal, NicknameModal } from '@/components/onboarding';
+import { useAnonymous } from '@/context/AnonymousContext';
 import type { Review } from '@/types';
 import { useReviews, useVoteOnReview } from '@/hooks';
 import { formatDate } from '@/utils';
@@ -132,6 +133,7 @@ function ReviewItem({ review }: { review: Review }) {
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { resetKey } = useAnonymous();
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<'engagement' | 'recent'>('engagement');
   const [showNicknameModal, setShowNicknameModal] = useState(false);
@@ -150,8 +152,19 @@ export function HomePage() {
       <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
            style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
 
-      <WelcomeModal onDismissed={() => setShowNicknameModal(true)} />
-      <NicknameModal isOpen={showNicknameModal} onClose={handleNicknameModalClose} />
+      {/* Keyed by resetKey (bumps ONLY when the browser is handed a brand-new
+          identity, e.g. after an admin deleted the previous one) so the modals
+          remount and re-read the reset onboarding flags. On a normal load the
+          key stays stable and the modals are never remounted mid-flow. */}
+      <WelcomeModal
+        key={resetKey}
+        onDismissed={() => setShowNicknameModal(true)}
+      />
+      <NicknameModal
+        key={resetKey}
+        isOpen={showNicknameModal}
+        onClose={handleNicknameModalClose}
+      />
 
       <Container size="lg" className="relative z-10 py-16">
         
