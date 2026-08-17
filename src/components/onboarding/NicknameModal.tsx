@@ -87,7 +87,7 @@ export function NicknameModal({ isOpen, onClose }: NicknameModalProps) {
 
         {/* Main Content Card — always light */}
         <div
-          className="relative bg-[#ffffff] border-4 border-[#2b2f23] p-8 md:p-10"
+          className="relative bg-[#ffffff] border-4 border-[#2b2f23] p-6 sm:p-8 md:p-10"
           style={tornEffect}
         >
           {/* Header */}

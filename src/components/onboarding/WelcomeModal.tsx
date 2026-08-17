@@ -58,7 +58,7 @@ export function WelcomeModal({ onDismissed }: WelcomeModalProps) {
       
     >
       {/* Main Content Card — always light */}
-      <div className="bg-[#ffffff]  p-8 md:p-10">
+      <div className="bg-[#ffffff]  p-5 sm:p-8 md:p-10">
         {/* Header */}
         <div className="text-center mb-8">
           <img
@@ -75,13 +75,13 @@ export function WelcomeModal({ onDismissed }: WelcomeModalProps) {
         </div>
 
         {/* Guidelines — simple stacked list for readability */}
-        <div className="space-y-3 mb-8">
+        <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
           {guidelines.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="flex items-start gap-4 bg-[#fcfaf7] border border-[#ece6d6] p-4"
+                className="flex items-start gap-3 sm:gap-4 bg-[#fcfaf7] border border-[#ece6d6] p-3 sm:p-4"
               >
                 <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border-2 border-[#2b2f23] bg-white">
                   <Icon size={18} className={item.color} />

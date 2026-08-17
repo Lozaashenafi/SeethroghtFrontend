@@ -71,7 +71,7 @@ export function Modal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overscroll-contain p-4">
           {/* Overlay */}
           <motion.div
             variants={overlayVariants}
@@ -89,7 +89,7 @@ export function Modal({
             animate="visible"
             exit="exit"
             className={cn(
-              'relative w-full rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] shadow-[10px_10px_0px_0px_var(--color-text)] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]',
+              'relative my-auto w-full rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] shadow-[10px_10px_0px_0px_var(--color-text)] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]',
               sizeStyles[size],
               className,
             )}
