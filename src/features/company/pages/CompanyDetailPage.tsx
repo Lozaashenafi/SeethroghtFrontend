@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { Globe, MapPin, ArrowLeft, ThumbsUp, Briefcase, Pencil, MessageSquareText } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton, CompanyLogo } from '@/components/ui';
@@ -9,8 +9,22 @@ import { tornEffect, cardShadow } from '@/constants/brand';
 
 export function CompanyDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
   const { data: company, isLoading: companyLoading, error: companyError } = useCompany(slug);
   const { data: reviewsData, isLoading: reviewsLoading, isError: reviewsError } = useReviews({ companySlug: slug, limit: 20 });
+
+  // Return to wherever the visitor came from (home feed / companies / search),
+  // falling back to the companies page for direct visits or unknown origins.
+  const from = (location.state as { from?: 'home' | 'companies' | 'search' } | null)?.from;
+  let backTo = '/company';
+  let backLabel = 'Back to Companies';
+  if (from === 'home') {
+    backTo = '/';
+    backLabel = 'Back to Home';
+  } else if (from === 'search') {
+    backTo = '/search';
+    backLabel = 'Back to Search';
+  }
 
   if (companyLoading) {
     return (
@@ -33,9 +47,9 @@ export function CompanyDetailPage() {
           <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
             Company not found.
           </p>
-          <Link to="/company" className="mt-6 inline-block">
+          <Link to={backTo} className="mt-6 inline-block">
             <span className="inline-flex items-center gap-2 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] hover:opacity-70 transition-opacity">
-              <ArrowLeft size={14} /> Back to Companies
+              <ArrowLeft size={14} /> {backLabel}
             </span>
           </Link>
         </Container>
@@ -56,11 +70,11 @@ export function CompanyDetailPage() {
       <Container size="lg" className="relative z-10 py-16">
         {/* Back link */}
         <Link
-          to="/company"
+          to={backTo}
           className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
         >
           <ArrowLeft size={14} />
-          Back to Companies
+          {backLabel}
         </Link>
 
         {/* Company Hero */}

@@ -92,7 +92,7 @@ export function CompanyPage() {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {companies.map((company) => (
-                <Link key={company.id} to={`/company/${company.slug}`} className="group block">
+                <Link key={company.id} to={`/company/${company.slug}`} state={{ from: 'companies' }} className="group block">
                   <div
                     className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1 h-full"
                     style={tornEffect}

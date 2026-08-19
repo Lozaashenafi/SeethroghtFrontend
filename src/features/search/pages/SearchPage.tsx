@@ -119,7 +119,7 @@ export function SearchPage() {
 
             <div className="grid gap-4">
               {companies.map((company) => (
-                <Link key={company.id} to={`/company/${company.slug}`} className="group block">
+                <Link key={company.id} to={`/company/${company.slug}`} state={{ from: 'search' }} className="group block">
                   <div
                     className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
                     style={tornEffect}

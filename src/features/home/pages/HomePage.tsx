@@ -1,130 +1,109 @@
 import { useState, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-  MessageSquareText,
+  MapPin,
   ChevronLeft,
   ChevronRight,
-  ThumbsUp,
   Search,
   Plus,
-  ArrowUpRight
+  ArrowUpRight,
+  Building2,
+  ShieldCheck,
+  Eye
 } from 'lucide-react';
 import { Page, Container } from '@/components/common';
-import { Button } from '@/components/ui';
+import { Button, BrandStarRating, CompanyLogo } from '@/components/ui';
 import { WelcomeModal, NicknameModal } from '@/components/onboarding';
 import { useAnonymous } from '@/context/AnonymousContext';
-import type { Review } from '@/types';
-import { useReviews, useVoteOnReview } from '@/hooks';
-import { formatDate } from '@/utils';
+import type { Company } from '@/types';
+import { useCompanies } from '@/hooks';
+import { formatNumber } from '@/utils';
 import { ROUTES } from '@/constants';
-import { toast } from 'sonner';
+import { tornEffect } from '@/constants/brand';
+import { staggerContainer, fadeInUp } from '@/lib/animations';
 
-const tornEffect = {
-  clipPath: `polygon(0% 0%, 100% 0%, 100% 96%, 98% 98%, 95% 96%, 92% 99%, 89% 96%, 85% 98%, 80% 95%, 75% 99%, 70% 96%, 65% 98%, 60% 95%, 55% 99%, 50% 96%, 45% 98%, 40% 95%, 35% 99%, 30% 96%, 25% 98%, 20% 95%, 15% 99%, 10% 96%, 5% 98%, 0% 95%)`
-};
-
-function StarRating({ rating }: { rating: number | null }) {
-  if (!rating) return null;
-  return (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <div
-          key={star}
-          className={`h-3 w-3 rotate-45 border ${
-            star <= rating 
-              ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]' 
-              : 'bg-transparent border-stone-300 dark:border-[var(--color-border)]'
-          }`}
-        />
-      ))}
-    </div>
-  );
-}
-
-function ReviewItem({ review }: { review: Review }) {
-  const vote = useVoteOnReview();
-
-  const handleVote = async (e: React.MouseEvent) => {
-    // Keep the vote from bubbling up to the card's <Link> navigation.
-    e.preventDefault();
-    e.stopPropagation();
-    if (vote.isPending) return;
-    try {
-      await vote.mutateAsync({ reviewPublicId: review.publicId, voteType: 'helpful' });
-      toast.success('Vote recorded');
-    } catch {
-      toast.error('Failed to record vote');
-    }
-  };
+function CompanyItem({ company }: { company: Company }) {
+  const avgRating = company.averageRating ? Math.round(Number(company.averageRating)) : null;
 
   return (
     <div className="group relative">
       {/* Shadow element - uses primary color with low opacity instead of black */}
-      <div className="absolute inset-0 translate-x-1 translate-y-1 bg-[var(--color-text)]/10 dark:bg-black/20" style={tornEffect} />
-      
+      <div
+        className="absolute inset-0 translate-x-1 translate-y-1 bg-[var(--color-text)]/10 dark:bg-black/20"
+        style={tornEffect}
+      />
+
       <Link
-        to={`/review/${review.publicId}`}
-        className="relative block bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
+        to={`/company/${company.slug}`}
+        state={{ from: 'home' }}
+        className="relative block bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
         style={tornEffect}
       >
-        <div className="flex justify-between items-start mb-8">
-          <div className="flex gap-4">
-            <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-              {review.companyName?.charAt(0)}
-            </div>
-            <div>
-              <h2 className="text-xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
-                {review.companyName}
-              </h2>
-              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 ">
-                {review.jobTitle} // {formatDate(review.createdAt)}
+        <div className="flex items-start justify-between gap-4 mb-7">
+          <div className="flex items-center gap-4 min-w-0">
+            <CompanyLogo
+              name={company.name}
+              logoUrl={company.logoUrl}
+              size="h-14 w-14"
+              fallbackTextSize="text-xl"
+            />
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none truncate">
+                  {company.name}
+                </h2>
+                {company.verified && (
+                  <span className="shrink-0 px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    Verified
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 flex items-center gap-1.5">
+                {(company.city || company.country) && (
+                  <>
+                    <MapPin size={12} />
+                    {[company.city, company.country].filter(Boolean).join(', ')}
+                  </>
+                )}
+                {!company.city && !company.country && `${formatNumber(company.reviewCount)} review${company.reviewCount !== 1 ? 's' : ''}`}
               </p>
             </div>
           </div>
-          <ArrowUpRight className="text-stone-400 dark:text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)] dark:group-hover:text-[var(--color-text)] transition-colors" />
+          <ArrowUpRight className="shrink-0 text-stone-400 dark:text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)] dark:group-hover:text-[var(--color-text)] transition-colors" />
         </div>
 
-        <div className="mb-6">
-          <h3 className="text-2xl text-[var(--color-text)] dark:text-[var(--color-text)] mb-4 leading-tight">
-            "{review.title}"
-          </h3>
-          <StarRating rating={review.overallRating} />
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[var(--color-text)] dark:text-[var(--color-text)] mb-6">
+          <span className="flex items-baseline gap-1.5">
+            <span className="text-base font-medium">{avgRating ? `${avgRating}/5` : 'N/A'}</span>
+            {avgRating && <BrandStarRating rating={avgRating} size={9} />}
+            <span className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">Rating</span>
+          </span>
+          <span className="h-4 w-px bg-stone-300 dark:bg-[var(--color-border)]" />
+          <span className="flex items-baseline gap-1.5">
+            <span className="text-base font-medium">{formatNumber(company.reviewCount)}</span>
+            <span className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">Review{company.reviewCount !== 1 ? 's' : ''}</span>
+          </span>
+          <span className="h-4 w-px bg-stone-300 dark:bg-[var(--color-border)]" />
+          <span className="flex items-baseline gap-1.5">
+            <span className="text-base font-medium">{company.recommendationRate}%</span>
+            <span className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">Recommend</span>
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-stone-200 dark:bg-[var(--color-border)] border border-stone-200 dark:border-[var(--color-border)] mb-8">
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
-            <span className="text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400 block mb-2 underline decoration-emerald-200 dark:decoration-emerald-900 underline-offset-4">The Good</span>
-            <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.pros}</p>
-          </div>
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-surface)] p-4">
-            <span className="text-[10px] font-medium tracking-normal text-orange-700 dark:text-orange-400 block mb-2 underline decoration-orange-200 dark:decoration-orange-900 underline-offset-4">The Bad</span>
-            <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-3 leading-relaxed">{review.cons}</p>
-          </div>
-        </div>
+        {company.description && (
+          <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mb-6">
+            {company.description}
+          </p>
+        )}
 
-        <div className="flex items-center justify-between pt-6 border-t border-stone-200 dark:border-[var(--color-border)]">
-          <div className="flex gap-6">
-             <button
-                type="button"
-                onClick={handleVote}
-                disabled={vote.isPending}
-                aria-label="Mark review as helpful"
-                className="flex items-center gap-2 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50 transition-colors cursor-pointer"
-             >
-                <ThumbsUp size={14} /> {review.helpfulCount || 0}
-             </button>
-             <div className="flex items-center gap-2 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
-                <MessageSquareText size={14} /> DISCUSS
-             </div>
-          </div>
-          <div className="flex gap-2">
-            {review.isVerified && (
-               <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">Verified Dept.</span>
-            )}
-            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
-              {review.employmentStatus}
-            </span>
-          </div>
+        <div className="flex items-center justify-between pt-5 border-t border-stone-200 dark:border-[var(--color-border)]">
+          <span className="text-[10px] font-medium tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] uppercase">
+            Read employee reviews
+          </span>
+          <span className="text-[10px] font-medium tracking-normal text-stone-400 dark:text-[var(--color-text-secondary)]">
+            {company.verified ? 'Verified company' : 'Employee-led'}
+          </span>
         </div>
       </Link>
     </div>
@@ -135,22 +114,27 @@ export function HomePage() {
   const navigate = useNavigate();
   const { resetKey } = useAnonymous();
   const [page, setPage] = useState(1);
-  const [sortBy, setSortBy] = useState<'engagement' | 'recent'>('engagement');
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Stable callback so NicknameModal's auto-close effect doesn't re-run on
   // every HomePage render (the inline arrow would change identity each time).
   const handleNicknameModalClose = useCallback(() => setShowNicknameModal(false), []);
-  const { data, isLoading, isError } = useReviews({ sortBy, page, limit: 10 });
-  const reviews = data?.reviews ?? [];
+  const { data, isLoading, isError } = useCompanies({ page, limit: 10 });
+  const companies = data?.companies ?? [];
   const pagination = data?.pagination;
+  const totalCompanies = pagination?.total ?? 0;
+
+  const goSearch = () =>
+    navigate(`/search?q=${encodeURIComponent(searchInputRef.current?.value ?? '')}`);
 
   return (
     <Page className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
       {/* Background Grid Pattern - color based on theme text */}
-      <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
-           style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
+      <div
+        className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
+        style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
+      />
 
       {/* Keyed by resetKey (bumps ONLY when the browser is handed a brand-new
           identity, e.g. after an admin deleted the previous one) so the modals
@@ -166,90 +150,165 @@ export function HomePage() {
         onClose={handleNicknameModalClose}
       />
 
-      <Container size="lg" className="relative z-10 py-16">
-        
+      <Container size="lg" className="relative z-10">
+        {/* ─── Hero ─── */}
+        <section className="pt-14 pb-14 md:pt-20 md:pb-16 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+          <div className="max-w-3xl">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="flex items-center gap-2 text-[10px] font-medium tracking-[0.25em] text-[var(--color-text)] dark:text-[var(--color-text)] uppercase"
+            >
+              <ShieldCheck size={13} />
+              Anonymous workplace reviews
+            </motion.p>
 
-        <main className="max-w-4xl mx-auto">
-          {/* Sharp Search Bar - Using Primary Light for the border/button */}
-          <div className="flex border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-16 shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
-            <div className="flex-1 flex items-center px-6 border-r-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
-              <Search size={20} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-4" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                placeholder="Find a company..."
-                className="w-full py-5 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
-                onKeyDown={(e) => e.key === 'Enter' && navigate(`/search?q=${encodeURIComponent(searchInputRef.current?.value ?? '')}`)}
-              />
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08, ease: 'easeOut' }}
+              className="mt-6 text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight leading-[1.05] text-balance text-[var(--color-text)] dark:text-[var(--color-text)]"
+            >
+              Honest insights from the people who actually work there.
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.16, ease: 'easeOut' }}
+              className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-stone-600 dark:text-[var(--color-text-secondary)]"
+            >
+              See Through is a ledger of workplaces — real employees sharing what the
+              interview never told you. No accounts. No names. No filter.
+            </motion.p>
+          </div>
+
+          {/* Search */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.24, ease: 'easeOut' }}
+            className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-stretch"
+          >
+            <div className="flex flex-1 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
+              <div className="flex flex-1 items-center gap-3 px-5">
+                <Search size={18} className="shrink-0 text-stone-400 dark:text-[var(--color-text-secondary)]" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder={`Search ${totalCompanies ? formatNumber(totalCompanies) : ''} companies...`}
+                  className="w-full py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                  onKeyDown={(e) => e.key === 'Enter' && goSearch()}
+                />
+              </div>
             </div>
-            <Link to={ROUTES.CREATE_REVIEW} className="hidden sm:block">
-              <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center gap-2">
-                <Plus size={16} /> Post Review
-              </button>
+            <Link
+              to={ROUTES.CREATE_REVIEW}
+              className="inline-flex items-center justify-center gap-2 px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity"
+            >
+              <Plus size={16} /> Post a Review
             </Link>
+          </motion.div>
+
+          {/* Trust strip */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-3 text-[10px] font-medium tracking-[0.2em] uppercase text-stone-500 dark:text-[var(--color-text-secondary)]"
+          >
+            <span className="flex items-center gap-2">
+              <Building2 size={12} />
+              {formatNumber(totalCompanies)} companies in the ledger
+            </span>
+            <span className="flex items-center gap-2">
+              <ShieldCheck size={12} />
+              Fully anonymous
+            </span>
+            <span className="flex items-center gap-2">
+              <Eye size={12} />
+              No account needed
+            </span>
+          </motion.div>
+        </section>
+
+        {/* ─── Feed ─── */}
+        <section className="py-14 md:py-16">
+          <div className="flex flex-wrap items-end justify-between gap-4 mb-10 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-4">
+            <div>
+              <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-stone-500 dark:text-[var(--color-text-secondary)]">
+                The ledger
+              </p>
+              <h2 className="mt-2 text-2xl sm:text-3xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                Browse companies
+              </h2>
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                Viewing {companies.length} of {formatNumber(totalCompanies)}
+              </span>
+              <Link
+                to={ROUTES.COMPANY}
+                className="text-[10px] font-medium tracking-[0.2em] uppercase text-[var(--color-text)] dark:text-[var(--color-text)] underline underline-offset-4 decoration-stone-400 dark:decoration-[var(--color-border)] hover:opacity-70 transition-opacity"
+              >
+                View all
+              </Link>
+            </div>
           </div>
 
-          {/* Filtering Header */}
-          <div className="flex items-center justify-between mb-12 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-4">
-            <div className="flex gap-8">
-              {(['engagement', 'recent'] as const).map((sort) => (
-                <button
-                  key={sort}
-                  onClick={() => { setSortBy(sort); setPage(1); }}
-                  className={`text-xs font-medium tracking-normal transition-all relative ${
-                    sortBy === sort 
-                      ? 'text-[var(--color-text)] dark:text-[var(--color-text)]' 
-                      : 'text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-stone-600 dark:hover:text-[var(--color-text)]'
-                  }`}
-                >
-                  {sort === 'recent' ? 'Latest' : 'Trending'}
-                  {sortBy === sort && <div className="absolute -bottom-[18px] left-0 right-0 h-1 bg-[var(--color-text)] dark:bg-[var(--color-text)]" />}
-                </button>
-              ))}
-            </div>
-            <div className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
-              Viewing {reviews.length} entries
-            </div>
-          </div>
-
-          <div className="grid gap-12">
+          <motion.div
+            className="grid gap-10"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
             {isLoading ? (
-              <div className="grid gap-12">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-80 w-full bg-stone-200 dark:bg-[var(--color-card)] animate-pulse border border-stone-300 dark:border-[var(--color-border)]" style={tornEffect} />
+              <div className="grid gap-10">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="h-64 w-full bg-stone-200 dark:bg-[var(--color-card)] animate-pulse border border-stone-300 dark:border-[var(--color-border)]"
+                    style={tornEffect}
+                  />
                 ))}
               </div>
             ) : isError ? (
               <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
                 <p className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                  Couldn&rsquo;t load reviews right now.
+                  Couldn&rsquo;t load companies right now.
                 </p>
                 <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
                   Please try again in a moment.
                 </p>
               </div>
-            ) : reviews.length === 0 ? (
+            ) : companies.length === 0 ? (
               <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
+                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+                  <Building2 size={24} />
+                </div>
                 <p className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                  No reviews yet.
+                  No companies yet.
                 </p>
                 <p className="mt-2 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
-                  Be the first to write one.
+                  Be the first to add one.
                 </p>
               </div>
             ) : (
-              reviews.map((review) => (
-                <ReviewItem key={review.publicId} review={review} />
+              companies.map((company) => (
+                <motion.div key={company.id} variants={fadeInUp}>
+                  <CompanyItem company={company} />
+                </motion.div>
               ))
             )}
-          </div>
+          </motion.div>
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
             <div className="mt-20 flex items-center justify-center gap-12 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-12">
               <Button
                 variant="ghost"
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
                 className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
@@ -260,7 +319,7 @@ export function HomePage() {
               </div>
               <Button
                 variant="ghost"
-                onClick={() => setPage(p => p + 1)}
+                onClick={() => setPage((p) => p + 1)}
                 disabled={page >= pagination.totalPages}
                 className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
               >
@@ -268,7 +327,7 @@ export function HomePage() {
               </Button>
             </div>
           )}
-        </main>
+        </section>
       </Container>
     </Page>
   );
