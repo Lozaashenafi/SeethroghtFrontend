@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Home, Search, Building2, MessageSquareText, Info, Pencil, Plus, User } from 'lucide-react';
 import { cn } from '@/lib/cn';
@@ -26,6 +26,8 @@ const actionLinks = [
 ];
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
+  const location = useLocation();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -46,7 +48,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/40"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -55,29 +57,29 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex w-80 max-w-[85vw] flex-col bg-surface shadow-xl"
+            className="fixed inset-y-0 right-0 z-50 flex w-80 max-w-[85vw] flex-col border-l-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] shadow-[-8px_0px_0px_0px_var(--color-text)] dark:shadow-[-8px_0px_0px_0px_rgba(255,239,205,0.2)]"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile navigation"
           >
-            <div className="flex items-center justify-between border-b px-5 py-4">
-              <span className="font-semibold text-brand-olive dark:text-brand-cream">
+            <div className="flex items-center justify-between border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] px-5 py-4">
+              <span className="text-xs font-medium tracking-[0.2em] uppercase text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Menu
               </span>
               <div className="flex items-center gap-2">
-                <ThemeToggle />
+                <ThemeToggle className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)] transition-colors" />
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-2.5 text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5 transition-colors"
+                  className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] p-2 text-[var(--color-text)] dark:text-[var(--color-text)] active:bg-[var(--color-text)] active:text-white"
                   aria-label="Close menu"
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 py-4">
+            <div className="flex-1 overflow-y-auto px-5 py-5">
               {/* Action buttons */}
-              <div className="mb-6 space-y-2">
+              <div className="mb-6 space-y-3">
                 {actionLinks.map((link) => {
                   const Icon = link.icon;
                   return (
@@ -86,13 +88,13 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                       to={link.href}
                       onClick={onClose}
                       className={cn(
-                        'flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-semibold transition-colors',
+                        'flex items-center gap-3 px-4 py-3 text-sm font-medium tracking-normal transition-colors',
                         link.highlight
-                          ? 'bg-brand-olive text-brand-cream dark:bg-brand-cream dark:text-brand-olive'
-                          : 'border border-border text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5',
+                          ? 'border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90'
+                          : 'border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)]',
                       )}
                     >
-                      <Icon size={18} />
+                      <Icon size={18} className="shrink-0" />
                       {link.label}
                     </Link>
                   );
@@ -100,25 +102,27 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               </div>
 
               {/* Navigation links */}
-              <div className="border-t pt-4">
-                <p className="mb-2 text-[11px] font-medium tracking-normal text-text-secondary/50">
+              <div className="border-t-2 border-[var(--color-text)]/15 dark:border-[var(--color-border)] pt-5">
+                <p className="mb-2 px-1 text-[10px] font-medium tracking-[0.2em] uppercase text-stone-500 dark:text-[var(--color-text-secondary)]">
                   Browse
                 </p>
-                <ul className="space-y-0.5">
+                <ul className="space-y-1">
                   {navLinks.map((link) => {
                     const Icon = link.icon;
+                    const isActive = location.pathname === link.href;
                     return (
                       <li key={link.href}>
                         <Link
                           to={link.href}
                           onClick={onClose}
                           className={cn(
-                            'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium',
-                            'text-text-secondary hover:text-text hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5',
-                            'transition-colors duration-200',
+                            'flex items-center gap-3 px-4 py-3 text-sm font-medium tracking-normal transition-colors',
+                            isActive
+                              ? 'bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)]'
+                              : 'text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)]',
                           )}
                         >
-                          <Icon size={18} />
+                          <Icon size={18} className="shrink-0" />
                           {link.label}
                         </Link>
                       </li>

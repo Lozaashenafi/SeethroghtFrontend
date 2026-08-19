@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   MapPin,
-  ChevronLeft,
-  ChevronRight,
   Search,
   Plus,
   ArrowUpRight,
@@ -13,7 +11,7 @@ import {
   Eye
 } from 'lucide-react';
 import { Page, Container } from '@/components/common';
-import { Button, BrandStarRating, CompanyLogo } from '@/components/ui';
+import { BrandStarRating, CompanyLogo } from '@/components/ui';
 import { WelcomeModal, NicknameModal } from '@/components/onboarding';
 import { useAnonymous } from '@/context/AnonymousContext';
 import type { Company } from '@/types';
@@ -113,14 +111,13 @@ function CompanyItem({ company }: { company: Company }) {
 export function HomePage() {
   const navigate = useNavigate();
   const { resetKey } = useAnonymous();
-  const [page, setPage] = useState(1);
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Stable callback so NicknameModal's auto-close effect doesn't re-run on
   // every HomePage render (the inline arrow would change identity each time).
   const handleNicknameModalClose = useCallback(() => setShowNicknameModal(false), []);
-  const { data, isLoading, isError } = useCompanies({ page, limit: 10 });
+  const { data, isLoading, isError } = useCompanies({ limit: 100 });
   const companies = data?.companies ?? [];
   const pagination = data?.pagination;
   const totalCompanies = pagination?.total ?? 0;
@@ -141,11 +138,11 @@ export function HomePage() {
           remount and re-read the reset onboarding flags. On a normal load the
           key stays stable and the modals are never remounted mid-flow. */}
       <WelcomeModal
-        key={resetKey}
+        key={`welcome-${resetKey}`}
         onDismissed={() => setShowNicknameModal(true)}
       />
       <NicknameModal
-        key={resetKey}
+        key={`nickname-${resetKey}`}
         isOpen={showNicknameModal}
         onClose={handleNicknameModalClose}
       />
@@ -302,31 +299,6 @@ export function HomePage() {
               ))
             )}
           </motion.div>
-
-          {/* Pagination */}
-          {pagination && pagination.totalPages > 1 && (
-            <div className="mt-20 flex items-center justify-center gap-12 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-12">
-              <Button
-                variant="ghost"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-                className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
-              >
-                <ChevronLeft className="mr-2" /> Previous
-              </Button>
-              <div className=" text-sm font-medium bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] px-4 py-1">
-                {pagination.page} / {pagination.totalPages}
-              </div>
-              <Button
-                variant="ghost"
-                onClick={() => setPage((p) => p + 1)}
-                disabled={page >= pagination.totalPages}
-                className="font-medium text-xs tracking-normal hover:bg-stone-200 dark:hover:bg-[var(--color-card)] text-[var(--color-text)] dark:text-[var(--color-text)]"
-              >
-                Next <ChevronRight className="ml-2" />
-              </Button>
-            </div>
-          )}
         </section>
       </Container>
     </Page>
