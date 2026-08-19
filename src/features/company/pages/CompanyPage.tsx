@@ -28,7 +28,7 @@ export function CompanyPage() {
       <Container size="lg" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 max-w-2xl">
-          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Companies
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
@@ -138,7 +138,7 @@ export function CompanyPage() {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="mt-16 flex items-center justify-center gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-10">
+              <div className="mt-16 flex items-center justify-center gap-3 sm:gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-10">
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}

@@ -44,7 +44,7 @@ export function SearchPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-12 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Search Companies
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
@@ -108,11 +108,11 @@ export function SearchPage() {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-8 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">
               <p className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Found <span className="">{formatNumber(data?.pagination?.total ?? 0)}</span> result{(data?.pagination?.total ?? 0) !== 1 ? 's' : ''}
               </p>
-              <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] ">
+              <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)] break-words">
                 for &ldquo;{query}&rdquo;
               </span>
             </div>

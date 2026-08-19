@@ -27,7 +27,7 @@ function CompanyItem({ company }: { company: Company }) {
   const avgRating = company.averageRating ? Math.round(Number(company.averageRating)) : null;
 
   return (
-    <div className="group relative">
+    <div className="group relative w-full min-w-0">
       {/* Shadow element - uses primary color with low opacity instead of black */}
       <div
         className="absolute inset-0 translate-x-1 translate-y-1 bg-[var(--color-text)]/10 dark:bg-black/20"
@@ -37,10 +37,10 @@ function CompanyItem({ company }: { company: Company }) {
       <Link
         to={`/company/${company.slug}`}
         state={{ from: 'home' }}
-        className="relative block bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
+        className="relative block w-full min-w-0 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
         style={tornEffect}
       >
-        <div className="flex items-start justify-between gap-4 mb-7">
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-5 sm:mb-7">
           <div className="flex items-center gap-4 min-w-0">
             <CompanyLogo
               name={company.name}
@@ -59,11 +59,11 @@ function CompanyItem({ company }: { company: Company }) {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 flex items-center gap-1.5">
+              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 flex items-center gap-1.5 min-w-0 break-words">
                 {(company.city || company.country) && (
                   <>
-                    <MapPin size={12} />
-                    {[company.city, company.country].filter(Boolean).join(', ')}
+                    <MapPin size={12} className="shrink-0" />
+                    <span className="min-w-0 break-words">{[company.city, company.country].filter(Boolean).join(', ')}</span>
                   </>
                 )}
                 {!company.city && !company.country && `${formatNumber(company.reviewCount)} review${company.reviewCount !== 1 ? 's' : ''}`}
@@ -73,7 +73,7 @@ function CompanyItem({ company }: { company: Company }) {
           <ArrowUpRight className="shrink-0 text-stone-400 dark:text-[var(--color-text-secondary)] group-hover:text-[var(--color-text)] dark:group-hover:text-[var(--color-text)] transition-colors" />
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[var(--color-text)] dark:text-[var(--color-text)] mb-6">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[var(--color-text)] dark:text-[var(--color-text)] mb-5 sm:mb-6 min-w-0 break-words">
           <span className="flex items-baseline gap-1.5">
             <span className="text-base font-medium">{avgRating ? `${avgRating}/5` : 'N/A'}</span>
             {avgRating && <BrandStarRating rating={avgRating} size={9} />}
@@ -92,12 +92,12 @@ function CompanyItem({ company }: { company: Company }) {
         </div>
 
         {company.description && (
-          <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mb-6">
+          <p className="text-sm text-stone-600 dark:text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed mb-6 min-w-0 break-words">
             {company.description}
           </p>
         )}
 
-        <div className="flex items-center justify-between pt-5 border-t border-stone-200 dark:border-[var(--color-border)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-4 sm:pt-5 border-t border-stone-200 dark:border-[var(--color-border)]">
           <span className="text-[10px] font-medium tracking-[0.2em] text-[var(--color-text)] dark:text-[var(--color-text)] uppercase">
             Read employee reviews
           </span>
@@ -189,25 +189,25 @@ export function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.24, ease: 'easeOut' }}
-            className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-stretch"
+            className="mt-10 flex items-stretch gap-3"
           >
-            <div className="flex flex-1 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
-              <div className="flex flex-1 items-center gap-3 px-5">
+            <div className="flex flex-1 min-w-0 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
+              <div className="flex flex-1 items-center gap-3 px-4 sm:px-5 min-w-0">
                 <Search size={18} className="shrink-0 text-stone-400 dark:text-[var(--color-text-secondary)]" />
                 <input
                   ref={searchInputRef}
                   type="text"
                   placeholder={`Search ${totalCompanies ? formatNumber(totalCompanies) : ''} companies...`}
-                  className="w-full py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                  className="w-full min-w-0 py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
                   onKeyDown={(e) => e.key === 'Enter' && goSearch()}
                 />
               </div>
             </div>
             <Link
               to={ROUTES.CREATE_REVIEW}
-              className="inline-flex items-center justify-center gap-2 px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity"
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 px-3 sm:px-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity"
             >
-              <Plus size={16} /> Post a Review
+              <Plus size={14} /> Post
             </Link>
           </motion.div>
 
@@ -296,7 +296,7 @@ export function HomePage() {
               </div>
             ) : (
               companies.map((company) => (
-                <motion.div key={company.id} variants={fadeInUp}>
+                <motion.div key={company.id} variants={fadeInUp} className="min-w-0">
                   <CompanyItem company={company} />
                 </motion.div>
               ))

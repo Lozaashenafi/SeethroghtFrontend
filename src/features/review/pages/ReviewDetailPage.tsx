@@ -200,16 +200,16 @@ export function ReviewDetailPage() {
         {/* Review Card */}
         <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] mb-8" style={{ ...tornEffect, ...cardShadow }}>
           {/* Header */}
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div className="flex gap-4">
-              <div className="h-14 w-14 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-start justify-between gap-3 mb-6">
+            <div className="flex gap-4 min-w-0 flex-1">
+              <div className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {review.companyName?.charAt(0) || 'R'}
               </div>
-              <div>
-                <h1 className="text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                   {review.title}
                 </h1>
-                <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1.5 ">
+                <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1.5 break-words">
                   {review.nickname ?? 'Anonymous Employee'} {review.jobTitle ? `// ${review.jobTitle}` : ''}
                 </p>
               </div>
@@ -275,8 +275,8 @@ export function ReviewDetailPage() {
           </div>
 
           {/* Vote + Report */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-6">
               <span className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">Was this helpful?</span>
               <button
                 onClick={() => handleVote('helpful')}

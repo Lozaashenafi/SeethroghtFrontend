@@ -61,10 +61,11 @@ export function CompaniesTab() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <Input leftIcon={<Search size={16} />} placeholder="Search companies..." value={search}
           onChange={e => { setSearch(e.target.value); setPage(1); }} className="flex-1 max-w-sm" />
-        <Button variant="primary" size="sm" leftIcon={<Plus size={14} />} onClick={() => setShowCreateModal(true)}>
+        <Button variant="primary" size="sm" leftIcon={<Plus size={14} />} onClick={() => setShowCreateModal(true)}
+          className="sm:w-auto justify-center">
           Add Company
         </Button>
       </div>
@@ -79,7 +80,7 @@ export function CompaniesTab() {
         <div className="space-y-2">
           {companies.map(company => (
             <Card key={company.id} padding="sm">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <Building2 size={18} className="shrink-0 text-text-secondary" />
                   <div className="min-w-0 flex-1">
@@ -94,7 +95,7 @@ export function CompaniesTab() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <Link to={`/admin/companies/${company.slug}`}><Button variant="outline" size="sm">View</Button></Link>
                   <Link to={`/company/${company.slug}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
                   <Button variant="ghost" size="sm" onClick={() => setEditingCompany(company)}>Edit</Button>

@@ -30,14 +30,14 @@ function ReportCard({ report, onUpdate }: { report: Report; onUpdate: (publicId:
   return (
     <motion.div variants={fadeInUp}>
       <Card padding="md">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-error/5">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-error/5 shrink-0">
                 <Flag size={18} className="text-error" />
               </div>
               <div className="flex-1">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <p className="font-medium text-text capitalize">{report.reason}</p>
                   <Badge variant={statusBadgeVariant[report.status]} dot>
                     {report.status}
@@ -117,7 +117,7 @@ export function ReportsTab() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-2 border-b-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-4">
+      <div className="mb-6 flex flex-wrap items-center gap-2 border-b-2 border-[var(--color-text)]/20 dark:border-[var(--color-border)] pb-4">
         {['pending', 'resolved', 'dismissed', 'all'].map((filter) => (
           <button key={filter} onClick={() => { setStatusFilter(filter === 'all' ? '' : filter); setPage(1); }}
             className={`rounded-none border-2 px-4 py-2 text-[10px] font-medium tracking-normal transition-colors ${

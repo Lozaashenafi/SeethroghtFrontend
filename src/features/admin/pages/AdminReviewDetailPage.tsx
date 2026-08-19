@@ -153,7 +153,7 @@ export function AdminReviewDetailPage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           {review.status === 'pending' && (
             <>
               <Button variant="outline" size="sm" className="text-success hover:bg-success/5"
@@ -183,9 +183,9 @@ export function AdminReviewDetailPage() {
       </div>
 
       {/* Ratings */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-4">
         <Card padding="md" torn={false} className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             <Star size={20} className="fill-amber-400 text-amber-400" />
             {review.overallRating ? `${review.overallRating}/5` : 'N/A'}
           </div>
@@ -194,7 +194,7 @@ export function AdminReviewDetailPage() {
           </p>
         </Card>
         <Card padding="md" torn={false} className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             <ThumbsUp size={20} />
             {review.helpfulCount}
           </div>
@@ -203,7 +203,7 @@ export function AdminReviewDetailPage() {
           </p>
         </Card>
         <Card padding="md" torn={false} className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             <ThumbsDown size={20} />
             {review.unhelpfulCount}
           </div>

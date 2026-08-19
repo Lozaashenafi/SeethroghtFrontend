@@ -77,11 +77,11 @@ export function ReviewsTab() {
         <div className="space-y-2">
           {reviews.map(review => (
             <Card key={review.publicId} padding="sm">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <MessageSquare size={18} className="shrink-0 text-text-secondary" />
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium text-text truncate">{review.title}</span>
                       {review.isVerified && <Badge variant="success" dot className="shrink-0" />}
                       {review.status && review.status !== 'published' && (
@@ -101,7 +101,7 @@ export function ReviewsTab() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
                   <Link to={`/admin/reviews/${review.publicId}`}><Button variant="outline" size="sm">View</Button></Link>
                   {review.status === 'published' && (
                     <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>

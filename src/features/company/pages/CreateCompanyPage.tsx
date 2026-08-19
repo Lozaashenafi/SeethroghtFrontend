@@ -161,12 +161,12 @@ export function CreateCompanyPage() {
         </Link>
 
         <header className="mb-10">
-          <div className="flex items-center gap-5 mb-4">
-            <div className="h-16 w-16 flex items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
-              <Building2 size={28} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
+          <div className="flex items-center gap-4 sm:gap-5 mb-4">
+            <div className="h-14 w-14 sm:h-16 sm:w-16 shrink-0 flex items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+              <Building2 size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
-            <div>
-              <h1 className="text-4xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+            <div className="min-w-0">
+              <h1 className="text-3xl sm:text-4xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                 Add a Company
               </h1>
               <p className="mt-2 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
@@ -189,8 +189,8 @@ export function CreateCompanyPage() {
               <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)] mb-5">
                 Enter a company's website URL and we'll automatically pull their info — name, description, location, and industry.
               </p>
-              <div className="flex items-stretch gap-3">
-                <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] flex items-center px-4">
+              <div className="flex flex-col sm:flex-row items-stretch gap-3">
+                <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] flex items-center px-4 min-w-0">
                   <Globe size={16} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-3 shrink-0" />
                   <input
                     value={scrapeUrl}
@@ -204,7 +204,7 @@ export function CreateCompanyPage() {
                   type="button"
                   onClick={handleScrape}
                   disabled={isScraping || !scrapeUrl.trim()}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                 >
                   {isScraping ? (
                     <Loader2 size={16} className="animate-spin" />
@@ -381,7 +381,7 @@ export function CreateCompanyPage() {
               <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Location
               </h2>
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Country
@@ -433,16 +433,16 @@ export function CreateCompanyPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-4">
               <Link to="/company">
-                <span className="inline-flex items-center gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
+                <span className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
                   Cancel
                 </span>
               </Link>
               <button
                 type="submit"
                 disabled={!name.trim() || !slug.trim() || !industryId || showWebsiteWarning}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">

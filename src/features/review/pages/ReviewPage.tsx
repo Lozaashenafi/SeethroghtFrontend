@@ -24,16 +24,16 @@ function ReviewCard({ review }: { review: Review }) {
         className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
         style={tornEffect}
       >
-        <div className="flex justify-between items-start mb-5">
-          <div className="flex gap-4">
-            <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+        <div className="flex justify-between items-start gap-3 mb-5">
+          <div className="flex gap-4 min-w-0 flex-1">
+            <div className="h-10 w-10 shrink-0 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
               {review.companyName?.charAt(0) || 'R'}
             </div>
-            <div>
-              <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+            <div className="min-w-0">
+              <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                 {review.title}
               </h3>
-              <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 ">
+              <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 break-words">
                 {review.nickname ?? 'Anonymous'} @ {review.companyName} // {formatDate(review.createdAt)}
               </p>
             </div>
@@ -52,7 +52,7 @@ function ReviewCard({ review }: { review: Review }) {
           </div>
         )}
 
-        <div className="flex items-center justify-between pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
           <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
             <span className="flex items-center gap-1.5">
               <ThumbsUp size={12} /> {review.helpfulCount || 0}
@@ -117,7 +117,7 @@ export function ReviewPage() {
       <Container size="md" className="relative z-10 py-16">
         {/* Header */}
         <header className="mb-10 text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)] break-words">
             Recent Reviews
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
@@ -130,12 +130,12 @@ export function ReviewPage() {
           {selectedCompanyName ? (
             <div className="flex items-center gap-3 bg-[var(--color-paper)] dark:bg-[var(--color-card)] px-5 py-4 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Building2 size={16} className="text-[var(--color-text)] dark:text-[var(--color-text)] shrink-0" />
-              <span className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)] flex-1">
-                Showing reviews for <strong className="text-[var(--color-text)] dark:text-[var(--color-text)]">{selectedCompanyName}</strong>
+              <span className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)] flex-1 min-w-0">
+                Showing reviews for <strong className="text-[var(--color-text)] dark:text-[var(--color-text)] break-words">{selectedCompanyName}</strong>
               </span>
               <button
                 onClick={clearFilter}
-                className="p-1 hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+                className="p-1 shrink-0 hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
               >
                 <X size={16} />
               </button>
@@ -215,7 +215,7 @@ export function ReviewPage() {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="mt-16 flex items-center justify-center gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-10">
+              <div className="mt-16 flex items-center justify-center gap-3 sm:gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-10">
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}

@@ -105,7 +105,7 @@ export function UsersTab() {
         <div className="space-y-2">
           {identities.map(identity => (
             <Card key={identity.publicId} padding="sm">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <Users size={18} className="shrink-0 text-text-secondary" />
                   <div className="min-w-0 flex-1">

@@ -435,10 +435,10 @@ export function ReviewForm({
             Company
           </h2>
           {mode === 'edit' ? (
-            <div className="flex items-center justify-between border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
-              <div className="flex items-center gap-2">
-                <Building2 size={16} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
-                <span className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <Building2 size={16} className="shrink-0 text-[var(--color-text)] dark:text-[var(--color-text)]" />
+                <span className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] break-words">
                   {initialValues?.companyName || 'Company'}
                 </span>
               </div>
@@ -473,7 +473,7 @@ export function ReviewForm({
           </div>
 
           {/* Calculated overall — read-only, derived from the categories above */}
-          <div className="mt-6 flex items-center justify-between border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
             <div>
               <span className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Overall Rating
@@ -637,16 +637,16 @@ export function ReviewForm({
         )}
 
         {/* Submit */}
-        <div className="flex justify-end gap-4 pt-4">
+        <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
           <Link to={cancelHref}>
-            <span className="inline-flex items-center gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
+            <span className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
               Cancel
             </span>
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-8 py-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[6px_6px_0px_0px_var(--color-text)] dark:shadow-[6px_6px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {submitting ? (
               <><svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> {submitPendingLabel}</>

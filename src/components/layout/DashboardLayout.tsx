@@ -71,7 +71,7 @@ export function DashboardLayout() {
             </aside>
 
             {/* Mobile sidebar toggle */}
-            <div className="md:hidden mb-4">
+            <div className="lg:hidden mb-4">
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {adminNavLinks.map((link) => {
                   const Icon = link.icon;

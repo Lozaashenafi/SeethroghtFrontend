@@ -71,7 +71,7 @@ export function CompanyEditModal({ company, onClose, onSaved }: CompanyEditModal
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
-      <div className="w-full max-w-lg rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 shadow-[10px_10px_0px_0px_var(--color-text)] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]" onClick={e => e.stopPropagation()}>
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-none border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 shadow-[10px_10px_0px_0px_var(--color-text)] dark:shadow-[10px_10px_0px_0px_rgba(255,239,205,0.15)]" onClick={e => e.stopPropagation()}>
         <h2 className="mb-4 text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
           {isEditing ? `Edit ${company.name}` : 'Add Company'}
         </h2>

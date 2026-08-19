@@ -79,21 +79,21 @@ export function CompanyDetailPage() {
 
         {/* Company Hero */}
         <div className="mb-10">
-          <div className="flex items-start gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-6">
             <CompanyLogo
               name={company.name}
               logoUrl={company.logoUrl}
-              size="h-20 w-20"
-              fallbackTextSize="text-4xl"
-              className="border-4"
+              size="h-16 w-16 sm:h-20 sm:w-20"
+              fallbackTextSize="text-3xl sm:text-4xl"
+              className="border-4 shrink-0"
             />
-            <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-4">
-                <h1 className="text-5xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                <h1 className="text-3xl sm:text-5xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                   {company.name}
                 </h1>
                 {company.verified && (
-                  <span className="px-3 py-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <span className="shrink-0 px-3 py-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Verified
                   </span>
                 )}
@@ -127,9 +127,9 @@ export function CompanyDetailPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="mt-10 grid grid-cols-3 gap-3 sm:gap-4">
+            <div className="min-w-0 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-4 sm:p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {avgRating ? `${avgRating}/5` : 'N/A'}
               </div>
               {avgRating && <BrandStarRating rating={avgRating} size={14} className="justify-center mt-2" />}
@@ -137,17 +137,17 @@ export function CompanyDetailPage() {
                 Overall Rating
               </p>
             </div>
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+            <div className="min-w-0 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-4 sm:p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 {company.reviewCount}
               </div>
               <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Total Reviews
               </p>
             </div>
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
-              <div className="flex items-center justify-center gap-2 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                <ThumbsUp size={24} />
+            <div className="min-w-0 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-4 sm:p-6 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                <ThumbsUp className="h-5 w-5 sm:h-6 sm:w-6 shrink-0" />
                 {company.recommendationRate}
               </div>
               <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
@@ -167,9 +167,9 @@ export function CompanyDetailPage() {
 
         {/* Write Review CTA */}
         <Link to={`${ROUTES.CREATE_REVIEW}?company=${company.slug}`} className="block mb-12">
-          <div className="flex items-center justify-center gap-3 py-5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-sm tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
-            <Pencil size={18} />
-            Write a Review for {company.name}
+          <div className="flex flex-wrap items-center justify-center gap-3 px-4 py-5 text-center bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-sm tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity">
+            <Pencil size={18} className="shrink-0" />
+            <span className="break-words">Write a Review for {company.name}</span>
           </div>
         </Link>
 
@@ -206,14 +206,14 @@ export function CompanyDetailPage() {
                     className="relative bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border border-stone-200 dark:border-[var(--color-border)] transition-transform duration-300 hover:-translate-y-1"
                     style={tornEffect}
                   >
-                    <div className="flex justify-between items-start mb-5">
-                      <div className="flex gap-4">
-                        <div className="h-10 w-10 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    <div className="flex justify-between items-start gap-3 mb-5">
+                      <div className="flex gap-4 min-w-0 flex-1">
+                        <div className="h-10 w-10 shrink-0 flex items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] text-base font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                           {review.companyName?.charAt(0)}
                         </div>
-                        <div>
-                          <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)]">{review.title}</h3>
-                          <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-0.5 ">
+                        <div className="min-w-0">
+                          <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)] break-words">{review.title}</h3>
+                          <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-0.5 break-words">
                             {review.jobTitle} // {formatDate(review.createdAt)}
                           </p>
                         </div>
@@ -236,7 +236,7 @@ export function CompanyDetailPage() {
                       </div>
                     )}
 
-                    <div className="flex items-center justify-between pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
                       <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
                         <span className="flex items-center gap-1.5">
                           <ThumbsUp size={12} /> {review.helpfulCount || 0}

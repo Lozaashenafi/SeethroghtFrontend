@@ -105,7 +105,7 @@ export function EditReviewPage() {
         </Link>
 
         <header className="mb-10">
-          <h1 className="text-4xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
             Edit Review
           </h1>
           <p className="mt-2 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">

@@ -136,7 +136,7 @@ export function AdminCompanyDetailPage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link to={`/company/${company.slug}`}>
             <Button variant="outline" size="sm" rightIcon={<ExternalLink size={14} />}>View Public Page</Button>
           </Link>
@@ -149,9 +149,9 @@ export function AdminCompanyDetailPage() {
       </div>
 
       {/* Stats */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid grid-cols-3 gap-3 sm:gap-4">
         <Card padding="md" torn={false} className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             <Star size={20} className="fill-amber-400 text-amber-400" />
             {avgRating ? avgRating.toFixed(1) : 'N/A'}
           </div>
@@ -160,7 +160,7 @@ export function AdminCompanyDetailPage() {
           </p>
         </Card>
         <Card padding="md" torn={false} className="text-center">
-          <div className="text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             {formatNumber(company.reviewCount)}
           </div>
           <p className="mt-2 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
@@ -168,7 +168,7 @@ export function AdminCompanyDetailPage() {
           </p>
         </Card>
         <Card padding="md" torn={false} className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
             <ThumbsUp size={20} />
             {company.recommendationRate}
           </div>

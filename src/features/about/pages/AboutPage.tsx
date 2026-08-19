@@ -87,7 +87,7 @@ export function AboutPage() {
         {/* Hero */}
         <header className="mb-16 text-center max-w-2xl mx-auto">
           <Logo className="mx-auto mb-6 h-20 w-20" />
-          <h1 className="text-4xl font-medium tracking-normal mb-3 text-[var(--color-text)] dark:text-[var(--color-text)]">
+          <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-3 text-[var(--color-text)] dark:text-[var(--color-text)]">
             About See Through
           </h1>
           <p className="text-stone-500 dark:text-[var(--color-text-secondary)] text-base">
