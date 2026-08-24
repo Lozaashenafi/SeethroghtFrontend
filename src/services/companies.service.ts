@@ -73,3 +73,42 @@ export async function scrapeCompanyWebsite(website: string): Promise<ScrapedComp
   if (!data.data) throw new Error('Failed to scrape website');
   return data.data;
 }
+
+export interface UploadedLogo {
+  url: string;
+  pathname: string;
+  size: number;
+}
+
+/**
+ * Upload a logo image to Vercel Blob via the backend. Returns the permanent
+ * CDN URL to use as `logoUrl`. Works for any visitor — attach the returned
+ * URL when creating/updating a company.
+ */
+export async function uploadCompanyLogo(file: File): Promise<UploadedLogo> {
+  const form = new FormData();
+  form.append('file', file);
+  // Explicit multipart header — overrides the apiClient's global
+  // 'application/json' default so multer can parse the file boundary.
+  const { data } = await apiClient.post<ApiResponse<UploadedLogo>>(API_ENDPOINTS.UPLOADS_LOGO, form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  if (!data.data) throw new Error('Failed to upload logo');
+  return data.data;
+}
+
+/**
+ * Admin-only: upload a logo and attach it to an existing company in one call.
+ * The backend swaps the stored URL and cleans up the previous blob.
+ */
+export async function uploadCompanyLogoFor(slug: string, file: File): Promise<Company> {
+  const form = new FormData();
+  form.append('file', file);
+  const { data } = await apiClient.put<ApiResponse<Company>>(
+    `${API_ENDPOINTS.COMPANIES}/${encodeURIComponent(slug)}/logo`,
+    form,
+    { headers: { 'Content-Type': 'multipart/form-data' } },
+  );
+  if (!data.data) throw new Error('Failed to update company logo');
+  return data.data;
+}

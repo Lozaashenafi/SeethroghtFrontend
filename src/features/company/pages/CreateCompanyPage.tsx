@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Building2, ArrowLeft, Send, Globe, Search, Loader2, Sparkles, AlertTriangle, Info } from 'lucide-react';
 import { Container } from '@/components/common';
-import { CompanyLogo } from '@/components/ui';
+import { LogoUpload } from '@/components/ui';
 import { useIndustries, useDebounce, useCompanyDuplicateCheck } from '@/hooks';
-import { createCompany, scrapeCompanyWebsite, type ScrapedCompanyData } from '@/services/companies.service';
+import { createCompany, scrapeCompanyWebsite, uploadCompanyLogo, type ScrapedCompanyData } from '@/services/companies.service';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
@@ -215,17 +215,10 @@ export function CreateCompanyPage() {
                 </button>
               </div>
               {logoUrl && (
-                <div className="mt-5 flex items-center gap-4 border-2 border-dashed border-stone-300 dark:border-[var(--color-border)] p-4">
-                  <CompanyLogo name={name || 'Company'} logoUrl={logoUrl} size="h-14 w-14" fallbackTextSize="text-2xl" />
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
-                      Logo found — it will be saved with the company
-                    </p>
-                    <p className="mt-0.5 truncate text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">
-                      {logoUrl}
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-5 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] flex items-center gap-2">
+                  <Sparkles size={12} className="text-emerald-600 dark:text-emerald-400" />
+                  Logo found on the website — preview it and manage it under Basic Information below.
+                </p>
               )}
             </div>
 
@@ -235,6 +228,13 @@ export function CreateCompanyPage() {
                 Basic Information
               </h2>
               <div className="space-y-5">
+                <LogoUpload
+                  name={name}
+                  value={logoUrl}
+                  onChange={(url) => setLogoUrl(url)}
+                  upload={async (file) => (await uploadCompanyLogo(file)).url}
+                />
+
                 <div className="space-y-1.5">
                   <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                     Company Name *

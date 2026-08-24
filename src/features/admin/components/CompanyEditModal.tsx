@@ -2,10 +2,10 @@ import { useState } from 'react';
 import {
   Check,
 } from 'lucide-react';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, LogoUpload } from '@/components/ui';
 import { useIndustries } from '@/hooks';
 import { adminUpdateCompany } from '@/services/admin.service';
-import { createCompany } from '@/services/companies.service';
+import { createCompany, uploadCompanyLogo, uploadCompanyLogoFor } from '@/services/companies.service';
 import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import type { Company } from '@/types';
@@ -80,7 +80,22 @@ export function CompanyEditModal({ company, onClose, onSaved }: CompanyEditModal
           <Input label="Slug" value={slug} onChange={e => setSlug(e.target.value)} required={!isEditing}
             placeholder="my-company" disabled={isEditing} helperText="Lowercase with dashes" />
           <Input label="Website" value={website} onChange={e => setWebsite(e.target.value)} placeholder="https://..." />
-          <Input label="Logo URL" value={logoUrl} onChange={e => setLogoUrl(e.target.value)} placeholder="https://.../logo.png (optional)" helperText="Shown next to the company name" />
+          <LogoUpload
+            name={name}
+            value={logoUrl || null}
+            onChange={(url) => setLogoUrl(url ?? '')}
+            upload={async (file) => {
+              // Editing an existing company: one-shot endpoint uploads the
+              // image AND persists it, so the change is live immediately.
+              if (isEditing) {
+                const updated = await uploadCompanyLogoFor(company.slug, file);
+                return updated.logoUrl ?? '';
+              }
+              // Creating: upload to storage now; the URL is sent with the
+              // create payload on submit.
+              return (await uploadCompanyLogo(file)).url;
+            }}
+          />
           <div className="grid grid-cols-2 gap-3">
             <Input label="Country" value={country} onChange={e => setCountry(e.target.value)} />
             <Input label="City" value={city} onChange={e => setCity(e.target.value)} />

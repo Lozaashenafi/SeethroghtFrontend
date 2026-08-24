@@ -8,3 +8,4 @@ export { BrandStarRating } from './BrandStarRating';
 export { TornSkeleton } from './TornSkeleton';
 export { Logo } from './Logo';
 export { CompanyLogo } from './CompanyLogo';
+export { LogoUpload } from './LogoUpload';

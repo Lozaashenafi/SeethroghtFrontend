@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   COMPANIES: `${API_PREFIX}/companies`,
   COMPANIES_SCRAPE: `${API_PREFIX}/companies/scrape`,
   COMPANIES_CHECK: `${API_PREFIX}/companies/check`,
+  UPLOADS_LOGO: `${API_PREFIX}/uploads/logo`,
   REVIEWS: `${API_PREFIX}/reviews`,
   REVIEWS_ADMIN_ALL: `${API_PREFIX}/reviews/admin/all`,
   COMMENTS: `${API_PREFIX}/comments`,
