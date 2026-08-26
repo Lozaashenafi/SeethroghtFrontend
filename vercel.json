@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://seethroght-backend.vercel.app/api/$1" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
 }
