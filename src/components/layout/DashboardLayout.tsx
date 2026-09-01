@@ -22,7 +22,7 @@ export function DashboardLayout() {
   const { admin } = useAuth();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)]">
       <AdminHeader />
       <div className="flex-1 py-8">
         <Container size="full" className="px-4 sm:px-6 lg:px-8">

@@ -7,6 +7,16 @@ const AUTH_ADMIN_KEY = 'see-through-admin-user';
 const isAdminRoute = (pathname: string): boolean =>
   pathname === '/admin' || pathname.startsWith('/admin/');
 
+// Read the CSRF token from the cookie set by the backend.
+function getCsrfToken(): string | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]*)/);
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
+// Methods that require CSRF protection.
+const STATE_METHODS = new Set(['post', 'put', 'patch', 'delete']);
+
 const apiClient = axios.create({
   baseURL: config.api.baseURL,
   timeout: config.api.timeout,
@@ -18,6 +28,13 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (reqConfig: InternalAxiosRequestConfig) => {
+    // Attach CSRF token for state-changing requests.
+    if (STATE_METHODS.has(reqConfig.method?.toLowerCase() ?? '')) {
+      const csrfToken = getCsrfToken();
+      if (csrfToken) {
+        reqConfig.headers.set('X-CSRF-Token', csrfToken);
+      }
+    }
     return reqConfig;
   },
   (error: AxiosError) => {

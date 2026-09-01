@@ -117,7 +117,7 @@ export function HomePage() {
   // Stable callback so NicknameModal's auto-close effect doesn't re-run on
   // every HomePage render (the inline arrow would change identity each time).
   const handleNicknameModalClose = useCallback(() => setShowNicknameModal(false), []);
-  const { data, isLoading, isError } = useCompanies({ limit: 100 });
+  const { data, isLoading, isError } = useCompanies({ limit: 10 });
   const companies = data?.companies ?? [];
   const pagination = data?.pagination;
   const totalCompanies = pagination?.total ?? 0;
