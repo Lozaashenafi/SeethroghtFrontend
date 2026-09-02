@@ -7,6 +7,17 @@ const API_PREFIX = '/api/v1';
 export const API_ENDPOINTS = {
   AUTH_LOGIN: `${API_PREFIX}/auth/login`,
   AUTH_LOGOUT: `${API_PREFIX}/auth/logout`,
+  // User authentication
+  USER_REGISTER: `${API_PREFIX}/user/register`,
+  USER_LOGIN: `${API_PREFIX}/user/login`,
+  USER_GOOGLE: `${API_PREFIX}/user/google`,
+  USER_ME: `${API_PREFIX}/user/me`,
+  USER_LOGOUT: `${API_PREFIX}/user/logout`,
+  USER_VERIFY_EMAIL: `${API_PREFIX}/user/verify-email`,
+  USER_FORGOT_PASSWORD: `${API_PREFIX}/user/forgot-password`,
+  USER_RESET_PASSWORD: `${API_PREFIX}/user/reset-password`,
+  USER_RESEND_VERIFICATION: `${API_PREFIX}/user/resend-verification`,
+  USER_SHOW_DISPLAY_NAME: `${API_PREFIX}/user/show-display-name`,
   COMPANIES: `${API_PREFIX}/companies`,
   COMPANIES_SCRAPE: `${API_PREFIX}/companies/scrape`,
   COMPANIES_CHECK: `${API_PREFIX}/companies/check`,

@@ -15,6 +15,9 @@ export const ROUTES = {
   CREATE_REVIEW: '/review/new',
   PROFILE: '/profile',
   CREATE_COMPANY: '/company/new',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  VERIFY_EMAIL: '/verify-email',
   admin: {
     ROOT: '/admin',
     COMPANIES: '/admin/companies',

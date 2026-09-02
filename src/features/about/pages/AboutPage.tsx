@@ -28,9 +28,9 @@ const appFacts = [
   },
   {
     icon: ShieldCheck,
-    title: 'How anonymity works',
+    title: 'Verified accounts, anonymous reviews',
     body:
-      'You never create an account or reveal your identity. Each visitor is issued a private, session-based identity so you can post reviews, comments, and votes without your name attached. Your identity cannot be traced back to you by employers, and admins can only block an identity — never see who is behind it.',
+      'You create a free account with your email and password (or sign in with Google) to verify you are a real person. But when you post a review, comment, or vote, your identity stays completely anonymous. Your name and email are never shown to anyone — only your anonymous nickname appears. We verify humans, not identities.',
   },
 ];
 
@@ -58,6 +58,7 @@ const platformResponsibilities = [
 ];
 
 const userResponsibilities = [
+  'Verify your email address before posting — this helps us keep reviews trustworthy.',
   'Review only companies you have genuinely worked for — no fake or paid reviews.',
   'Share facts and specific experiences, not rumour, hearsay, or personal attacks.',
   'Never post confidential, proprietary, or identifying information about colleagues.',
@@ -186,14 +187,22 @@ export function AboutPage() {
               Have something to say?
             </h2>
             <p className="mx-auto mb-8 max-w-md text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
-              Your experience can help someone make a better decision. Share it anonymously.
+              Create a free account, verify your email, and share your experience anonymously. Your name is never revealed.
             </p>
-            <Link
-              to={ROUTES.CREATE_REVIEW}
-              className="inline-block bg-[var(--color-text)] dark:bg-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity"
-            >
-              Write a Review
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                to={ROUTES.REGISTER}
+                className="inline-block bg-[var(--color-text)] dark:bg-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity"
+              >
+                Create Account
+              </Link>
+              <Link
+                to={ROUTES.LOGIN}
+                className="inline-block border-2 border-[var(--color-text)] dark:border-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-100 dark:hover:bg-[var(--color-card)] transition-colors"
+              >
+                Log In
+              </Link>
+            </div>
           </div>
         </section>
       </Container>

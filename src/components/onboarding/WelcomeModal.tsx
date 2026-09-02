@@ -70,7 +70,7 @@ export function WelcomeModal({ onDismissed }: WelcomeModalProps) {
             Welcome to See Through
           </h2>
           <p className="mt-3 text-base text-[#6b7280]">
-            Honest, anonymous workplace reviews — no account needed.
+            Honest, anonymous workplace reviews — verified accounts keep it trustworthy.
           </p>
         </div>
 

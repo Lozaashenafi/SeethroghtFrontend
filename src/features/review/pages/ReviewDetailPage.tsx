@@ -6,14 +6,17 @@ import {
   ThumbsDown,
   Send,
   Flag,
+  LogIn,
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useReview, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { formatDate, profanityError } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
+import { ROUTES } from '@/constants';
 
 function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onClose: () => void }) {
   const [reason, setReason] = useState('');
@@ -115,8 +118,14 @@ export function ReviewDetailPage() {
 
   const createComment = useCreateComment();
   const vote = useVoteOnReview();
+  const { isAuthenticated } = useUserAuth();
 
   const handleSubmitComment = async () => {
+    if (!isAuthenticated) {
+      const redirect = encodeURIComponent(window.location.pathname);
+      window.location.href = `${ROUTES.LOGIN}?redirect=${redirect}`;
+      return;
+    }
     if (!publicId || !commentText.trim()) return;
 
     // Profanity gate — warn and block until the comment is cleaned up.
@@ -140,6 +149,11 @@ export function ReviewDetailPage() {
   };
 
   const handleVote = async (voteType: 'helpful' | 'unhelpful') => {
+    if (!isAuthenticated) {
+      const redirect = encodeURIComponent(window.location.pathname);
+      window.location.href = `${ROUTES.LOGIN}?redirect=${redirect}`;
+      return;
+    }
     if (!publicId) return;
     try {
       await vote.mutateAsync({ reviewPublicId: publicId, voteType });
@@ -315,25 +329,40 @@ export function ReviewDetailPage() {
 
           {/* Comment Form */}
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] mb-6" style={tornEffect}>
-            <div className="flex gap-3">
-              <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
-                <input
-                  value={commentText}
-                  onChange={(e) => { setCommentText(e.target.value); if (commentError) setCommentError(''); }}
-                  placeholder="Share your thoughts..."
-                  className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
-                  onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment()}
-                />
+            {isAuthenticated ? (
+              <div className="flex gap-3">
+                <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+                  <input
+                    value={commentText}
+                    onChange={(e) => { setCommentText(e.target.value); if (commentError) setCommentError(''); }}
+                    placeholder="Share your thoughts..."
+                    className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmitComment()}
+                  />
+                </div>
+                <button
+                  onClick={handleSubmitComment}
+                  disabled={!commentText.trim() || createComment.isPending}
+                  className="px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  <Send size={14} />
+                  Post
+                </button>
               </div>
-              <button
-                onClick={handleSubmitComment}
-                disabled={!commentText.trim() || createComment.isPending}
-                className="px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                <Send size={14} />
-                Post
-              </button>
-            </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
+                  Log in to leave a comment.
+                </p>
+                <Link
+                  to={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(window.location.pathname)}`}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] hover:opacity-90 transition-opacity"
+                >
+                  <LogIn size={14} />
+                  Log In
+                </Link>
+              </div>
+            )}
             {commentError && (
               <p className="mt-2 text-[11px] font-medium tracking-normal text-red-700 dark:text-red-400">
                 {commentError}

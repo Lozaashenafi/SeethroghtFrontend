@@ -7,6 +7,7 @@ import { CheckCircle2, XCircle, AlertTriangle, Info, Loader2 } from 'lucide-reac
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { AnonymousProvider } from '@/context/AnonymousContext';
+import { UserAuthProvider } from '@/context/UserAuthContext';
 import { queryClient } from '@/lib/queryClient';
 
 interface ProvidersProps {
@@ -20,7 +21,8 @@ export function Providers({ children }: ProvidersProps) {
           identity changes (a fresh identity = fresh start in light mode). */}
       <AnonymousProvider>
         <ThemeProvider>
-          <AuthProvider>
+          <UserAuthProvider>
+            <AuthProvider>
             <BrowserRouter>
             {children}
             <Toaster
@@ -60,8 +62,8 @@ export function Providers({ children }: ProvidersProps) {
                 },
               }}
             />
-          </BrowserRouter>
-          </AuthProvider>
+          </BrowserRouter>            </AuthProvider>
+          </UserAuthProvider>
         </ThemeProvider>
       </AnonymousProvider>
       <ReactQueryDevtools initialIsOpen={false} />

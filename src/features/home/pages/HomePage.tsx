@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Page, Container } from '@/components/common';
 import { BrandStarRating, CompanyLogo } from '@/components/ui';
-import { WelcomeModal, NicknameModal } from '@/components/onboarding';
+import { WelcomeModal } from '@/components/onboarding';
 import { useAnonymous } from '@/context/AnonymousContext';
 import type { Company } from '@/types';
 import { useCompanies } from '@/hooks';
@@ -111,12 +111,9 @@ function CompanyItem({ company }: { company: Company }) {
 export function HomePage() {
   const navigate = useNavigate();
   const { resetKey } = useAnonymous();
-  const [showNicknameModal, setShowNicknameModal] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Stable callback so NicknameModal's auto-close effect doesn't re-run on
-  // every HomePage render (the inline arrow would change identity each time).
-  const handleNicknameModalClose = useCallback(() => setShowNicknameModal(false), []);
+
   const { data, isLoading, isError } = useCompanies({ limit: 10 });
   const companies = data?.companies ?? [];
   const pagination = data?.pagination;
@@ -137,15 +134,7 @@ export function HomePage() {
           identity, e.g. after an admin deleted the previous one) so the modals
           remount and re-read the reset onboarding flags. On a normal load the
           key stays stable and the modals are never remounted mid-flow. */}
-      <WelcomeModal
-        key={`welcome-${resetKey}`}
-        onDismissed={() => setShowNicknameModal(true)}
-      />
-      <NicknameModal
-        key={`nickname-${resetKey}`}
-        isOpen={showNicknameModal}
-        onClose={handleNicknameModalClose}
-      />
+      <WelcomeModal key={`welcome-${resetKey}`} />
 
       <Container size="lg" className="relative z-10">
         {/* ─── Hero ─── */}
@@ -177,7 +166,7 @@ export function HomePage() {
               className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-stone-600 dark:text-[var(--color-text-secondary)]"
             >
               See Through is a ledger of workplaces — real employees sharing what the
-              interview never told you. No accounts. No names. No filter.
+              interview never told you. Verified accounts. Anonymous voices. No filter.
             </motion.p>
           </div>
 
@@ -225,7 +214,7 @@ export function HomePage() {
             </span>
             <span className="flex items-center gap-2">
               <Eye size={12} />
-              No account needed
+              Sign up to post
             </span>
           </motion.div>
         </section>

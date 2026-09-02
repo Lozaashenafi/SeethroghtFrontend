@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { MainLayout } from '@/components/layout';
 import { DashboardLayout } from '@/components/layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { ProtectedUserRoute } from '@/features/auth/components/ProtectedUserRoute';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { ROUTES } from '@/constants';
 
@@ -17,6 +18,9 @@ import { CreateReviewPage } from '@/features/review/pages/CreateReviewPage';
 import { EditReviewPage } from '@/features/review/pages/EditReviewPage';
 import { ProfilePage } from '@/features/profile/pages/ProfilePage';
 import { CreateCompanyPage } from '@/features/company/pages/CreateCompanyPage';
+import { LoginPage as UserLoginPage } from '@/features/auth/pages/LoginPage';
+import { RegisterPage } from '@/features/auth/pages/RegisterPage';
+import { VerifyEmailPage } from '@/features/auth/pages/VerifyEmailPage';
 import { NotFoundPage } from '@/routes/NotFoundPage';
 
 // Lazy-loaded admin pages — public visitors never pay the bundle cost.
@@ -45,11 +49,20 @@ export function AppRouter() {
           <Route path={ROUTES.COMPANY} element={<CompanyPage />} />
           <Route path={ROUTES.COMPANY_DETAIL} element={<CompanyDetailPage />} />
           <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
-          <Route path={ROUTES.CREATE_REVIEW} element={<CreateReviewPage />} />
+          <Route
+            path={ROUTES.CREATE_REVIEW}
+            element={<ProtectedUserRoute><CreateReviewPage /></ProtectedUserRoute>}
+          />
           <Route path={ROUTES.REVIEW_DETAIL} element={<ReviewDetailPage />} />
-          <Route path={ROUTES.EDIT_REVIEW} element={<EditReviewPage />} />
-          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+          <Route
+            path={ROUTES.EDIT_REVIEW}
+            element={<ProtectedUserRoute><EditReviewPage /></ProtectedUserRoute>}
+          />
+          <Route path={ROUTES.PROFILE} element={<ProtectedUserRoute><ProfilePage /></ProtectedUserRoute>} />
           <Route path={ROUTES.CREATE_COMPANY} element={<CreateCompanyPage />} />
+          <Route path={ROUTES.LOGIN} element={<UserLoginPage />} />
+          <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
         </Route>
         <Route path="/admin/login" element={<Suspense fallback={<AdminFallback />}><LoginPage /></Suspense>} />
         <Route

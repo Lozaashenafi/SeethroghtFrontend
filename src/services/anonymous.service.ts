@@ -24,19 +24,3 @@ export async function getAnonymousIdentity(): Promise<AnonymousIdentity> {
   if (!data.data) throw new Error('Failed to load anonymous identity');
   return data.data;
 }
-
-export async function regenerateNickname(): Promise<AnonymousIdentity> {
-  const { data } = await apiClient.patch<ApiResponse<AnonymousIdentity>>(`${API_ENDPOINTS.ANONYMOUS_SELF}/nickname`);
-  if (!data.data) throw new Error('Failed to regenerate nickname');
-  return data.data;
-}
-
-/** Set a custom nickname (the one-time change budget is consumed by the server). */
-export async function updateNickname(nickname: string): Promise<AnonymousIdentity> {
-  const { data } = await apiClient.patch<ApiResponse<AnonymousIdentity>>(
-    `${API_ENDPOINTS.ANONYMOUS_SELF}/nickname`,
-    { nickname },
-  );
-  if (!data.data) throw new Error('Failed to set nickname');
-  return data.data;
-}

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Pencil, ShieldCheck, MessageSquareText, User } from 'lucide-react';
+import { ArrowLeft, Pencil, CheckCircle, AlertCircle, Loader2, Mail, MessageSquareText, LogOut, Eye, EyeOff } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useMyReviews } from '@/hooks';
-import { useAnonymous } from '@/context/AnonymousContext';
+import { useUserAuth } from '@/context/UserAuthContext';
+import { resendVerification, updateShowDisplayName } from '@/services/userAuth.service';
 import { ROUTES } from '@/constants';
 import { formatDate } from '@/utils';
-import { getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import type { Review } from '@/types';
@@ -26,98 +26,6 @@ const statusMeta: Record<Review['status'] & string, { label: string; className: 
     className: 'border border-orange-700 dark:border-orange-400 text-orange-700 dark:text-orange-400',
   },
 };
-
-function NameEditor() {
-  const { identity, setNickname } = useAnonymous();
-  const [name, setName] = useState('');
-  const [saving, setSaving] = useState(false);
-
-  if (!identity) return null;
-
-  const canChange = !identity.nicknameRegeneratedAt;
-  const currentName = name || identity.nickname || '';
-
-  const handleSave = async () => {
-    const trimmed = name.trim();
-    if (!trimmed) {
-      toast.error('Please enter a display name');
-      return;
-    }
-    if (trimmed.length > 30) {
-      toast.error('Display name must be 30 characters or fewer');
-      return;
-    }
-    setSaving(true);
-    try {
-      await setNickname(trimmed);
-      setName('');
-      toast.success('Your display name has been updated');
-    } catch (error) {
-      toast.error(
-        getApiErrorMessage(
-          error,
-          'Failed to change display name. It can only be changed once.',
-        ),
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" style={cardShadow}>
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div>
-          <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
-            YOUR DISPLAY NAME
-          </p>
-          <p className="mt-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
-            {identity.nickname ?? 'Anonymous'}
-          </p>
-        </div>
-        <div className="flex h-12 w-12 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
-          <User size={20} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
-        </div>
-      </div>
-
-      {canChange ? (
-        <>
-          <p className="mb-4 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)]">
-            This name appears next to your reviews. You can change it <strong className="text-[var(--color-text)] dark:text-[var(--color-text)]">once</strong> — pick something you'll be happy with.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-                placeholder={currentName || 'Type your display name...'}
-                maxLength={30}
-                className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={saving}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {saving ? 'Saving...' : 'Save Name'}
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="flex items-start gap-2 border-2 border-stone-200 dark:border-[var(--color-border)] bg-white dark:bg-[var(--color-surface)] px-4 py-3">
-          <ShieldCheck size={16} className="mt-0.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
-          <p className="text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)]">
-            You already used your one-time name change. Your display name is now permanent so other reviewers can recognize you.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function ReviewRow({ review }: { review: Review }) {
   const status = statusMeta[review.status ?? 'published'];
@@ -173,10 +81,45 @@ function ReviewRow({ review }: { review: Review }) {
 }
 
 export function ProfilePage() {
-  const { isReady } = useAnonymous();
+  const { user, logout, setUser } = useUserAuth();
   const { data, isLoading } = useMyReviews({ page: 1, limit: 100 });
+  const [resending, setResending] = useState(false);
 
   const reviews = data?.reviews ?? [];
+
+  const handleResendVerification = async () => {
+    setResending(true);
+    try {
+      await resendVerification();
+      toast.success('Verification email sent! Check your inbox.');
+    } catch {
+      toast.error('Failed to send verification email.');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    toast.success('Logged out');
+  };
+
+  const handleToggleShowName = async () => {
+    if (!user) return;
+    try {
+      const updated = await updateShowDisplayName(!user.showDisplayName);
+      setUser(updated);
+      toast.success(
+        updated.showDisplayName
+          ? 'Your name will now appear on new reviews'
+          : 'Your reviews will now show as Anonymous'
+      );
+    } catch {
+      toast.error('Failed to update preference');
+    }
+  };
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
@@ -200,17 +143,106 @@ export function ProfilePage() {
             My Profile
           </h1>
           <p className="mt-2 text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
-            Your reviews, your alias — all anonymous, all yours.
+            Your account, your reviews — all anonymous, all yours.
           </p>
         </header>
 
-        {!isReady ? (
-          <TornSkeleton count={1} height="h-40" />
-        ) : (
-          <div className="mb-12">
-            <NameEditor />
+        {/* Account Info Card */}
+        <div className="mb-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" style={cardShadow}>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
+                ACCOUNT
+              </p>
+              <p className="mt-2 text-lg font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                {user.displayName}
+              </p>
+              <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
+                {user.email}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {user.emailVerified ? (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                  <CheckCircle size={12} />
+                  Verified
+                </span>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-medium tracking-normal text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+                    <AlertCircle size={12} />
+                    Not verified
+                  </span>
+                  <button
+                    onClick={handleResendVerification}
+                    disabled={resending}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors disabled:opacity-40"
+                  >
+                    {resending ? (
+                      <Loader2 size={10} className="animate-spin" />
+                    ) : (
+                      <>
+                        <Mail size={10} />
+                        Verify
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        )}
+          <p className="mt-3 text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+            Your account is private — it will never be shown on your reviews.
+          </p>
+
+          {/* Show Name Toggle */}
+          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-[var(--color-border)]">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                {user.showDisplayName ? (
+                  <Eye size={14} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
+                ) : (
+                  <EyeOff size={14} className="text-stone-400 dark:text-[var(--color-text-secondary)]" />
+                )}
+                <div>
+                  <p className="text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    Show my name on reviews
+                  </p>
+                  <p className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                    {user.showDisplayName
+                      ? `New reviews will show as "${user.displayName}"`
+                      : 'New reviews will show as "Anonymous"'
+                    }
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleToggleShowName}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  user.showDisplayName
+                    ? 'bg-[var(--color-text)] dark:bg-[var(--color-text)]'
+                    : 'bg-stone-300 dark:bg-stone-600'
+                }`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    user.showDisplayName ? 'translate-x-5' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-[var(--color-border)]">
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 px-4 py-2 text-[11px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] border border-stone-200 dark:border-[var(--color-border)] hover:border-[var(--color-text)] dark:hover:border-[var(--color-text)] transition-colors"
+            >
+              <LogOut size={12} />
+              Log Out
+            </button>
+          </div>
+        </div>
 
         {/* My Reviews */}
         <div className="flex items-center justify-between mb-6 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-3">

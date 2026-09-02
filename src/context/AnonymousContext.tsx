@@ -1,8 +1,6 @@
-import { createContext, useState, useCallback, useContext, useEffect, type ReactNode } from 'react';
+import { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import {
   getAnonymousIdentity,
-  regenerateNickname,
-  updateNickname,
   type AnonymousIdentity,
 } from '@/services/anonymous.service';
 
@@ -13,8 +11,6 @@ interface AnonymousContextType {
    * previous one was deleted by an admin). Used to remount the onboarding
    * modals so they re-read the reset flags. */
   resetKey: number;
-  regenerate: () => Promise<void>;
-  setNickname: (nickname: string) => Promise<void>;
 }
 
 const AnonymousContext = createContext<AnonymousContextType | null>(null);
@@ -25,7 +21,6 @@ const AnonymousContext = createContext<AnonymousContextType | null>(null);
 // reset so the welcome page shows again.
 const IDENTITY_PUBLIC_ID_KEY = 'see-through-identity-public-id';
 const WELCOME_SEEN_KEY = 'see-through-welcome-seen';
-const NICKNAME_SEEN_KEY = 'see-through-nickname-seen';
 
 export function AnonymousProvider({ children }: { children: ReactNode }) {
   const [identity, setIdentity] = useState<AnonymousIdentity | null>(null);
@@ -43,8 +38,7 @@ export function AnonymousProvider({ children }: { children: ReactNode }) {
           // orphaned, so this browser is a fresh visitor. Reset the onboarding
           // flags to run the welcome flow again, and bump resetKey so the
           // onboarding modals remount and re-read them.
-          localStorage.removeItem(WELCOME_SEEN_KEY);
-          localStorage.removeItem(NICKNAME_SEEN_KEY);
+        localStorage.removeItem(WELCOME_SEEN_KEY);
           setResetKey((k) => k + 1);
         }
         localStorage.setItem(IDENTITY_PUBLIC_ID_KEY, id.publicId);
@@ -61,18 +55,8 @@ export function AnonymousProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const regenerate = useCallback(async () => {
-    const id = await regenerateNickname();
-    setIdentity(id);
-  }, []);
-
-  const setNickname = useCallback(async (nickname: string) => {
-    const id = await updateNickname(nickname);
-    setIdentity(id);
-  }, []);
-
   return (
-    <AnonymousContext.Provider value={{ identity, isReady, resetKey, regenerate, setNickname }}>
+    <AnonymousContext.Provider value={{ identity, isReady, resetKey }}>
       {children}
     </AnonymousContext.Provider>
   );
