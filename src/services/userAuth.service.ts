@@ -8,6 +8,7 @@ export interface UserProfile {
   displayName: string;
   emailVerified: boolean;
   showDisplayName: boolean;
+  hasPassword: boolean;
   createdAt: string;
 }
 
@@ -100,6 +101,32 @@ export async function updateShowDisplayName(
   if (!data.data) throw new Error('Failed to update preference');
   setUser(data.data);
   return data.data;
+}
+
+export async function updateDisplayName(
+  displayName: string,
+): Promise<UserProfile> {
+  const { data } = await apiClient.patch<ApiResponse<UserProfile>>(
+    API_ENDPOINTS.USER_UPDATE_DISPLAY_NAME,
+    { displayName },
+  );
+  if (!data.data) throw new Error('Failed to update display name');
+  setUser(data.data);
+  return data.data;
+}
+
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> {
+  await apiClient.patch(API_ENDPOINTS.USER_CHANGE_PASSWORD, {
+    currentPassword,
+    newPassword,
+  });
+}
+
+export async function setPassword(password: string): Promise<void> {
+  await apiClient.patch(API_ENDPOINTS.USER_SET_PASSWORD, { password });
 }
 
 export function getStoredUser(): UserProfile | null {

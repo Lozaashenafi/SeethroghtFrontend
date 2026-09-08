@@ -1,11 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Pencil, CheckCircle, AlertCircle, Loader2, Mail, MessageSquareText, LogOut, Eye, EyeOff } from 'lucide-react';
+import {
+  ArrowLeft,
+  Pencil,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Mail,
+  MessageSquareText,
+  LogOut,
+  Eye,
+  EyeOff,
+  Key,
+  Check,
+} from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useMyReviews } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
-import { resendVerification, updateShowDisplayName } from '@/services/userAuth.service';
+import {
+  resendVerification,
+  updateShowDisplayName,
+  updateDisplayName,
+  changePassword,
+  setPassword,
+} from '@/services/userAuth.service';
 import { ROUTES } from '@/constants';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
@@ -85,6 +104,19 @@ export function ProfilePage() {
   const { data, isLoading } = useMyReviews({ page: 1, limit: 100 });
   const [resending, setResending] = useState(false);
 
+  // Display name editing
+  const [editingName, setEditingName] = useState(false);
+  const [displayName, setDisplayName] = useState(user?.displayName ?? '');
+  const [nameSaving, setNameSaving] = useState(false);
+
+  // Password
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordSaving, setPasswordSaving] = useState(false);
+
   const reviews = data?.reviews ?? [];
 
   const handleResendVerification = async () => {
@@ -119,7 +151,66 @@ export function ProfilePage() {
     }
   };
 
+  const handleSaveName = async () => {
+    if (!displayName.trim() || displayName.trim().length < 2) {
+      toast.error('Display name must be at least 2 characters');
+      return;
+    }
+    setNameSaving(true);
+    try {
+      const updated = await updateDisplayName(displayName.trim());
+      setUser(updated);
+      setEditingName(false);
+      toast.success('Display name updated');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to update name');
+    } finally {
+      setNameSaving(false);
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    setPasswordSaving(true);
+    try {
+      await changePassword(currentPassword, newPassword);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success('Password changed successfully');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to change password');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
+  const handleSetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    setPasswordSaving(true);
+    try {
+      await setPassword(newPassword);
+      setNewPassword('');
+      setConfirmPassword('');
+      toast.success('Password set successfully');
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || 'Failed to set password');
+    } finally {
+      setPasswordSaving(false);
+    }
+  };
+
   if (!user) return null;
+
+  const isGoogleUser = !user.hasPassword;
 
   return (
     <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50 dark:selection:text-[var(--color-bg)]">
@@ -150,13 +241,58 @@ export function ProfilePage() {
         {/* Account Info Card */}
         <div className="mb-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" style={cardShadow}>
           <div className="flex items-start justify-between gap-4">
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
                 ACCOUNT
               </p>
-              <p className="mt-2 text-lg font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
-                {user.displayName}
-              </p>
+
+              {editingName ? (
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSaveName();
+                      if (e.key === 'Escape') {
+                        setDisplayName(user.displayName);
+                        setEditingName(false);
+                      }
+                    }}
+                    autoFocus
+                    className="flex-1 px-3 py-1.5 text-lg font-medium tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] outline-none"
+                  />
+                  <button
+                    onClick={handleSaveName}
+                    disabled={nameSaving}
+                    className="p-1.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity disabled:opacity-40"
+                  >
+                    {nameSaving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setDisplayName(user.displayName);
+                      setEditingName(false);
+                    }}
+                    className="px-3 py-1.5 text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] border border-stone-200 dark:border-[var(--color-border)] hover:border-[var(--color-text)] dark:hover:border-[var(--color-text)] transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-2 flex items-center gap-2">
+                  <p className="text-lg font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                    {user.displayName}
+                  </p>
+                  <button
+                    onClick={() => setEditingName(true)}
+                    className="p-1 text-stone-400 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                </div>
+              )}
+
               <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
                 {user.email}
               </p>
@@ -233,6 +369,7 @@ export function ProfilePage() {
             </div>
           </div>
 
+          {/* Logout */}
           <div className="mt-4 pt-4 border-t border-stone-200 dark:border-[var(--color-border)]">
             <button
               onClick={handleLogout}
@@ -242,6 +379,101 @@ export function ProfilePage() {
               Log Out
             </button>
           </div>
+        </div>
+
+        {/* Password Section */}
+        <div className="mb-8 bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]" style={cardShadow}>
+          <div className="flex items-center gap-2 mb-4">
+            <Key size={14} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
+            <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+              {isGoogleUser ? 'Set Password' : 'Change Password'}
+            </h2>
+          </div>
+
+          {isGoogleUser ? (
+            <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mb-4">
+              You signed up with Google. Set a password so you can also log in with email.
+            </p>
+          ) : null}
+
+          <form onSubmit={isGoogleUser ? handleSetPassword : handleChangePassword} className="space-y-4">
+            {!isGoogleUser && (
+              <div>
+                <label className="block text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] mb-1.5">
+                  CURRENT PASSWORD
+                </label>
+                <div className="relative">
+                  <input
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required={!isGoogleUser}
+                    className="w-full px-3 py-2.5 pr-10 text-sm font-medium tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] outline-none"
+                    placeholder="Enter current password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[var(--color-text)]"
+                  >
+                    {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] mb-1.5">
+                {isGoogleUser ? 'NEW PASSWORD' : 'NEW PASSWORD'}
+              </label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                  minLength={8}
+                  className="w-full px-3 py-2.5 pr-10 text-sm font-medium tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] outline-none"
+                  placeholder="At least 8 characters"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-[var(--color-text)]"
+                >
+                  {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-medium tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] mb-1.5">
+                CONFIRM PASSWORD
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+                className="w-full px-3 py-2.5 text-sm font-medium tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] outline-none"
+                placeholder="Repeat password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={passwordSaving}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {passwordSaving ? (
+                <Loader2 size={12} className="animate-spin" />
+              ) : (
+                <Key size={12} />
+              )}
+              {isGoogleUser ? 'Set Password' : 'Change Password'}
+            </button>
+          </form>
         </div>
 
         {/* My Reviews */}
