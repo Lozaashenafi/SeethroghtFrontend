@@ -17,13 +17,13 @@ import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
 import {
   useAdminUserActivity,
   useAdminUserAllReviews,
-  useAdminBlockIdentity,
-  useAdminUnblockIdentity,
-  useAdminTempBlockIdentity,
-  useAdminClearTempBlockIdentity,
-  useAdminDeleteIdentity,
+  useAdminBlockUser,
+  useAdminUnblockUser,
+  useAdminTempBlockUser,
+  useAdminClearTempBlockUser,
+  useAdminDeleteUser,
 } from '@/hooks/useAdmin';
-import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/context/AuthContext';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 
@@ -32,59 +32,57 @@ interface PendingAction {
 }
 
 const statusVariant: Record<string, 'success' | 'warning' | 'error'> = {
-  active: 'success',
-  flagged: 'warning',
-  disabled: 'error',
+  published: 'success',
+  pending: 'warning',
+  rejected: 'error',
+  resolved: 'success',
+  dismissed: 'error',
 };
 
 export function AdminUserDetailPage() {
-  const { publicId } = useParams<{ publicId: string }>();
-  const queryClient = useQueryClient();
+  const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
 
-  const { data, isLoading, isError } = useAdminUserActivity(publicId);
-  const { data: allReviews } = useAdminUserAllReviews(publicId);
-  const blockUser = useAdminBlockIdentity();
-  const unblockUser = useAdminUnblockIdentity();
-  const tempBlock = useAdminTempBlockIdentity();
-  const clearTempBlock = useAdminClearTempBlockIdentity();
-  const deleteUser = useAdminDeleteIdentity();
+  const { data, isLoading, isError } = useAdminUserActivity(userId);
+  const { data: allReviews } = useAdminUserAllReviews(userId);
+  const blockUser = useAdminBlockUser();
+  const unblockUser = useAdminUnblockUser();
+  const tempBlock = useAdminTempBlockUser();
+  const clearTempBlock = useAdminClearTempBlockUser();
+  const deleteUser = useAdminDeleteUser();
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
-  const identity = data?.identity;
+  const user = data?.user;
+  const isSelf = !!user && currentUser?.id === user.id;
   const isActionPending =
     blockUser.isPending || unblockUser.isPending || tempBlock.isPending || clearTempBlock.isPending || deleteUser.isPending;
 
   const [now] = useState(() => Date.now());
-  const isTempBlocked = !!identity?.tempBlockedUntil && new Date(identity.tempBlockedUntil).getTime() > now;
-
-  const invalidateActivity = () => {
-    queryClient.invalidateQueries({ queryKey: ['admin-user-activity'] });
-    queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
-  };
+  const isTempBlocked = !!user?.tempBlockedUntil && new Date(user.tempBlockedUntil).getTime() > now;
 
   const handleConfirm = async () => {
-    if (!pendingAction || !publicId) return;
+    if (!pendingAction || !userId) return;
     const { action } = pendingAction;
     try {
       if (action === 'block') {
-        await toast.promise(blockUser.mutateAsync(publicId),
+        await toast.promise(blockUser.mutateAsync(userId),
           { loading: 'Blocking user...', success: 'User blocked', error: 'Failed to block user' });
       } else if (action === 'unblock') {
-        await toast.promise(unblockUser.mutateAsync(publicId),
+        await toast.promise(unblockUser.mutateAsync(userId),
           { loading: 'Unblocking user...', success: 'User unblocked', error: 'Failed to unblock user' });
       } else if (action === 'temp-block') {
-        await toast.promise(tempBlock.mutateAsync({ publicId, hours: 24 }),
+        await toast.promise(tempBlock.mutateAsync({ userId, hours: 24 }),
           { loading: 'Restricting user...', success: 'User restricted for 24 hours', error: 'Failed to restrict user' });
       } else if (action === 'clear-temp-block') {
-        await toast.promise(clearTempBlock.mutateAsync(publicId),
+        await toast.promise(clearTempBlock.mutateAsync(userId),
           { loading: 'Lifting restriction...', success: 'Restriction lifted', error: 'Failed to lift restriction' });
       } else {
-        await toast.promise(deleteUser.mutateAsync(publicId),
+        await toast.promise(deleteUser.mutateAsync(userId),
           { loading: 'Deleting user...', success: 'User deleted', error: 'Failed to delete user' });
         navigate('/admin/users');
+        return;
       }
-      invalidateActivity();
       setPendingAction(null);
     } catch {
       // toast.promise already surfaced the error
@@ -103,7 +101,7 @@ export function AdminUserDetailPage() {
     );
   }
 
-  if (isError || !identity) {
+  if (isError || !user) {
     return (
       <Card padding="lg" className="text-center">
         <Users size={24} className="mx-auto mb-3 text-text-secondary" />
@@ -141,54 +139,79 @@ export function AdminUserDetailPage() {
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none">
-                {identity.nickname ?? identity.publicId}
+                {user.displayName}
               </h1>
-              {identity.isBlocked ? (
+              {user.isBlocked ? (
                 <Badge variant="error" dot>Blocked</Badge>
               ) : isTempBlocked ? (
                 <Badge variant="warning" dot>Temp restricted</Badge>
               ) : (
                 <Badge variant="success" dot>Active</Badge>
               )}
-              <Badge variant="outline">{identity.publicId}</Badge>
+              {user.role === 'admin' && <Badge variant="outline">admin</Badge>}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
-              <span>Risk score: {identity.riskScore}</span>
-              <span>Status: {identity.status}</span>
-              <span>Created: {formatDate(identity.createdAt)}</span>
-              <span>Last seen: {formatDate(identity.lastSeenAt)}</span>
+              <span>{user.email}</span>
+              <span>{user.emailVerified ? 'Email verified' : 'Email unverified'}</span>
+              <span>Joined: {formatDate(user.createdAt)}</span>
+              {isTempBlocked && <span className="text-warning">Restricted until: {formatDate(user.tempBlockedUntil!)}</span>}
+              {user.isBlocked && user.blockedAt && <span>Blocked: {formatDate(user.blockedAt)}</span>}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
-          {!identity.isBlocked && isTempBlocked && (
-            <Button variant="outline" size="sm" className="text-warning border-warning hover:bg-warning/5"
-              onClick={() => setPendingAction({ action: 'clear-temp-block' })} leftIcon={<TimerReset size={14} />}>
-              Lift Restriction
-            </Button>
-          )}
-          {!identity.isBlocked && !isTempBlocked && (
-            <Button variant="outline" size="sm" className="text-warning border-warning hover:bg-warning/5"
-              onClick={() => setPendingAction({ action: 'temp-block' })} leftIcon={<TimerReset size={14} />}>
-              Restrict 24h
-            </Button>
-          )}
-          {identity.isBlocked ? (
-            <Button variant="outline" size="sm" className="text-success border-success hover:bg-success/5"
-              onClick={() => setPendingAction({ action: 'unblock' })} leftIcon={<Check size={14} />}>
-              Unblock
-            </Button>
+          {/* The API refuses to let an admin moderate their own account. */}
+          {isSelf ? (
+            <span className="px-2 py-1 text-[10px] tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">
+              Your account
+            </span>
           ) : (
-            <Button variant="outline" size="sm" className="text-error border-error hover:bg-error/5"
-              onClick={() => setPendingAction({ action: 'block' })} leftIcon={<Ban size={14} />}>
-              Block
-            </Button>
+            <>
+              {!user.isBlocked && isTempBlocked && (
+                <Button variant="outline" size="sm" className="text-warning border-warning hover:bg-warning/5"
+                  onClick={() => setPendingAction({ action: 'clear-temp-block' })} leftIcon={<TimerReset size={14} />}>
+                  Lift Restriction
+                </Button>
+              )}
+              {!user.isBlocked && !isTempBlocked && (
+                <Button variant="outline" size="sm" className="text-warning border-warning hover:bg-warning/5"
+                  onClick={() => setPendingAction({ action: 'temp-block' })} leftIcon={<TimerReset size={14} />}>
+                  Restrict 24h
+                </Button>
+              )}
+              {user.isBlocked ? (
+                <Button variant="outline" size="sm" className="text-success border-success hover:bg-success/5"
+                  onClick={() => setPendingAction({ action: 'unblock' })} leftIcon={<Check size={14} />}>
+                  Unblock
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" className="text-error border-error hover:bg-error/5"
+                  onClick={() => setPendingAction({ action: 'block' })} leftIcon={<Ban size={14} />}>
+                  Block
+                </Button>
+              )}
+              <Button variant="outline" size="sm" className="text-error border-error hover:bg-error/5"
+                onClick={() => setPendingAction({ action: 'delete' })} leftIcon={<Trash2 size={14} />}>
+                Delete User
+              </Button>
+            </>
           )}
-          <Button variant="outline" size="sm" className="text-error border-error hover:bg-error/5"
-            onClick={() => setPendingAction({ action: 'delete' })} leftIcon={<Trash2 size={14} />}>
-            Delete User
-          </Button>
         </div>
+      </div>
+
+      {/* Counts */}
+      <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {[
+          { label: 'Reviews', value: reviews.length },
+          { label: 'Comments', value: data?.comments.pagination.total ?? 0 },
+          { label: 'Votes', value: data?.votes.pagination.total ?? 0 },
+          { label: 'Reports filed', value: data?.reports.pagination.total ?? 0 },
+        ].map(({ label, value }) => (
+          <Card key={label} padding="sm">
+            <p className="text-[10px] tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)]">{label}</p>
+            <p className="mt-1 text-lg text-[var(--color-text)] dark:text-[var(--color-text)]">{value}</p>
+          </Card>
+        ))}
       </div>
 
       {/* Reviews */}
@@ -255,7 +278,15 @@ export function AdminUserDetailPage() {
             <Card key={comment.publicId} padding="sm">
               <p className="text-sm leading-relaxed text-stone-600 dark:text-[var(--color-text-secondary)]">{comment.content}</p>
               <p className="mt-2 text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)]">
-                {comment.reviewTitle ?? 'Unknown review'} · {comment.companyName ?? 'Unknown company'} · {formatDate(comment.createdAt)}
+                {comment.reviewPublicId ? (
+                  <Link to={`/admin/reviews/${comment.reviewPublicId}`} className="hover:underline underline-offset-2">
+                    {comment.reviewTitle ?? 'Unknown review'}
+                  </Link>
+                ) : (
+                  'Unknown review'
+                )}
+                {' · '}
+                {comment.companyName ?? 'Unknown company'} · {formatDate(comment.createdAt)}
               </p>
             </Card>
           ))}
@@ -341,11 +372,11 @@ export function AdminUserDetailPage() {
           pendingAction?.action === 'unblock'
             ? 'This user will be able to post reviews, comments, and votes again. You can block them again at any time.'
             : pendingAction?.action === 'block'
-              ? 'This user will no longer be able to post reviews, comments, or votes. Their existing content will remain visible. This can be undone later.'
+              ? 'This user will no longer be able to post reviews, comments, or votes. They can still browse and log in, and their existing content stays visible. This can be undone later.'
               : pendingAction?.action === 'temp-block'
-                ? 'This user will be temporarily restricted from posting for 24 hours. They can still browse. This can be lifted early.'
+                ? 'This user will be temporarily restricted from posting for 24 hours. They can still browse and log in. This can be lifted early.'
                 : pendingAction?.action === 'delete'
-                  ? 'This permanently removes the user and ALL of their reviews, comments, votes, and reports. This cannot be undone — the same browser will return as a brand-new anonymous user.'
+                  ? 'This permanently removes the user and ALL of their reviews, comments, votes, and reports. This cannot be undone — the same person could still register again with the same email.'
                   : 'This user will be able to post reviews, comments, and votes again immediately.'
         }
         confirmLabel={

@@ -20,7 +20,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, isAdmin } = useAuth();
 
   // Prefer the ?redirect= query param (used by the axios 401 handler), then the
   // router location state (used by ProtectedRoute), then the admin root.
@@ -32,7 +32,7 @@ export function LoginPage() {
     return (location.state as LoginLocationState | null)?.from?.pathname ?? '/admin';
   };
 
-  if (isAuthenticated) {
+  if (isAuthenticated && isAdmin) {
     return <Navigate to={getRedirectTarget()} replace />;
   }
 

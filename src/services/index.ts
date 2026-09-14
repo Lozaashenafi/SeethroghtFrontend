@@ -19,4 +19,3 @@ export { voteOnReview } from './votes.service';
 export { createReport } from './reports.service';
 export { getIndustries } from './industries.service';
 export { getTags } from './tags.service';
-export { getAnonymousIdentity } from './anonymous.service';

@@ -20,7 +20,6 @@ import { useMyReviews } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
 import {
   resendVerification,
-  updateShowDisplayName,
   updateDisplayName,
   changePassword,
   setPassword,
@@ -134,21 +133,6 @@ export function ProfilePage() {
   const handleLogout = async () => {
     await logout();
     toast.success('Logged out');
-  };
-
-  const handleToggleShowName = async () => {
-    if (!user) return;
-    try {
-      const updated = await updateShowDisplayName(!user.showDisplayName);
-      setUser(updated);
-      toast.success(
-        updated.showDisplayName
-          ? 'Your name will now appear on new reviews'
-          : 'Your reviews will now show as Anonymous'
-      );
-    } catch {
-      toast.error('Failed to update preference');
-    }
   };
 
   const handleSaveName = async () => {
@@ -330,44 +314,6 @@ export function ProfilePage() {
           <p className="mt-3 text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
             Your account is private — it will never be shown on your reviews.
           </p>
-
-          {/* Show Name Toggle */}
-          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-[var(--color-border)]">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                {user.showDisplayName ? (
-                  <Eye size={14} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
-                ) : (
-                  <EyeOff size={14} className="text-stone-400 dark:text-[var(--color-text-secondary)]" />
-                )}
-                <div>
-                  <p className="text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
-                    Show my name on reviews
-                  </p>
-                  <p className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
-                    {user.showDisplayName
-                      ? `New reviews will show as "${user.displayName}"`
-                      : 'New reviews will show as "Anonymous"'
-                    }
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleToggleShowName}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                  user.showDisplayName
-                    ? 'bg-[var(--color-text)] dark:bg-[var(--color-text)]'
-                    : 'bg-stone-300 dark:bg-stone-600'
-                }`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    user.showDisplayName ? 'translate-x-5' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
 
           {/* Logout */}
           <div className="mt-4 pt-4 border-t border-stone-200 dark:border-[var(--color-border)]">

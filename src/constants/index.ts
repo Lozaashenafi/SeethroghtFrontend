@@ -25,7 +25,7 @@ export const ROUTES = {
     REVIEWS: '/admin/reviews',
     REVIEW_DETAIL: '/admin/reviews/:publicId',
     USERS: '/admin/users',
-    USER_DETAIL: '/admin/users/:publicId',
+    USER_DETAIL: '/admin/users/:userId',
   },
   NOT_FOUND: '/404',
 } as const;

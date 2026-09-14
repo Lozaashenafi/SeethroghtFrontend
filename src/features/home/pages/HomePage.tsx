@@ -13,7 +13,6 @@ import {
 import { Page, Container } from '@/components/common';
 import { BrandStarRating, CompanyLogo } from '@/components/ui';
 import { WelcomeModal } from '@/components/onboarding';
-import { useAnonymous } from '@/context/AnonymousContext';
 import type { Company } from '@/types';
 import { useCompanies } from '@/hooks';
 import { formatNumber } from '@/utils';
@@ -110,7 +109,6 @@ function CompanyItem({ company }: { company: Company }) {
 
 export function HomePage() {
   const navigate = useNavigate();
-  const { resetKey } = useAnonymous();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -134,7 +132,7 @@ export function HomePage() {
           identity, e.g. after an admin deleted the previous one) so the modals
           remount and re-read the reset onboarding flags. On a normal load the
           key stays stable and the modals are never remounted mid-flow. */}
-      <WelcomeModal key={`welcome-${resetKey}`} />
+      <WelcomeModal />
 
       <Container size="lg" className="relative z-10">
         {/* ─── Hero ─── */}

@@ -1,49 +1,105 @@
-import { createContext, useState, useCallback, useContext, type ReactNode } from 'react';
+import { createContext, useState, useCallback, useContext, useEffect, type ReactNode } from 'react';
 import {
-  adminLogin,
+  adminLogin as apiLogin,
   adminLogout,
   getAdminUser,
   setAdminUser,
   clearAdminAuth,
 } from '@/services/auth.service';
+import { apiClient } from '@/lib/axios';
+import { API_ENDPOINTS } from '@/constants';
 
-interface AdminUser {
-  id: number;
+interface AuthUser {
+  id: string;
   email: string;
-  name: string;
+  displayName: string;
+  role: string;
+  emailVerified: boolean;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  admin: AdminUser | null;
+  user: AuthUser | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const AUTH_USER_KEY = 'see-through-auth-user';
+
+function getStoredUser(): AuthUser | null {
+  const stored = localStorage.getItem(AUTH_USER_KEY);
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return null;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [admin, setAdmin] = useState<AdminUser | null>(getAdminUser());
+  const [user, setUser] = useState<AuthUser | null>(getStoredUser);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Verify token on mount
+  useEffect(() => {
+    const stored = getStoredUser();
+    if (!stored) {
+      setIsLoading(false);
+      return;
+    }
+    apiClient
+      .get(API_ENDPOINTS.AUTH_ME)
+      .then(({ data }) => {
+        const u = data.data;
+        const authUser: AuthUser = {
+          id: u.id,
+          email: u.email,
+          displayName: u.displayName,
+          role: u.role,
+          emailVerified: u.emailVerified,
+        };
+        setUser(authUser);
+        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(authUser));
+      })
+      .catch(() => {
+        localStorage.removeItem(AUTH_USER_KEY);
+        setUser(null);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const result = await adminLogin(email, password);
-    setAdminUser(result.admin);
-    setAdmin(result.admin);
+    const result = await apiLogin(email, password);
+    const authUser: AuthUser = {
+      id: result.user.id,
+      email: result.user.email,
+      displayName: result.user.displayName,
+      role: result.user.role,
+      emailVerified: result.user.emailVerified,
+    };
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(authUser));
+    setUser(authUser);
   }, []);
 
   const logout = useCallback(() => {
-    clearAdminAuth();
-    setAdmin(null);
+    localStorage.removeItem(AUTH_USER_KEY);
+    setUser(null);
     void adminLogout().catch(() => {});
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!admin,
-        admin,
+        isAuthenticated: !!user,
+        user,
+        isAdmin: user?.role === 'admin',
         login,
         logout,
+        isLoading,
       }}
     >
       {children}

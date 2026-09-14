@@ -139,6 +139,72 @@ export interface CreateVoteInput {
   voteType: 'helpful' | 'unhelpful';
 }
 
+// ─── Admin: user management ───
+
+/** A user account as returned by the admin-only user endpoints. */
+export interface AdminUser {
+  id: string;
+  email: string;
+  displayName: string;
+  role: string;
+  emailVerified: boolean;
+  isBlocked: boolean;
+  blockedAt: string | null;
+  tempBlockedUntil: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminUserCounts {
+  reviews: number;
+  comments: number;
+  votes: number;
+  reports: number;
+}
+
+export interface AdminUserDetail extends AdminUser {
+  counts: AdminUserCounts;
+}
+
+export interface AdminUserComment {
+  publicId: string;
+  reviewPublicId: string | null;
+  reviewTitle: string | null;
+  companyName: string | null;
+  content: string;
+  helpfulCount: number;
+  createdAt: string;
+}
+
+export interface AdminUserVote {
+  reviewPublicId: string | null;
+  reviewTitle: string | null;
+  companyName: string | null;
+  voteType: string;
+  createdAt: string;
+}
+
+export interface AdminUserReport {
+  publicId: string;
+  reason: string;
+  description: string | null;
+  status: string;
+  createdAt: string;
+  resolvedAt: string | null;
+  reviewPublicId: string | null;
+  reviewTitle: string | null;
+  commentPublicId: string | null;
+  commentContent: string | null;
+}
+
+export interface AdminUserActivity {
+  user: AdminUser;
+  reviews: { data: Review[]; pagination: Pagination };
+  comments: { data: AdminUserComment[]; pagination: Pagination };
+  votes: { data: AdminUserVote[]; pagination: Pagination };
+  reports: { data: AdminUserReport[]; pagination: Pagination };
+}
+
 export interface Report {
   publicId: string;
   reason: string;

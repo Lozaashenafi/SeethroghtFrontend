@@ -4,12 +4,13 @@ import {
   adminDeleteReview,
   adminGetReview,
   adminModerateReview,
-  adminListIdentities,
-  adminBlockIdentity,
-  adminUnblockIdentity,
-  adminTempBlockIdentity,
-  adminClearTempBlockIdentity,
-  adminDeleteIdentity,
+  adminListUsers,
+  adminGetUser,
+  adminBlockUser,
+  adminUnblockUser,
+  adminTempBlockUser,
+  adminClearTempBlockUser,
+  adminDeleteUser,
   adminDeleteCompany,
   adminGetReports,
   adminUpdateReportStatus,
@@ -94,85 +95,80 @@ export function useAdminModerateReview() {
   });
 }
 
-// ─── Anonymous Identities (admin) ───
+// ─── Users (admin) ───
 
-export function useAdminIdentities(params: { page?: number; limit?: number; status?: string; search?: string } = {}) {
+export function useAdminUsers(params: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: 'user' | 'admin' | 'all';
+  status?: 'active' | 'blocked' | 'restricted' | 'all';
+} = {}) {
   return useQuery({
-    queryKey: ['admin-identities', params],
-    queryFn: () => adminListIdentities(params),
+    queryKey: ['admin-users', params],
+    queryFn: () => adminListUsers(params),
   });
 }
 
-export function useAdminUserActivity(publicId: string | undefined, params: { page?: number; limit?: number } = {}) {
+export function useAdminUser(userId: string | undefined) {
   return useQuery({
-    queryKey: ['admin-user-activity', publicId, params],
-    queryFn: () => adminGetUserActivity(publicId!, params),
-    enabled: !!publicId,
+    queryKey: ['admin-user', userId],
+    queryFn: () => adminGetUser(userId!),
+    enabled: !!userId,
   });
 }
 
-export function useAdminUserAllReviews(publicId: string | undefined) {
+export function useAdminUserActivity(userId: string | undefined, params: { page?: number; limit?: number } = {}) {
   return useQuery({
-    queryKey: ['admin-user-all-reviews', publicId],
-    queryFn: () => adminGetUserAllReviews(publicId!),
-    enabled: !!publicId,
+    queryKey: ['admin-user-activity', userId, params],
+    queryFn: () => adminGetUserActivity(userId!, params),
+    enabled: !!userId,
   });
 }
 
-export function useAdminBlockIdentity() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (publicId: string) => adminBlockIdentity(publicId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
-    },
+export function useAdminUserAllReviews(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['admin-user-all-reviews', userId],
+    queryFn: () => adminGetUserAllReviews(userId!),
+    enabled: !!userId,
   });
 }
 
-export function useAdminUnblockIdentity() {
+/** Every user mutation refreshes the list and the detail view it may affect. */
+function useUserMutation<TInput>(
+  mutationFn: (input: TInput) => Promise<unknown>,
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (publicId: string) => adminUnblockIdentity(publicId),
+    mutationFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
-    },
-  });
-}
-
-export function useAdminTempBlockIdentity() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ publicId, hours }: { publicId: string; hours: number }) =>
-      adminTempBlockIdentity(publicId, hours),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
-    },
-  });
-}
-
-export function useAdminClearTempBlockIdentity() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (publicId: string) => adminClearTempBlockIdentity(publicId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
-    },
-  });
-}
-
-export function useAdminDeleteIdentity() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (publicId: string) => adminDeleteIdentity(publicId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-identities'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-user'] });
       queryClient.invalidateQueries({ queryKey: ['admin-user-activity'] });
       queryClient.invalidateQueries({ queryKey: ['admin-user-all-reviews'] });
     },
   });
+}
+
+export function useAdminBlockUser() {
+  return useUserMutation((userId: string) => adminBlockUser(userId));
+}
+
+export function useAdminUnblockUser() {
+  return useUserMutation((userId: string) => adminUnblockUser(userId));
+}
+
+export function useAdminTempBlockUser() {
+  return useUserMutation(({ userId, hours }: { userId: string; hours: number }) =>
+    adminTempBlockUser(userId, hours),
+  );
+}
+
+export function useAdminClearTempBlockUser() {
+  return useUserMutation((userId: string) => adminClearTempBlockUser(userId));
+}
+
+export function useAdminDeleteUser() {
+  return useUserMutation((userId: string) => adminDeleteUser(userId));
 }

@@ -1,18 +1,15 @@
 import { apiClient } from '@/lib/axios';
 import { API_ENDPOINTS } from '@/constants';
-import type { ApiResponse, Company, Review, Pagination, Report } from '@/types';
-
-interface AnonymousIdentity {
-  publicId: string;
-  nickname: string | null;
-  nicknameRegeneratedAt: string | null;
-  tempBlockedUntil: string | null;
-  status: string;
-  riskScore: number;
-  isBlocked: boolean;
-  createdAt: string;
-  lastSeenAt: string;
-}
+import type {
+  ApiResponse,
+  Company,
+  Review,
+  Pagination,
+  Report,
+  AdminUser,
+  AdminUserDetail,
+  AdminUserActivity,
+} from '@/types';
 
 // ─── Reports (admin-only) ───
 
@@ -82,96 +79,83 @@ export async function adminModerateReview(publicId: string, status: 'published' 
   return data.data;
 }
 
-// ─── Anonymous Identities (admin-only) ───
+// ─── Users (admin-only) ───
 
-interface ListIdentitiesResponse {
-  identities: AnonymousIdentity[];
-  pagination: Pagination;
+const emptyPagination: Pagination = { total: 0, page: 1, limit: 20, totalPages: 0 };
+
+export async function adminListUsers(params: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: 'user' | 'admin' | 'all';
+  status?: 'active' | 'blocked' | 'restricted' | 'all';
+} = {}): Promise<{ users: AdminUser[]; pagination: Pagination }> {
+  const { data } = await apiClient.get<ApiResponse<{ users: AdminUser[]; pagination: Pagination }>>(
+    API_ENDPOINTS.ADMIN_USERS,
+    { params },
+  );
+  return data.data ?? { users: [], pagination: emptyPagination };
 }
 
-export async function adminListIdentities(params: { page?: number; limit?: number; status?: string; search?: string } = {}): Promise<ListIdentitiesResponse> {
-  const { data } = await apiClient.get<ApiResponse<ListIdentitiesResponse>>(API_ENDPOINTS.ANONYMOUS_ADMIN_LIST, {
-    params,
-  });
-  return data.data ?? { identities: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0 } };
-}
-
-interface ActivityPagination {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface CommentActivityItem {
-  publicId: string;
-  reviewPublicId: string | null;
-  reviewTitle: string | null;
-  companyName: string | null;
-  content: string;
-  helpfulCount: number;
-  createdAt: string;
-}
-
-interface VoteActivityItem {
-  reviewPublicId: string | null;
-  reviewTitle: string | null;
-  companyName: string | null;
-  voteType: string;
-  createdAt: string;
-}
-
-interface ReportActivityItem {
-  publicId: string;
-  reason: string;
-  description: string | null;
-  status: string;
-  createdAt: string;
-  resolvedAt: string | null;
-  reviewPublicId: string | null;
-  reviewTitle: string | null;
-  commentPublicId: string | null;
-  commentContent: string | null;
-}
-
-interface UserActivityResponse {
-  identity: AnonymousIdentity;
-  reviews: { data: Review[]; pagination: ActivityPagination };
-  comments: { data: CommentActivityItem[]; pagination: ActivityPagination };
-  votes: { data: VoteActivityItem[]; pagination: ActivityPagination };
-  reports: { data: ReportActivityItem[]; pagination: ActivityPagination };
-}
-
-export async function adminGetUserActivity(publicId: string, params: { page?: number; limit?: number } = {}): Promise<UserActivityResponse> {
-  const { data } = await apiClient.get<ApiResponse<UserActivityResponse>>(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/activity`, {
-    params,
-  });
+export async function adminGetUser(userId: string): Promise<AdminUserDetail> {
+  const { data } = await apiClient.get<ApiResponse<AdminUserDetail>>(`${API_ENDPOINTS.ADMIN_USERS}/${userId}`);
   if (!data.data) throw new Error('User not found');
   return data.data;
 }
 
-export async function adminGetUserAllReviews(publicId: string): Promise<Review[]> {
-  const { data } = await apiClient.get<ApiResponse<{ reviews: Review[] }>>(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/reviews`);
+export async function adminGetUserActivity(
+  userId: string,
+  params: { page?: number; limit?: number } = {},
+): Promise<AdminUserActivity> {
+  const { data } = await apiClient.get<ApiResponse<AdminUserActivity>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/activity`,
+    { params },
+  );
+  if (!data.data) throw new Error('User not found');
+  return data.data;
+}
+
+export async function adminGetUserAllReviews(userId: string): Promise<Review[]> {
+  const { data } = await apiClient.get<ApiResponse<{ reviews: Review[] }>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/reviews`,
+  );
   return data.data?.reviews ?? [];
 }
 
-export async function adminBlockIdentity(publicId: string): Promise<void> {
-  await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/block`, {});
+export async function adminBlockUser(userId: string): Promise<AdminUser> {
+  const { data } = await apiClient.patch<ApiResponse<AdminUser>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/block`,
+  );
+  if (!data.data) throw new Error('Failed to block user');
+  return data.data;
 }
 
-/** Permanently delete an identity and ALL of its content (reviews, comments, votes, reports). */
-export async function adminDeleteIdentity(publicId: string): Promise<void> {
-  await apiClient.delete(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}`);
+export async function adminUnblockUser(userId: string): Promise<AdminUser> {
+  const { data } = await apiClient.patch<ApiResponse<AdminUser>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/unblock`,
+  );
+  if (!data.data) throw new Error('Failed to unblock user');
+  return data.data;
 }
 
-export async function adminUnblockIdentity(publicId: string): Promise<void> {
-  await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/unblock`, {});
+export async function adminTempBlockUser(userId: string, hours: number): Promise<AdminUser> {
+  const { data } = await apiClient.patch<ApiResponse<AdminUser>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/temp-block`,
+    { hours },
+  );
+  if (!data.data) throw new Error('Failed to restrict user');
+  return data.data;
 }
 
-export async function adminTempBlockIdentity(publicId: string, hours: number): Promise<void> {
-  await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/temp-block`, { hours });
+export async function adminClearTempBlockUser(userId: string): Promise<AdminUser> {
+  const { data } = await apiClient.patch<ApiResponse<AdminUser>>(
+    `${API_ENDPOINTS.ADMIN_USERS}/${userId}/clear-temp-block`,
+  );
+  if (!data.data) throw new Error('Failed to lift restriction');
+  return data.data;
 }
 
-export async function adminClearTempBlockIdentity(publicId: string): Promise<void> {
-  await apiClient.patch(`${API_ENDPOINTS.ANONYMOUS_ADMIN}/${publicId}/clear-temp-block`, {});
+/** Permanently delete a user and ALL of their content (reviews, comments, votes, reports). */
+export async function adminDeleteUser(userId: string): Promise<void> {
+  await apiClient.delete(`${API_ENDPOINTS.ADMIN_USERS}/${userId}`);
 }

@@ -6,8 +6,8 @@ export interface UserProfile {
   id: string;
   email: string;
   displayName: string;
+  role: string;
   emailVerified: boolean;
-  showDisplayName: boolean;
   hasPassword: boolean;
   createdAt: string;
 }
@@ -89,18 +89,6 @@ export async function resetPassword(
 
 export async function resendVerification(): Promise<void> {
   await apiClient.post(API_ENDPOINTS.USER_RESEND_VERIFICATION);
-}
-
-export async function updateShowDisplayName(
-  showDisplayName: boolean,
-): Promise<UserProfile> {
-  const { data } = await apiClient.patch<ApiResponse<UserProfile>>(
-    API_ENDPOINTS.USER_SHOW_DISPLAY_NAME,
-    { showDisplayName },
-  );
-  if (!data.data) throw new Error('Failed to update preference');
-  setUser(data.data);
-  return data.data;
 }
 
 export async function updateDisplayName(

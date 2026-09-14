@@ -2,20 +2,22 @@ import { apiClient } from '@/lib/axios';
 import { API_ENDPOINTS } from '@/constants';
 import type { ApiResponse } from '@/types';
 
-interface AdminProfile {
-  id: number;
+interface AuthUser {
+  id: string;
   email: string;
-  name: string;
+  displayName: string;
+  role: string;
+  emailVerified: boolean;
 }
 
 interface LoginResponse {
-  admin: AdminProfile;
+  user: AuthUser;
 }
 
-const AUTH_ADMIN_KEY = 'see-through-admin-user';
+const AUTH_USER_KEY = 'see-through-auth-user';
 
 export async function adminLogin(email: string, password: string): Promise<LoginResponse> {
-  const { data } = await apiClient.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.AUTH_LOGIN, { email, password });
+  const { data } = await apiClient.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.ADMIN_LOGIN, { email, password });
   if (!data.data) throw new Error('Login failed');
   return data.data;
 }
@@ -24,8 +26,8 @@ export async function adminLogout(): Promise<void> {
   await apiClient.post(API_ENDPOINTS.AUTH_LOGOUT);
 }
 
-export function getAdminUser(): AdminProfile | null {
-  const stored = localStorage.getItem(AUTH_ADMIN_KEY);
+export function getAdminUser(): AuthUser | null {
+  const stored = localStorage.getItem(AUTH_USER_KEY);
   if (!stored) return null;
   try {
     return JSON.parse(stored);
@@ -34,10 +36,10 @@ export function getAdminUser(): AdminProfile | null {
   }
 }
 
-export function setAdminUser(admin: AdminProfile): void {
-  localStorage.setItem(AUTH_ADMIN_KEY, JSON.stringify(admin));
+export function setAdminUser(user: AuthUser): void {
+  localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
 }
 
 export function clearAdminAuth(): void {
-  localStorage.removeItem(AUTH_ADMIN_KEY);
+  localStorage.removeItem(AUTH_USER_KEY);
 }
