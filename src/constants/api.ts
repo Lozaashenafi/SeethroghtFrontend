@@ -1,7 +1,6 @@
 const API_PREFIX = '/api/v1';
 
 export const API_ENDPOINTS = {
-  AUTH_LOGIN: `${API_PREFIX}/user/admin/login`,
   AUTH_LOGOUT: `${API_PREFIX}/user/logout`,
   AUTH_ME: `${API_PREFIX}/user/me`,
   USER_REGISTER: `${API_PREFIX}/user/register`,
@@ -16,7 +15,6 @@ export const API_ENDPOINTS = {
   USER_UPDATE_DISPLAY_NAME: `${API_PREFIX}/user/display-name`,
   USER_CHANGE_PASSWORD: `${API_PREFIX}/user/change-password`,
   USER_SET_PASSWORD: `${API_PREFIX}/user/set-password`,
-  ADMIN_LOGIN: `${API_PREFIX}/user/admin/login`,
   ADMIN_USERS: `${API_PREFIX}/user/admin/users`,
   COMPANIES: `${API_PREFIX}/companies`,
   COMPANIES_SCRAPE: `${API_PREFIX}/companies/scrape`,

@@ -17,7 +17,7 @@ interface LoginResponse {
 const AUTH_USER_KEY = 'see-through-auth-user';
 
 export async function adminLogin(email: string, password: string): Promise<LoginResponse> {
-  const { data } = await apiClient.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.ADMIN_LOGIN, { email, password });
+  const { data } = await apiClient.post<ApiResponse<LoginResponse>>(API_ENDPOINTS.USER_LOGIN, { email, password });
   if (!data.data) throw new Error('Login failed');
   return data.data;
 }

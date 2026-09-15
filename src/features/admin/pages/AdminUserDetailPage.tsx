@@ -23,7 +23,7 @@ import {
   useAdminClearTempBlockUser,
   useAdminDeleteUser,
 } from '@/hooks/useAdmin';
-import { useAuth } from '@/context/AuthContext';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 
@@ -42,7 +42,7 @@ const statusVariant: Record<string, 'success' | 'warning' | 'error'> = {
 export function AdminUserDetailPage() {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useUserAuth();
 
   const { data, isLoading, isError } = useAdminUserActivity(userId);
   const { data: allReviews } = useAdminUserAllReviews(userId);

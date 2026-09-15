@@ -20,6 +20,14 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  const handlePostLogin = (user: { role: string }, targetRedirect: string) => {
+    if (user.role === 'admin') {
+      navigate('/admin', { replace: true });
+    } else {
+      navigate(decodeURIComponent(targetRedirect));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -27,7 +35,7 @@ export function LoginPage() {
       const user = await loginUser(email, password);
       setUser(user);
       toast.success('Welcome back!');
-      navigate(decodeURIComponent(redirectTo));
+      handlePostLogin(user, redirectTo);
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Login failed'));
     } finally {
@@ -38,9 +46,6 @@ export function LoginPage() {
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
-      // Use Google's One Tap or Sign-In button to get an ID token.
-      // For demo purposes, we use the Google Identity Services API.
-      // In production, you'd use google.accounts.id.initialize() and render a button.
       const google = (window as any).google;
       if (!google?.accounts?.id) {
         toast.error('Google Sign-In is not available. Please try again later.');
@@ -55,7 +60,7 @@ export function LoginPage() {
             const user = await googleSignIn(response.credential);
             setUser(user);
             toast.success('Signed in with Google!');
-            navigate(decodeURIComponent(redirectTo));
+            handlePostLogin(user, redirectTo);
           } catch (error) {
             toast.error(getApiErrorMessage(error, 'Google sign-in failed'));
           } finally {

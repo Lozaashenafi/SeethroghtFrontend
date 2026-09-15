@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { AdminHeader, AdminFooter } from '@/components/navigation';
 import { Container } from '@/components/common';
-import { useAuth } from '@/context/AuthContext';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { cn } from '@/lib/cn';
 
 const adminNavLinks = [
@@ -19,7 +19,7 @@ const adminNavLinks = [
 
 export function DashboardLayout() {
   const location = useLocation();
-  const { admin } = useAuth();
+  const { user } = useUserAuth();
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)]">
@@ -36,10 +36,10 @@ export function DashboardLayout() {
                   </p>
                 </div>
 
-                {admin && (
+                {user && (
                   <div className="mb-4 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] px-4 py-3 shadow-[4px_4px_0px_0px_var(--color-text)] dark:shadow-[4px_4px_0px_0px_rgba(255,239,205,0.15)]">
-                    <p className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate">{admin.name}</p>
-                    <p className="mt-0.5 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] truncate">{admin.email}</p>
+                    <p className="text-sm font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] truncate">{user.displayName}</p>
+                    <p className="mt-0.5 text-[11px] text-stone-500 dark:text-[var(--color-text-secondary)] truncate">{user.email}</p>
                   </div>
                 )}
 

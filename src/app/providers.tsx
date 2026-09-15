@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { CheckCircle2, XCircle, AlertTriangle, Info, Loader2 } from 'lucide-react';
 import { ThemeProvider } from '@/context/ThemeContext';
-import { AuthProvider } from '@/context/AuthContext';
 import { UserAuthProvider } from '@/context/UserAuthContext';
 import { queryClient } from '@/lib/queryClient';
 
@@ -18,10 +17,9 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <UserAuthProvider>
-          <AuthProvider>
-            <BrowserRouter>
-              {children}
-              <Toaster
+          <BrowserRouter>
+            {children}
+            <Toaster
                 position="bottom-right"
                 offset={16}
                 gap={12}
@@ -57,7 +55,6 @@ export function Providers({ children }: ProvidersProps) {
                 }}
               />
             </BrowserRouter>
-          </AuthProvider>
         </UserAuthProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />

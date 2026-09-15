@@ -1,8 +1,8 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { config } from '@/config';
 
-// Mirrors the key used in services/auth.service.ts to avoid a circular import.
-const AUTH_USER_KEY = 'see-through-auth-user';
+// Mirrors the key used in services/userAuth.service.ts.
+const USER_KEY = 'see-through-user';
 
 const isAdminRoute = (pathname: string): boolean =>
   pathname === '/admin' || pathname.startsWith('/admin/');
@@ -48,12 +48,12 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       console.error('[AUTH] 401 on', error.config?.url, '→', error.response?.data);
       if (typeof window !== 'undefined') {
-        localStorage.removeItem(AUTH_USER_KEY);
+        localStorage.removeItem(USER_KEY);
 
         const { pathname } = window.location;
-        if (isAdminRoute(pathname) && !pathname.startsWith('/admin/login')) {
+        if (isAdminRoute(pathname) && !pathname.startsWith('/login')) {
           const redirect = encodeURIComponent(pathname);
-          window.location.replace(`/admin/login?redirect=${redirect}`);
+          window.location.replace(`/login?redirect=${redirect}`);
         }
       }
     }

@@ -8,7 +8,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Container } from '@/components/common';
-import { useAuth } from '@/context/AuthContext';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { ROUTES } from '@/constants';
 
 const adminQuickLinks = [
@@ -19,7 +19,7 @@ const adminQuickLinks = [
 ];
 
 export function AdminFooter() {
-  const { admin } = useAuth();
+  const { user } = useUserAuth();
   const year = new Date().getFullYear();
 
   return (
@@ -84,7 +84,7 @@ export function AdminFooter() {
               Access
             </h3>
             <div className="border-2 border-[var(--color-text)]/20 bg-white p-4 dark:border-[var(--color-border)] dark:bg-[var(--color-surface)]">
-              {admin ? (
+              {user ? (
                 <p className="flex items-center gap-2 text-[10px] font-medium tracking-normal text-emerald-700 dark:text-emerald-400">
                   <span className="h-2 w-2 animate-pulse bg-emerald-600 dark:bg-emerald-400" />
                   Authenticated Session

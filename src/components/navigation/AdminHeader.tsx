@@ -11,7 +11,7 @@ import {
 import { cn } from '@/lib/cn';
 import { Logo } from '@/components/ui';
 import { ThemeToggle } from './ThemeToggle';
-import { useAuth } from '@/context/AuthContext';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { ROUTES } from '@/constants';
 
 const adminNavLinks = [
@@ -24,7 +24,7 @@ const adminNavLinks = [
 export function AdminHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { admin, logout } = useAuth();
+  const { user, logout } = useUserAuth();
 
   const isActive = (href: string) =>
     href === ROUTES.admin.ROOT
@@ -33,7 +33,7 @@ export function AdminHeader() {
 
   const handleLogout = () => {
     logout();
-    navigate('/admin/login');
+    navigate('/login');
   };
 
   return (
@@ -66,7 +66,7 @@ export function AdminHeader() {
         </div>
 
         {/* Desktop section nav */}
-        {admin && (
+        {user && (
           <div className="hidden h-full items-center gap-8 md:flex">
             {adminNavLinks.map((link) => {
               const Icon = link.icon;
@@ -105,7 +105,7 @@ export function AdminHeader() {
 
           <ThemeToggle className="border-2 border-[var(--color-text)] transition-colors hover:bg-[var(--color-text)] hover:text-white dark:border-[var(--color-text)] dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)]" />
 
-          {admin && (
+          {user && (
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 border-2 border-[var(--color-text)] bg-[var(--color-text)] px-4 py-2 text-[10px] font-medium tracking-normal text-white transition-all hover:opacity-90 active:translate-y-0.5 dark:border-[var(--color-text)] dark:bg-[var(--color-text)] dark:text-[var(--color-bg)]"

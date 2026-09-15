@@ -11,7 +11,7 @@ import {
   useAdminDeleteUser,
 } from '@/hooks/useAdmin';
 import { useDebounce } from '@/hooks';
-import { useAuth } from '@/context/AuthContext';
+import { useUserAuth } from '@/context/UserAuthContext';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 import type { AdminUser } from '@/types';
@@ -41,7 +41,7 @@ export function UsersTab() {
   const deleteUser = useAdminDeleteUser();
   const users = data?.users ?? [];
   const pagination = data?.pagination;
-  const { user: currentUser } = useAuth();
+  const { user: currentUser } = useUserAuth();
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const isActionPending =

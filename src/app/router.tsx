@@ -28,7 +28,6 @@ const AdminPage = lazy(() => import('@/features/admin/pages/AdminPage').then(m =
 const AdminCompanyDetailPage = lazy(() => import('@/features/admin/pages/AdminCompanyDetailPage').then(m => ({ default: m.AdminCompanyDetailPage })));
 const AdminReviewDetailPage = lazy(() => import('@/features/admin/pages/AdminReviewDetailPage').then(m => ({ default: m.AdminReviewDetailPage })));
 const AdminUserDetailPage = lazy(() => import('@/features/admin/pages/AdminUserDetailPage').then(m => ({ default: m.AdminUserDetailPage })));
-const LoginPage = lazy(() => import('@/features/admin/pages/LoginPage').then(m => ({ default: m.LoginPage })));
 
 function AdminFallback() {
   return (
@@ -64,7 +63,6 @@ export function AppRouter() {
           <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
           <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
         </Route>
-        <Route path="/admin/login" element={<Suspense fallback={<AdminFallback />}><LoginPage /></Suspense>} />
         <Route
           element={
             <ErrorBoundary>
