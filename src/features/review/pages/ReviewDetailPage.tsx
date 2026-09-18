@@ -118,7 +118,8 @@ export function ReviewDetailPage() {
 
   const createComment = useCreateComment();
   const vote = useVoteOnReview();
-  const { isAuthenticated } = useUserAuth();
+  const { isAuthenticated, user } = useUserAuth();
+  const isAuthor = !!user && !!review && user.id === review.userId;
 
   const handleSubmitComment = async () => {
     if (!isAuthenticated) {
@@ -143,8 +144,8 @@ export function ReviewDetailPage() {
       });
       setCommentText('');
       toast.success('Comment posted');
-    } catch {
-      toast.error('Failed to post comment');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Failed to post comment'));
     }
   };
 
@@ -307,12 +308,21 @@ export function ReviewDetailPage() {
                 <ThumbsDown size={14} /> {review.unhelpfulCount}
               </button>
             </div>
-            <button
-              onClick={() => setShowReportModal(true)}
-              className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
-            >
-              <Flag size={14} /> Report
-            </button>
+            {isAuthenticated ? (
+              <button
+                onClick={() => setShowReportModal(true)}
+                className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+              >
+                <Flag size={14} /> Report
+              </button>
+            ) : (
+              <Link
+                to={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(window.location.pathname)}`}
+                className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+              >
+                <LogIn size={14} /> Log in to report
+              </Link>
+            )}
           </div>
         </div>
 
@@ -329,7 +339,11 @@ export function ReviewDetailPage() {
 
           {/* Comment Form */}
           <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 border border-stone-200 dark:border-[var(--color-border)] mb-6" style={tornEffect}>
-            {isAuthenticated ? (
+            {isAuthor ? (
+              <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
+                You cannot comment on your own review.
+              </p>
+            ) : isAuthenticated ? (
               <div className="flex gap-3">
                 <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                   <input

@@ -95,7 +95,14 @@ export function ReviewsTab() {
                       )}
                     </div>
                     <p className="text-xs text-text-secondary/60 mt-0.5">
-                      {review.nickname && <>{review.nickname} · </>}
+                      {review.authorDisplayName && (
+                        <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                          {review.authorDisplayName}
+                        </span>
+                      )}
+                      {review.authorDisplayName && review.authorEmail && ' · '}
+                      {review.authorEmail && <span>{review.authorEmail}</span>}
+                      {!review.authorDisplayName && review.nickname && <>{review.nickname} · </>}
                       {review.jobTitle && <>{review.jobTitle} · </>}
                       {formatDate(review.createdAt)} · {review.helpfulCount} helpful
                     </p>

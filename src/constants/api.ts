@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   USER_UPDATE_DISPLAY_NAME: `${API_PREFIX}/user/display-name`,
   USER_CHANGE_PASSWORD: `${API_PREFIX}/user/change-password`,
   USER_SET_PASSWORD: `${API_PREFIX}/user/set-password`,
+  USER_MY_REVIEWS: `${API_PREFIX}/user/me/reviews`,
   ADMIN_USERS: `${API_PREFIX}/user/admin/users`,
   COMPANIES: `${API_PREFIX}/companies`,
   COMPANIES_SCRAPE: `${API_PREFIX}/companies/scrape`,

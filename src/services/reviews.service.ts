@@ -54,7 +54,7 @@ export async function getMyReviews(
   params: { page?: number; limit?: number } = {},
 ): Promise<ListReviewsResponse> {
   const { data } = await apiClient.get<ApiResponse<ListReviewsResponse>>(
-    API_ENDPOINTS.ANONYMOUS_MY_REVIEWS,
+    API_ENDPOINTS.USER_MY_REVIEWS,
     { params },
   );
   return data.data ?? { reviews: [], pagination: { total: 0, page: 1, limit: 20, totalPages: 0 } };
@@ -75,7 +75,7 @@ export async function getReviewTags(publicId: string): Promise<number[]> {
  */
 export async function getMyReview(publicId: string): Promise<Review> {
   const { data } = await apiClient.get<ApiResponse<Review>>(
-    `${API_ENDPOINTS.ANONYMOUS_SELF}/reviews/${publicId}`,
+    `${API_ENDPOINTS.USER_MY_REVIEWS}/${publicId}`,
   );
   if (!data.data) throw new Error('Review not found');
   return data.data;

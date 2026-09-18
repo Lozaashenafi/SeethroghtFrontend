@@ -60,6 +60,7 @@ export interface Company {
 
 export interface Review {
   publicId: string;
+  userId: string;
   companyId: string;
   nickname: string | null;
   companyName: string | null;
@@ -82,6 +83,8 @@ export interface Review {
   unhelpfulCount: number;
   createdAt: string;
   updatedAt: string;
+  authorEmail?: string;
+  authorDisplayName?: string;
 }
 
 export interface Comment {

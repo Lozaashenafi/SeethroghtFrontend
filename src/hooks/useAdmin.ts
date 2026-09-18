@@ -77,6 +77,8 @@ export function useAdminDeleteReview() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-reviews-list'] });
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: ['company'] });
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
     },
   });
 }
@@ -91,6 +93,8 @@ export function useAdminModerateReview() {
       queryClient.invalidateQueries({ queryKey: ['admin-reviews-list'] });
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
       queryClient.invalidateQueries({ queryKey: ['review'] });
+      queryClient.invalidateQueries({ queryKey: ['company'] });
+      queryClient.invalidateQueries({ queryKey: ['companies'] });
     },
   });
 }

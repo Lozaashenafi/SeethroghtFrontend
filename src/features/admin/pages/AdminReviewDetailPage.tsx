@@ -136,7 +136,12 @@ export function AdminReviewDetailPage() {
               )}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
-              {review.nickname && <span>{review.nickname}</span>}
+              {review.authorDisplayName && (
+                <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  {review.authorDisplayName}
+                </span>
+              )}
+              {review.authorEmail && <span>({review.authorEmail})</span>}
               {review.companySlug && (
                 <Link
                   to={`/admin/companies/${review.companySlug}`}
