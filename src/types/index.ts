@@ -223,3 +223,12 @@ export interface Report {
   commentPublicId?: string | null;
   commentContent?: string | null;
 }
+
+export interface Notification {
+  id: number;
+  type: 'comment' | 'like';
+  reviewPublicId: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+}

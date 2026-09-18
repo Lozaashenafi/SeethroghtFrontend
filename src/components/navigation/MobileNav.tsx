@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Home, Search, Building2, MessageSquareText, Info, Pencil, Plus, User } from 'lucide-react';
+import { X, Home, Search, Building2, MessageSquareText, Info, Pencil, Plus, User, Bell } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { ThemeToggle } from './ThemeToggle';
 import { ROUTES } from '@/constants';
+import { useUnreadCount } from '@/hooks';
+import { useUserAuth } from '@/context/UserAuthContext';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -27,6 +29,8 @@ const actionLinks = [
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const location = useLocation();
+  const { isAuthenticated } = useUserAuth();
+  const { data: unreadCount } = useUnreadCount();
 
   useEffect(() => {
     if (isOpen) {
@@ -67,6 +71,18 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                 Menu
               </span>
               <div className="flex items-center gap-2">
+                {isAuthenticated && (unreadCount ?? 0) > 0 && (
+                  <Link
+                    to={ROUTES.PROFILE}
+                    onClick={onClose}
+                    className="relative border-2 border-[var(--color-text)] dark:border-[var(--color-text)] p-2 text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)] transition-colors"
+                  >
+                    <Bell size={18} />
+                    <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                      {unreadCount! > 9 ? '9+' : unreadCount}
+                    </span>
+                  </Link>
+                )}
                 <ThemeToggle className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)] transition-colors" />
                 <button
                   onClick={onClose}

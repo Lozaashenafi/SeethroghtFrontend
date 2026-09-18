@@ -16,6 +16,7 @@ export {
 export { useComments, useCreateComment } from './useComments';
 export { useVoteOnReview } from './useVotes';
 export { useCreateReport } from './useReports';
+export { useNotifications, useUnreadCount, useMarkNotificationRead, useMarkAllNotificationsRead } from './useNotifications';
 export { useIndustries } from './useIndustries';
 export { useTags } from './useTags';
 

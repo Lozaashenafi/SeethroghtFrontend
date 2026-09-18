@@ -28,4 +28,5 @@ export const API_ENDPOINTS = {
   REPORTS: `${API_PREFIX}/reports`,
   INDUSTRIES: `${API_PREFIX}/industries`,
   TAGS: `${API_PREFIX}/tags`,
+  NOTIFICATIONS: `${API_PREFIX}/notifications`,
 } as const;
