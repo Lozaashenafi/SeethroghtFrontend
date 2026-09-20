@@ -14,7 +14,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     <button
       onClick={toggleTheme}
       className={cn(
-        'relative flex h-9 w-9 items-center justify-center rounded-lg',
+        'relative flex h-9 w-9 items-center justify-center ',
         'text-brand-olive dark:text-brand-cream',
         'hover:bg-brand-olive/5 dark:hover:bg-brand-cream/5',
         'transition-colors duration-200',
