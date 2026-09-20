@@ -5,19 +5,26 @@ import {
   markAsRead,
   markAllAsRead,
 } from '@/services/notifications.service';
+import { useAuth } from '@/context/AuthContext'; // Adjust path as needed
 
 export function useNotifications(params: { page?: number; limit?: number } = {}) {
+  const { isAuthenticated } = useAuth();
+
   return useQuery({
     queryKey: ['notifications', params],
     queryFn: () => getNotifications(params),
+    enabled: isAuthenticated, // Only fetch when logged in
   });
 }
 
 export function useUnreadCount() {
+  const { isAuthenticated } = useAuth();
+
   return useQuery({
     queryKey: ['notifications-unread'],
     queryFn: getUnreadCount,
-    refetchInterval: 30000,
+    refetchInterval: isAuthenticated ? 30000 : false, // Disable polling when logged out
+    enabled: isAuthenticated, // Only fetch when logged in
   });
 }
 
