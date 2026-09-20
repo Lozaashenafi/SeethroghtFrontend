@@ -225,7 +225,7 @@ export function ReviewDetailPage() {
                   {review.title}
                 </h1>
                 <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1.5 break-words">
-                  {review.nickname ?? 'Anonymous Employee'} {review.jobTitle ? `// ${review.jobTitle}` : ''}
+                  {review.showName && review.reviewerName ? review.reviewerName : 'Anonymous Employee'} {review.jobTitle ? `// ${review.jobTitle}` : ''}
                 </p>
               </div>
             </div>

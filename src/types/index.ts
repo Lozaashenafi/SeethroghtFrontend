@@ -78,6 +78,8 @@ export interface Review {
   employmentStatus: string | null;
   jobTitle: string | null;
   isVerified: boolean;
+  showName: boolean;
+  reviewerName: string | null;
   status?: 'published' | 'pending' | 'rejected';
   helpfulCount: number;
   unhelpfulCount: number;
@@ -119,6 +121,7 @@ export interface CreateReviewInput {
   employmentStatus?: 'full-time' | 'part-time' | 'contract' | 'intern' | 'freelance';
   jobTitle?: string;
   tagIds?: number[];
+  showName?: boolean;
 }
 
 /** Fields an author may change on their own review (company is fixed). */

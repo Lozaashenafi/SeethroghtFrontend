@@ -85,6 +85,7 @@ export function EditReviewPage() {
     employmentStatus: (review.employmentStatus ?? '') as ReviewFormValues['employmentStatus'],
     jobTitle: review.jobTitle ?? '',
     tagIds: tagIds ?? [],
+    showName: review.showName ?? false,
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Briefcase, Send, Check, X } from 'lucide-react';
+import { Building2, Briefcase, Send, Check, X, Eye, EyeOff } from 'lucide-react';
 import { useCompanies, useTags, useDebounce } from '@/hooks';
 import { ROUTES } from '@/constants';
 import { getApiErrorMessage, profanityError } from '@/utils';
@@ -51,6 +51,7 @@ export interface ReviewFormValues {
   employmentStatus: EmploymentStatusValue;
   jobTitle: string;
   tagIds: number[];
+  showName: boolean;
 }
 
 interface ReviewFormProps {
@@ -327,6 +328,7 @@ export function ReviewForm({
   );
   const [jobTitle, setJobTitle] = useState(initialValues?.jobTitle ?? '');
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(initialValues?.tagIds ?? []);
+  const [showName, setShowName] = useState(initialValues?.showName ?? false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -408,6 +410,7 @@ export function ReviewForm({
       employmentStatus: employmentStatus === '' ? undefined : employmentStatus,
       jobTitle: jobTitle.trim() || undefined,
       tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
+      showName,
     };
 
     const payload =
@@ -624,6 +627,36 @@ export function ReviewForm({
               </span>
             </label>
           </div>
+        </div>
+
+        {/* Identity */}
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+          <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
+            Identity
+          </h2>
+          <label className="flex items-center gap-3 cursor-pointer">
+            <div
+              onClick={() => setShowName(!showName)}
+              className={`flex h-6 w-6 items-center justify-center border-2 transition-colors ${
+                showName
+                  ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)]'
+                  : 'border-stone-300 dark:border-[var(--color-border)]'
+              }`}
+            >
+              {showName && <Check size={14} className="text-white dark:text-[var(--color-bg)]" />}
+            </div>
+            <div className="flex items-center gap-2">
+              {showName ? <Eye size={14} className="text-[var(--color-text)] dark:text-[var(--color-text)]" /> : <EyeOff size={14} className="text-stone-400 dark:text-[var(--color-text-secondary)]" />}
+              <span className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                Show my name on this review
+              </span>
+            </div>
+          </label>
+          <p className="mt-2 ml-9 text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+            {showName
+              ? 'Your display name will be visible on this review'
+              : 'Your review will be posted anonymously (default)'}
+          </p>
         </div>
 
         {/* Tags */}

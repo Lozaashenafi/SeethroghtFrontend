@@ -1,4 +1,4 @@
-// Mirrors the backend profanity filter (seethroght/src/shared/utils/profanityFilter.ts)
+// Mirrors the backend profanity filter (seethrough/src/shared/utils/profanityFilter.ts)
 // — keep the word lists in sync when adding or removing terms.
 // so users get an instant warning before the server rejects their post.
 // Terms are matched as whole words (so "class" never trips on "ass") and common
