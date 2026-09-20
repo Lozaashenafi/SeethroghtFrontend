@@ -2,9 +2,6 @@ import { createContext, useState, useCallback, useContext, useEffect, type React
 import {
   adminLogin as apiLogin,
   adminLogout,
-  getAdminUser,
-  setAdminUser,
-  clearAdminAuth,
 } from '@/services/auth.service';
 import { apiClient } from '@/lib/axios';
 import { API_ENDPOINTS } from '@/constants';

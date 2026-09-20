@@ -6,6 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   getStoredUser,
   getUserProfile,
@@ -15,8 +16,6 @@ import {
   clearUser,
   type UserProfile,
 } from '@/services/userAuth.service';
-import { apiClient } from '@/lib/axios';
-import { API_ENDPOINTS } from '@/constants';
 
 interface UserAuthContextType {
   user: UserProfile | null;
@@ -33,6 +32,7 @@ interface UserAuthContextType {
 const UserAuthContext = createContext<UserAuthContextType | null>(null);
 
 export function UserAuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUserState] = useState<UserProfile | null>(getStoredUser);
   const [isReady, setIsReady] = useState(false);
   const [userLoading, setUserLoading] = useState(true);
@@ -83,8 +83,12 @@ export function UserAuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     clearUser();
     setUserState(null);
+    // Drop cached per-user data (notifications, etc.) so a later login by a
+    // different account never sees the previous session's data.
+    queryClient.removeQueries({ queryKey: ['notifications'] });
+    queryClient.removeQueries({ queryKey: ['notifications-unread'] });
     await logoutUser().catch(() => {});
-  }, []);
+  }, [queryClient]);
 
   const refreshProfile = useCallback(async () => {
     try {

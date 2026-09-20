@@ -27,7 +27,7 @@ function NotificationBell() {
   const { data } = useNotifications({ page: 1, limit: 10 });
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllNotificationsRead();
-  const ref = useClickOutside(() => setOpen(false));
+  const ref = useClickOutside<HTMLDivElement>(() => setOpen(false));
 
   if (!isAuthenticated) return null;
 

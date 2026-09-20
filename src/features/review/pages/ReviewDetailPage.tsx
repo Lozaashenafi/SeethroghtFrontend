@@ -12,7 +12,7 @@ import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import { useReview, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
-import { formatDate, profanityError } from '@/utils';
+import { formatDate, profanityError, getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
