@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { useUserAuth } from '@/context/UserAuthContext';
 import { register, googleSignIn } from '@/services/userAuth.service';
+import { GoogleSignInError, promptGoogleSignIn } from '@/lib/googleAuth';
 import { ROUTES } from '@/constants';
 import { toast } from 'sonner';
 import { getApiErrorMessage } from '@/utils';
@@ -39,32 +40,19 @@ export function RegisterPage() {
   const handleGoogleSignup = async () => {
     setGoogleLoading(true);
     try {
-      const google = (window as any).google;
-      if (!google?.accounts?.id) {
-        toast.error('Google Sign-In is not available. Please try again later.');
-        setGoogleLoading(false);
-        return;
+      const credential = await promptGoogleSignIn();
+      const user = await googleSignIn(credential);
+      setUser(user);
+      toast.success('Signed up with Google!');
+      navigate(decodeURIComponent(redirectTo));
+    } catch (error) {
+      if (error instanceof GoogleSignInError) {
+        // Friendly, actionable message (config missing, blocked, dismissed…)
+        toast.error(error.userMessage);
+      } else {
+        toast.error(getApiErrorMessage(error, 'Google sign-up failed'));
       }
-
-      google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        callback: async (response: any) => {
-          try {
-            const user = await googleSignIn(response.credential);
-            setUser(user);
-            toast.success('Signed up with Google!');
-            navigate(decodeURIComponent(redirectTo));
-          } catch (error) {
-            toast.error(getApiErrorMessage(error, 'Google sign-up failed'));
-          } finally {
-            setGoogleLoading(false);
-          }
-        },
-      });
-
-      google.accounts.id.prompt();
-    } catch {
-      toast.error('Google sign-up failed');
+    } finally {
       setGoogleLoading(false);
     }
   };
