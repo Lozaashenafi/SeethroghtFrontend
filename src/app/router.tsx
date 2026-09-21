@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { trackPageView } from '@/lib/analytics';
 import { MainLayout } from '@/components/layout';
 import { DashboardLayout } from '@/components/layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
@@ -38,6 +39,13 @@ function AdminFallback() {
 }
 
 export function AppRouter() {
+  // SPA page-view tracking: React Router navigations don't reload the page,
+  // so Google Analytics needs an explicit page_view per route change.
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);
+
   return (
     <ErrorBoundary>
       <Routes>
