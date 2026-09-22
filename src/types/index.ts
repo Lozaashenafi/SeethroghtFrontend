@@ -60,9 +60,7 @@ export interface Company {
 
 export interface Review {
   publicId: string;
-  userId: string;
   companyId: string;
-  nickname: string | null;
   companyName: string | null;
   companySlug: string | null;
   title: string;
@@ -78,15 +76,11 @@ export interface Review {
   employmentStatus: string | null;
   jobTitle: string | null;
   isVerified: boolean;
-  showName: boolean;
-  reviewerName: string | null;
   status?: 'published' | 'pending' | 'rejected';
   helpfulCount: number;
   unhelpfulCount: number;
   createdAt: string;
   updatedAt: string;
-  authorEmail?: string;
-  authorDisplayName?: string;
 }
 
 export interface Comment {
@@ -121,7 +115,6 @@ export interface CreateReviewInput {
   employmentStatus?: 'full-time' | 'part-time' | 'contract' | 'intern' | 'freelance';
   jobTitle?: string;
   tagIds?: number[];
-  showName?: boolean;
 }
 
 /** Fields an author may change on their own review (company is fixed). */

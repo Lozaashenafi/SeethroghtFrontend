@@ -33,8 +33,7 @@ function ReviewCard({ review }: { review: Review }) {
               <h3 className="font-medium tracking-normal text-sm text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                 {review.title}
               </h3>
-              <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 break-words">
-                {review.showName && review.reviewerName ? review.reviewerName : 'Anonymous'} @ {review.companyName} // {formatDate(review.createdAt)}
+              <p className="text-[10px] text-stone-500 dark:text-[var(--color-text-secondary)] mt-1 break-words">                  Anonymous @ {review.companyName} // {formatDate(review.createdAt)}
               </p>
             </div>
           </div>

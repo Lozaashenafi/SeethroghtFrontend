@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
+  Ban,
   Building2,
   Check,
   ExternalLink,
@@ -13,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { Card, Badge, Button, BrandStarRating, ConfirmDialog } from '@/components/ui';
-import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview } from '@/hooks';
+import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview, useAdminBanReviewAuthor } from '@/hooks';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 import type { Review } from '@/types';
@@ -49,6 +50,9 @@ export function AdminReviewDetailPage() {
   const { data: commentsData, isLoading: commentsLoading } = useComments(publicId);
   const deleteReview = useAdminDeleteReview();
   const moderate = useAdminModerateReview();
+  const banAuthor = useAdminBanReviewAuthor();
+
+  const [banConfirmOpen, setBanConfirmOpen] = useState(false);
 
   const handleDeleteReview = async () => {
     if (!deleteReviewTarget) return;
@@ -61,6 +65,21 @@ export function AdminReviewDetailPage() {
       navigate('/admin/reviews');
     } catch {
       // toast.promise already surfaced the error
+    }
+  };
+
+  const handleBan = async () => {
+    if (!review) return;
+    try {
+      const banned = await banAuthor.mutateAsync(review.publicId);
+      if (banned) {
+        toast.success('Author banned. They can no longer post reviews, comments or votes.');
+      } else {
+        toast.info('No action taken — the author is an admin or could not be banned.');
+      }
+      setBanConfirmOpen(false);
+    } catch {
+      toast.error('Failed to ban the author');
     }
   };
 
@@ -136,12 +155,6 @@ export function AdminReviewDetailPage() {
               )}
             </div>
             <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">
-              {review.authorDisplayName && (
-                <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                  {review.authorDisplayName}
-                </span>
-              )}
-              {review.authorEmail && <span>({review.authorEmail})</span>}
               {review.companySlug && (
                 <Link
                   to={`/admin/companies/${review.companySlug}`}
@@ -177,6 +190,13 @@ export function AdminReviewDetailPage() {
               </Button>
             </>
           )}
+          <Button variant="outline" size="sm" className="text-error hover:bg-error/5"
+            onClick={() => setBanConfirmOpen(true)}
+            disabled={banAuthor.isPending}
+            leftIcon={<Ban size={14} />}
+          >
+            Ban Author
+          </Button>
           <Link to={`/review/${review.publicId}`}>
             <Button variant="outline" size="sm" rightIcon={<ExternalLink size={14} />}>View Public Page</Button>
           </Link>
@@ -299,6 +319,15 @@ export function AdminReviewDetailPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={banConfirmOpen}
+        title="Ban this author?"
+        description={`Block the author of "${review?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — an admin can unblock the account later from the Users tab if this was a mistake.`}
+        isLoading={banAuthor.isPending}
+        onConfirm={handleBan}
+        onClose={() => setBanConfirmOpen(false)}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteReviewTarget}

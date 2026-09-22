@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageSquare, ExternalLink, Star, Trash2 } from 'lucide-react';
+import { MessageSquare, ExternalLink, Star, Trash2, Ban } from 'lucide-react';
 import { Card, Badge, Button, ConfirmDialog } from '@/components/ui';
-import { useAdminReviews, useAdminDeleteReview } from '@/hooks/useAdmin';
+import { useAdminReviews, useAdminDeleteReview, useAdminBanReviewAuthor } from '@/hooks/useAdmin';
 import { formatDate } from '@/utils';
 import { toast } from 'sonner';
 import type { Review } from '@/types';
@@ -20,9 +20,11 @@ export function ReviewsTab() {
   const [status, setStatus] = useState<StatusFilter>('all');
   const { data, isLoading, isError } = useAdminReviews({ page, limit: 10, status });
   const deleteReview = useAdminDeleteReview();
+  const banAuthor = useAdminBanReviewAuthor();
   const reviews = data?.reviews ?? [];
   const pagination = data?.pagination;
   const [deleteTarget, setDeleteTarget] = useState<Review | null>(null);
+  const [banTarget, setBanTarget] = useState<Review | null>(null);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -38,6 +40,21 @@ export function ReviewsTab() {
       setDeleteTarget(null);
     } catch {
       // toast.promise already surfaced the error
+    }
+  };
+
+  const handleBan = async () => {
+    if (!banTarget) return;
+    try {
+      const banned = await banAuthor.mutateAsync(banTarget.publicId);
+      if (banned) {
+        toast.success('Author banned. They can no longer post reviews, comments or votes.');
+      } else {
+        toast.info('No action taken — the author is an admin or could not be banned.');
+      }
+      setBanTarget(null);
+    } catch {
+      toast.error('Failed to ban the author');
     }
   };
 
@@ -95,14 +112,6 @@ export function ReviewsTab() {
                       )}
                     </div>
                     <p className="text-xs text-text-secondary/60 mt-0.5">
-                      {review.authorDisplayName && (
-                        <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
-                          {review.authorDisplayName}
-                        </span>
-                      )}
-                      {review.authorDisplayName && review.authorEmail && ' · '}
-                      {review.authorEmail && <span>{review.authorEmail}</span>}
-                      {!review.authorDisplayName && review.nickname && <>{review.nickname} · </>}
                       {review.jobTitle && <>{review.jobTitle} · </>}
                       {formatDate(review.createdAt)} · {review.helpfulCount} helpful
                     </p>
@@ -113,6 +122,10 @@ export function ReviewsTab() {
                   {review.status === 'published' && (
                     <Link to={`/review/${review.publicId}`}><Button variant="ghost" size="sm"><ExternalLink size={14} /></Button></Link>
                   )}
+                  <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
+                    onClick={() => setBanTarget(review)}
+                    leftIcon={<Ban size={14} />}
+                  />
                   <Button variant="ghost" size="sm" className="text-error hover:bg-error/5"
                     onClick={() => setDeleteTarget(review)}
                     leftIcon={<Trash2 size={14} />}
@@ -131,6 +144,15 @@ export function ReviewsTab() {
           <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= pagination.totalPages}>Next</Button>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={!!banTarget}
+        title="Ban this author?"
+        description={`Block the author of "${banTarget?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — an admin can unblock the account later from the Users tab if this was a mistake.`}
+        isLoading={banAuthor.isPending}
+        onConfirm={handleBan}
+        onClose={() => setBanTarget(null)}
+      />
 
       <ConfirmDialog
         isOpen={!!deleteTarget}

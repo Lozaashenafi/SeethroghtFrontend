@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
-import { useReview, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
+import { useReview, useMyReviews, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
 import { formatDate, profanityError, getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
@@ -118,8 +118,13 @@ export function ReviewDetailPage() {
 
   const createComment = useCreateComment();
   const vote = useVoteOnReview();
-  const { isAuthenticated, user } = useUserAuth();
-  const isAuthor = !!user && !!review && user.id === review.userId;
+  const { isAuthenticated } = useUserAuth();
+  // Reviews carry no author identity anymore, so authorship is checked via the
+  // authenticated /user/me/reviews list instead of a userId on the payload.
+  const { data: myReviews } = useMyReviews({ page: 1, limit: 100 });
+  const isAuthor =
+    isAuthenticated && !!review &&
+    (myReviews?.reviews ?? []).some((r) => r.publicId === review.publicId);
 
   const handleSubmitComment = async () => {
     if (!isAuthenticated) {
@@ -225,7 +230,7 @@ export function ReviewDetailPage() {
                   {review.title}
                 </h1>
                 <p className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)] mt-1.5 break-words">
-                  {review.showName && review.reviewerName ? review.reviewerName : 'Anonymous Employee'} {review.jobTitle ? `// ${review.jobTitle}` : ''}
+                  Anonymous Employee {review.jobTitle ? `// ${review.jobTitle}` : ''}
                 </p>
               </div>
             </div>

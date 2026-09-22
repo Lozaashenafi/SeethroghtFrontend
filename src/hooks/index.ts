@@ -28,6 +28,7 @@ export {
   useAdminReview,
   useAdminDeleteReview,
   useAdminModerateReview,
+  useAdminBanReviewAuthor,
   useAdminUsers,
   useAdminUser,
   useAdminUserActivity,

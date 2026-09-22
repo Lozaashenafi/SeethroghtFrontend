@@ -4,6 +4,7 @@ import {
   adminDeleteReview,
   adminGetReview,
   adminModerateReview,
+  adminBanReviewAuthor,
   adminListUsers,
   adminGetUser,
   adminBlockUser,
@@ -95,6 +96,18 @@ export function useAdminModerateReview() {
       queryClient.invalidateQueries({ queryKey: ['review'] });
       queryClient.invalidateQueries({ queryKey: ['company'] });
       queryClient.invalidateQueries({ queryKey: ['companies'] });
+    },
+  });
+}
+
+/** Blind ban — the response carries no identity, only whether a ban was applied. */
+export function useAdminBanReviewAuthor() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (publicId: string) => adminBanReviewAuthor(publicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
   });
 }

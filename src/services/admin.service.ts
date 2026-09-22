@@ -79,6 +79,18 @@ export async function adminModerateReview(publicId: string, status: 'published' 
   return data.data;
 }
 
+/**
+ * Blind ban — blocks the author of the review without ever revealing who it
+ * is. The response contains no user data, only whether a ban was applied.
+ */
+export async function adminBanReviewAuthor(publicId: string): Promise<boolean> {
+  const { data } = await apiClient.patch<ApiResponse<{ banned: boolean }>>(
+    `${API_ENDPOINTS.REVIEWS}/admin/${publicId}/ban-author`,
+    {},
+  );
+  return data.data?.banned ?? false;
+}
+
 // ─── Users (admin-only) ───
 
 const emptyPagination: Pagination = { total: 0, page: 1, limit: 20, totalPages: 0 };
