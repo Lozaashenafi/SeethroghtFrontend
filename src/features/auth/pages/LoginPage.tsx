@@ -71,7 +71,7 @@ export function LoginPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="sm" className="relative z-10 py-16">
+      <Container size="sm" className="relative z-10 py-8 sm:py-12 lg:py-16">
         <Link
           to={ROUTES.HOME}
           className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
@@ -90,7 +90,7 @@ export function LoginPage() {
         </header>
 
         <div
-          className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]"
+          className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-5 sm:p-8 border-2 border-[var(--color-text)] dark:border-[var(--color-text)]"
           style={{ boxShadow: '8px 8px 0px 0px var(--color-text)' }}
         >
           <form onSubmit={handleSubmit} className="space-y-5">

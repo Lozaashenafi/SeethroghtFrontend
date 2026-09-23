@@ -174,7 +174,7 @@ export function ReviewDetailPage() {
       <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)]">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
-        <Container size="md" className="relative z-10 py-16">
+        <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
           <TornSkeleton count={1} height="h-96" />
         </Container>
       </div>
@@ -208,7 +208,7 @@ export function ReviewDetailPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         <Link
           to="/review"
           className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
@@ -218,7 +218,7 @@ export function ReviewDetailPage() {
         </Link>
 
         {/* Review Card */}
-        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] mb-8" style={{ ...tornEffect, ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] mb-8" style={{ ...tornEffect, ...cardShadow }}>
           {/* Header */}
           <div className="flex items-start justify-between gap-3 mb-6">
             <div className="flex gap-4 min-w-0 flex-1">
@@ -393,7 +393,7 @@ export function ReviewDetailPage() {
           {commentsLoading ? (
             <TornSkeleton count={2} height="h-20" />
           ) : commentsData?.comments.length === 0 ? (
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
               <p className=" text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
                 No comments yet. Be the first to share your thoughts.
               </p>

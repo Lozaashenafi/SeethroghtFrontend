@@ -24,8 +24,8 @@ export function DashboardLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] text-[var(--color-text)] dark:text-[var(--color-text)]">
       <AdminHeader />
-      <div className="flex-1 py-8">
-        <Container size="full" className="px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 py-4 sm:py-8">
+        <Container size="full" className="px-3 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
             {/* Sidebar */}
             <aside className="hidden lg:block">

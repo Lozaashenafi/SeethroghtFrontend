@@ -152,7 +152,7 @@ export function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08, ease: 'easeOut' }}
-              className="mt-6 text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight leading-[1.05] text-balance text-[var(--color-text)] dark:text-[var(--color-text)]"
+              className="mt-6 text-3xl leading-tight sm:text-5xl md:text-6xl sm:leading-[1.05] font-medium tracking-tight text-balance text-[var(--color-text)] dark:text-[var(--color-text)]"
             >
               Honest insights from the people who actually work there.
             </motion.h1>
@@ -168,30 +168,30 @@ export function HomePage() {
             </motion.p>
           </div>
 
-          {/* Search */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.24, ease: 'easeOut' }}
-            className="mt-10 flex items-stretch gap-3"
-          >
+          {/* Search */}            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.24, ease: 'easeOut' }}
+              className="mt-6 sm:mt-10 flex flex-col-reverse sm:flex-row items-stretch gap-3"
+            >
             <div className="flex flex-1 min-w-0 border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
-              <div className="flex flex-1 items-center gap-3 px-4 sm:px-5 min-w-0">
+              <div className="flex flex-1 items-center gap-3 px-3 sm:px-5 min-w-0">
                 <Search size={18} className="shrink-0 text-stone-400 dark:text-[var(--color-text-secondary)]" />
                 <input
                   ref={searchInputRef}
-                  type="text"
+                  type="search"
+                  inputMode="search"
                   placeholder={`Search ${totalCompanies ? formatNumber(totalCompanies) : ''} companies...`}
-                  className="w-full min-w-0 py-4 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                  className="h-12 w-full min-w-0 text-base font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)] sm:text-sm"
                   onKeyDown={(e) => e.key === 'Enter' && goSearch()}
                 />
               </div>
             </div>
             <Link
               to={ROUTES.CREATE_REVIEW}
-              className="inline-flex shrink-0 items-center justify-center gap-1.5 px-3 sm:px-4 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity"
+              className="inline-flex h-14 shrink-0 items-center justify-center gap-1.5 px-4 sm:h-auto bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-4 border-[var(--color-text)] dark:border-[var(--color-text)] shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)] hover:opacity-90 transition-opacity"
             >
-              <Plus size={14} /> Post
+              <Plus size={14} /> Post a review
             </Link>
           </motion.div>
 
@@ -219,7 +219,7 @@ export function HomePage() {
 
         {/* ─── Feed ─── */}
         <section className="py-14 md:py-16">
-          <div className="flex flex-wrap items-end justify-between gap-4 mb-10 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-8 sm:mb-10 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)] pb-4">
             <div>
               <p className="text-[10px] font-medium tracking-[0.25em] uppercase text-stone-500 dark:text-[var(--color-text-secondary)]">
                 The ledger
@@ -228,7 +228,7 @@ export function HomePage() {
                 Browse companies
               </h2>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
               <span className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
                 Viewing {companies.length} of {formatNumber(totalCompanies)}
               </span>
@@ -258,7 +258,7 @@ export function HomePage() {
                 ))}
               </div>
             ) : isError ? (
-              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 text-center" style={tornEffect}>
                 <p className="text-sm font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                   Couldn&rsquo;t load companies right now.
                 </p>
@@ -267,7 +267,7 @@ export function HomePage() {
                 </p>
               </div>
             ) : companies.length === 0 ? (
-              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 text-center" style={tornEffect}>
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 text-center" style={tornEffect}>
                 <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                   <Building2 size={24} />
                 </div>

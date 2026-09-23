@@ -204,7 +204,7 @@ export function ProfilePage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         <Link
           to="/"
           className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
@@ -438,7 +438,7 @@ export function ProfilePage() {
         {isLoading ? (
           <TornSkeleton count={3} height="h-24" />
         ) : reviews.length === 0 ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <MessageSquareText size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>

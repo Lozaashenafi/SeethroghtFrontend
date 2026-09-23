@@ -151,7 +151,7 @@ export function CreateCompanyPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         <Link
           to="/company"
           className="mb-8 inline-flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
@@ -179,7 +179,7 @@ export function CreateCompanyPage() {
         <form onSubmit={handleSubmit}>
           <div className="space-y-8">
             {/* ─────────────── Scrape from Website ─────────────── */}
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <div className="flex items-center gap-3 mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 <Sparkles size={18} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
                 <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
@@ -223,7 +223,7 @@ export function CreateCompanyPage() {
             </div>
 
             {/* Basic Info */}
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Basic Information
               </h2>
@@ -377,7 +377,7 @@ export function CreateCompanyPage() {
             </div>
 
             {/* Location */}
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Location
               </h2>
@@ -412,7 +412,7 @@ export function CreateCompanyPage() {
             </div>
 
             {/* Description */}
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
               <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
                 Description
               </h2>

@@ -113,7 +113,7 @@ export function ReviewPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         {/* Header */}
         <header className="mb-10 text-center max-w-2xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)] break-words">
@@ -180,13 +180,13 @@ export function ReviewPage() {
         {isLoading ? (
           <TornSkeleton count={3} height="h-48" />
         ) : error ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <p className=" text-sm text-stone-500 dark:text-[var(--color-text-secondary)] tracking-normal">
               Failed to load reviews.
             </p>
           </div>
         ) : reviews.length === 0 ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <MessageSquareText size={24} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
@@ -214,7 +214,7 @@ export function ReviewPage() {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="mt-16 flex items-center justify-center gap-3 sm:gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-10">
+              <div className="mt-10 sm:mt-16 flex items-center justify-center gap-3 sm:gap-8 border-t-2 border-stone-200 dark:border-[var(--color-border)] pt-6 sm:pt-10">
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page <= 1}

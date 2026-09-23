@@ -76,7 +76,7 @@ export function AboutPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         {/* Back link */}
         <Link
           to={ROUTES.HOME}
@@ -161,7 +161,7 @@ export function AboutPage() {
             </h2>
           </div>
           <div
-            className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]"
+            className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]"
             style={{ ...tornEffect, ...cardShadow }}
           >
             <ul className="space-y-4">

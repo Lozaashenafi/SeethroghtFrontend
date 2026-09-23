@@ -52,7 +52,7 @@ function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] shadow-lg z-50">
+        <div className="fixed inset-x-3 top-[4.5rem] z-50 max-h-[70vh] overflow-y-auto border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper)] dark:bg-[var(--color-card)] shadow-lg sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 sm:max-h-96 sm:max-w-[calc(100vw-2rem)]">
           <div className="flex items-center justify-between border-b-2 border-[var(--color-text)]/10 dark:border-[var(--color-border)] px-4 py-3">
             <span className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
               Notifications
@@ -123,14 +123,14 @@ export function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-30 border-b-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)]">
-        <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-3 sm:h-20 sm:px-6 lg:px-8">
          
           <Link
             to={ROUTES.HOME}
-            className="flex items-center gap-2 text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]"
+            className="flex min-w-0 items-center gap-2 text-xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] sm:text-2xl"
           >
-            <Logo className="h-8 w-8" />
-            <span>See Through</span>
+            <Logo className="h-7 w-7 shrink-0 sm:h-8 sm:w-8" />
+            <span className="truncate">See Through</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -168,7 +168,7 @@ export function Navbar() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-4">
             <NotificationBell />
             
             <ThemeToggle className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-[var(--color-text)] hover:text-white dark:hover:bg-[var(--color-text)] dark:hover:text-[var(--color-bg)] transition-colors" />

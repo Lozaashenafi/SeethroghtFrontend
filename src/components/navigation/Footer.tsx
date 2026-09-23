@@ -27,7 +27,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] pt-16 pb-8" role="contentinfo">
+    <footer className="border-t-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] pt-10 sm:pt-16 pb-8" role="contentinfo">
       <Container size="lg">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           {/* Logo and Tagline Section */}
@@ -68,7 +68,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Section - "The Receipt" style */}
-        <div className="mt-20 border-t-2 border-[var(--color-text)] dark:border-[var(--color-text)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-12 sm:mt-20 border-t-2 border-[var(--color-text)] dark:border-[var(--color-text)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-[10px] font-medium tracking-normal text-stone-400 dark:text-[var(--color-text-secondary)]">
             Log Number: {year}-ST-BRUTALIST
           </div>

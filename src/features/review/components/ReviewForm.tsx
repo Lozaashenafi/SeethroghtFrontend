@@ -89,7 +89,7 @@ function DiamondRatingInput({
           {description}
         </span>
       )}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1 sm:gap-1.5">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
             key={star}
@@ -97,14 +97,14 @@ function DiamondRatingInput({
             onClick={() => onChange(star)}
             onMouseEnter={() => setHovered(star)}
             onMouseLeave={() => setHovered(null)}
-            className="p-1 cursor-pointer"
+            className="flex h-11 w-11 items-center justify-center cursor-pointer active:scale-95 transition-transform"
             aria-label={`${star} star${star !== 1 ? 's' : ''}`}
           >
             <div
-              className={`w-5 h-5 rotate-45 border-2 transition-all ${
+              className={`w-6 h-6 sm:w-5 sm:h-5 rotate-45 border-2 transition-all ${
                 star <= (hovered ?? value ?? 0)
                   ? 'bg-[var(--color-text)] border-[var(--color-text)] dark:bg-[var(--color-text)] dark:border-[var(--color-text)] scale-110'
-                  : 'bg-transparent border-stone-300 dark:border-[var(--color-border)] hover:border-[var(--color-text)] dark:hover:border-[var(--color-text)]'
+                  : 'bg-transparent border-stone-300 dark:border-[var(--color-border)]'
               }`}
             />
           </button>
@@ -430,7 +430,7 @@ export function ReviewForm({
       <div className="space-y-8">
         {/* Company */}
         {/* NOTE: no tornEffect clipPath on this card because the dropdown would be clipped */}
-        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" data-field="company" style={{ ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" data-field="company" style={{ ...cardShadow }}>
           <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
             Company
           </h2>
@@ -456,7 +456,7 @@ export function ReviewForm({
         </div>
 
         {/* Ratings */}
-        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
           <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
             Ratings
           </h2>
@@ -511,7 +511,7 @@ export function ReviewForm({
         </div>
 
         {/* Review Details */}
-        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
           <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
             Your Review
           </h2>
@@ -569,7 +569,7 @@ export function ReviewForm({
         </div>
 
         {/* Job Details */}
-        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+        <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
           <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
             Job Details
           </h2>
@@ -628,7 +628,7 @@ export function ReviewForm({
 
         {/* Tags */}
         {tags.length > 0 && (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-5 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={{ ...tornEffect, ...cardShadow }}>
             <h2 className="text-xs font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-6 pb-3 border-b-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               Tags
             </h2>
@@ -636,8 +636,9 @@ export function ReviewForm({
           </div>
         )}
 
-        {/* Submit */}
-        <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
+        {/* Submit — full-width buttons stacked on phones, sticky for thumb reach */}
+        <div className="sticky bottom-0 -mx-4 px-4 pt-4 pb-2 bg-[var(--color-paper-warm)]/95 dark:bg-[var(--color-bg)]/95 backdrop-blur-sm border-t-2 border-[var(--color-text)]/10 dark:border-[var(--color-border)] sm:static sm:mx-0 sm:px-0 sm:pb-0 sm:bg-transparent sm:dark:bg-transparent sm:border-t-0 sm:backdrop-blur-none">
+        <div className="flex flex-col sm:flex-row justify-end gap-4 pt-2 sm:pt-4">
           <Link to={cancelHref}>
             <span className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-6 py-4 font-medium text-xs tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] border-2 border-[var(--color-text)] dark:border-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors cursor-pointer">
               Cancel
@@ -654,6 +655,7 @@ export function ReviewForm({
               <><Send size={16} /> {submitLabel}</>
             )}
           </button>
+        </div>
         </div>
       </div>
     </form>

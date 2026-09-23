@@ -31,7 +31,7 @@ export function CompanyDetailPage() {
       <div className="min-h-screen bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] selection:bg-[var(--color-text)] dark:selection:bg-[var(--color-text)] selection:text-stone-50">
         <div className="fixed inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none" 
              style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }} />
-        <Container size="lg" className="relative z-10 py-16">
+        <Container size="lg" className="relative z-10 py-8 sm:py-12 lg:py-16">
           <TornSkeleton count={1} height="h-64" />
         </Container>
       </div>
@@ -67,7 +67,7 @@ export function CompanyDetailPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="lg" className="relative z-10 py-16">
+      <Container size="lg" className="relative z-10 py-8 sm:py-12 lg:py-16">
         {/* Back link */}
         <Link
           to={backTo}
@@ -187,13 +187,13 @@ export function CompanyDetailPage() {
           {reviewsLoading ? (
             <TornSkeleton count={3} height="h-48" />
           ) : reviewsError ? (
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
               <p className=" text-stone-500 dark:text-[var(--color-text-secondary)]">
                 Couldn&rsquo;t load reviews. Please try again.
               </p>
             </div>
           ) : reviewsData?.reviews.length === 0 ? (
-            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+            <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
               <p className=" text-stone-500 dark:text-[var(--color-text-secondary)]">
                 No reviews yet for this company. Be the first.
               </p>

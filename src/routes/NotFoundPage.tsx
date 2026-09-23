@@ -23,11 +23,11 @@ export function NotFoundPage() {
           className="max-w-md"
         >
           {/* Torn-edge card */}
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)]" style={tornEffect}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)]" style={tornEffect}>
             <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center border-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Logo className="h-16 w-16" />
             </div>
-            <h1 className="text-6xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-4">
+            <h1 className="text-5xl sm:text-6xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] mb-4">
               404
             </h1>
             <p className=" text-base text-stone-500 dark:text-[var(--color-text-secondary)] mb-2">

@@ -53,6 +53,10 @@
 
   html {
     scroll-behavior: smooth;
+    /* Prevent mobile browsers from shifting content behind notches/scrollbars */
+    scrollbar-gutter: stable;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -63,7 +67,72 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s ease, color 0.3s ease;
+    /* Honor iPhone notch/home-bar for fixed bars and full-height layouts */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    /* Kill the gray flash-tap highlight on Android/iOS taps */
+    -webkit-tap-highlight-color: transparent;
   }
+
+  /* Mobile-first form baseline:
+     16px inputs stop iOS Safari from auto-zooming the page when a field
+     is focused (it zooms any input with font-size < 16px). !important is
+     deliberate: text-* utilities live in a higher cascade layer and would
+     otherwise win, reintroducing the zoom on inputs styled text-sm. */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    font-family: inherit;
+  }
+
+  @media (max-width: 639px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Comfortable tap targets on coarse pointers (phones/tablets) without
+     affecting the desktop layout. */
+  @media (pointer: coarse) {
+    a,
+    button,
+    [role='button'],
+    input[type='checkbox'],
+    input[type='radio'] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Inline text elements are not tap targets — keep them exempt */
+    p,
+    h1, h2, h3, h4, h5, h6,
+    label,
+    span {
+      min-height: 0;
+      min-width: 0;
+    }
+  }
+
+/* Soften the brutalist offset shadows on small screens: a 10px black block
+   reads as clutter on a 375px viewport. Restores full depth on sm+. */
+@media (max-width: 639px) {
+  [class*='shadow-[4px'],
+  [class*='shadow-[6px'],
+  [class*='shadow-[8px'],
+  [class*='shadow-[10px'] {
+    box-shadow: 3px 3px 0px 0px var(--color-text);
+  }
+
+  .dark [class*='shadow-[4px'],
+  .dark [class*='shadow-[6px'],
+  .dark [class*='shadow-[8px'],
+  .dark [class*='shadow-[10px'] {
+    box-shadow: 3px 3px 0px 0px rgba(255, 239, 205, 0.2);
+  }
+}
 
   ::selection {
     background-color: var(--color-brand-olive);
@@ -86,4 +155,14 @@
 
 @utility text-balance {
   text-wrap: balance;
+}
+
+/* Bottom bar breathing room on phones with a home indicator (iOS) */
+@utility pb-safe {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+
+/* Sticky-header offset so in-page anchors never hide behind the nav */
+@utility scroll-mt-header {
+  scroll-margin-top: 5.5rem;
 }

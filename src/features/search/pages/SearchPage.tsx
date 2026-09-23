@@ -41,9 +41,9 @@ export function SearchPage() {
         style={{ backgroundImage: `radial-gradient(currentColor 1px, transparent 0)`, backgroundSize: '40px 40px' }}
       />
 
-      <Container size="md" className="relative z-10 py-16">
+      <Container size="md" className="relative z-10 py-8 sm:py-12 lg:py-16">
         {/* Header */}
-        <header className="mb-12 text-center max-w-2xl mx-auto">
+        <header className="mb-8 sm:mb-12 text-center max-w-2xl mx-auto">
           <h1 className="text-3xl sm:text-4xl font-medium tracking-normal mb-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
             Search Companies
           </h1>
@@ -53,32 +53,33 @@ export function SearchPage() {
         </header>
 
         {/* Sharp Search Bar */}
-        <div className="flex border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-12 shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
-          <div className="flex-1 flex items-center px-6 border-r-4 border-[var(--color-text)] dark:border-[var(--color-text)]">
-            <Search size={20} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-4 shrink-0" />
+        <div className="flex flex-col-reverse sm:flex-row border-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] mb-8 sm:mb-12 shadow-[8px_8px_0px_0px_var(--color-text)] dark:shadow-[8px_8px_0px_0px_rgba(255,239,205,0.2)]">
+          <div className="flex-1 flex items-center px-4 sm:px-6 sm:border-r-4 border-b-4 sm:border-b-0 border-[var(--color-text)] dark:border-[var(--color-text)]">
+            <Search size={20} className="text-stone-400 dark:text-[var(--color-text-secondary)] mr-3 sm:mr-4 shrink-0" />
             <input
-              type="text"
+              type="search"
+              inputMode="search"
               value={inputValue}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search a company..."
-              className="w-full py-5 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+              className="h-14 w-full text-base font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)] sm:text-sm"
             />
             {inputValue && (
-              <button onClick={clearSearch} className="ml-2 p-1 hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors">
+              <button onClick={clearSearch} className="ml-2 p-2 hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors" aria-label="Clear search">
                 <X size={18} />
               </button>
             )}
           </div>
-          <Link to={ROUTES.CREATE_COMPANY} className="hidden sm:block">
-            <button className="h-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center gap-2">
-              <Plus size={16} /> Add
+          <Link to={ROUTES.CREATE_COMPANY} className="shrink-0">
+            <button className="h-14 w-full px-8 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal hover:opacity-90 transition-colors flex items-center justify-center gap-2">
+              <Plus size={16} /> Add company
             </button>
           </Link>
         </div>
 
         {/* Results */}
         {!query ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border-2 border-[var(--color-text)] dark:border-[var(--color-text)]">
               <Search size={32} className="text-[var(--color-text)] dark:text-[var(--color-text)]" />
             </div>
@@ -89,7 +90,7 @@ export function SearchPage() {
         ) : isLoading ? (
           <TornSkeleton count={3} height="h-24" />
         ) : isError ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
               Couldn&rsquo;t load search results right now.
             </p>
@@ -98,7 +99,7 @@ export function SearchPage() {
             </p>
           </div>
         ) : companies.length === 0 ? (
-          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-12 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
+          <div className="bg-[var(--color-paper)] dark:bg-[var(--color-card)] p-6 sm:p-8 border border-stone-200 dark:border-[var(--color-border)] text-center" style={{ ...tornEffect, ...cardShadow }}>
             <p className=" text-stone-500 dark:text-[var(--color-text-secondary)] text-sm tracking-normal">
               No companies found for <span className="font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">&ldquo;{query}&rdquo;</span>
             </p>

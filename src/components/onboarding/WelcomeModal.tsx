@@ -64,7 +64,7 @@ export function WelcomeModal({ onDismissed }: WelcomeModalProps) {
           <img
             src="/lightlogo.png"
             alt="See Through"
-            className="mx-auto mb-5 h-20 w-20 object-contain"
+            className="mx-auto mb-5 h-14 w-14 object-contain sm:h-20 sm:w-20"
           />
           <h2 className="text-3xl md:text-4xl font-medium leading-tight text-[#2b2f23]">
             Welcome to See Through
