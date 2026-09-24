@@ -16,5 +16,5 @@
     "moduleDetection": "force",
     "types": ["node"]
   },
-  "include": ["api"]
+  "include": ["."]
 }
