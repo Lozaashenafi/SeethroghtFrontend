@@ -14,6 +14,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5",
     "@tanstack/react-query-devtools": "^5",
+    "@vercel/og": "^1.0.3",
     "axios": "^1",
     "clsx": "^2",
     "framer-motion": "^12",

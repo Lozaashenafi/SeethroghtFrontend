@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://seethroght-backend.vercel.app/api/$1" },
+    { "source": "/api/((?!review-og).*)", "destination": "https://seethroght-backend.vercel.app/api/$1" },
+    { "source": "/r/:publicId", "destination": "/api/review-preview?publicId=:publicId" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

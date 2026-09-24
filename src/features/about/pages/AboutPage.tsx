@@ -189,20 +189,21 @@ export function AboutPage() {
             <p className="mx-auto mb-8 max-w-md text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
               Create a free account, verify your email, and share your experience anonymously. Your name is never revealed.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                to={ROUTES.REGISTER}
-                className="inline-block bg-[var(--color-text)] dark:bg-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-white dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity"
-              >
-                Create Account
-              </Link>
-              <Link
-                to={ROUTES.LOGIN}
-                className="inline-block border-2 border-[var(--color-text)] dark:border-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-100 dark:hover:bg-[var(--color-card)] transition-colors"
-              >
-                Log In
-              </Link>
-            </div>
+           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+  <Link
+    to={ROUTES.REGISTER}
+    className="inline-block border-2 border-transparent bg-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity"
+  >
+    Create Account
+  </Link>
+
+  <Link
+    to={ROUTES.LOGIN}
+    className="inline-block border-2 border-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:border-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-100 dark:hover:bg-[var(--color-card)] transition-colors"
+  >
+    Log In
+  </Link>
+</div>
           </div>
         </section>
       </Container>

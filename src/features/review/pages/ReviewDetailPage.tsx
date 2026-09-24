@@ -7,6 +7,7 @@ import {
   Send,
   Flag,
   LogIn,
+  Share2,
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
@@ -16,6 +17,7 @@ import { formatDate, profanityError, getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
+import { ShareReviewModal } from '@/features/review/components/ShareReviewModal';
 import { ROUTES } from '@/constants';
 
 function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onClose: () => void }) {
@@ -115,6 +117,7 @@ export function ReviewDetailPage() {
   const [commentText, setCommentText] = useState('');
   const [commentError, setCommentError] = useState('');
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const createComment = useCreateComment();
   const vote = useVoteOnReview();
@@ -313,21 +316,29 @@ export function ReviewDetailPage() {
                 <ThumbsDown size={14} /> {review.unhelpfulCount}
               </button>
             </div>
-            {isAuthenticated ? (
+            <div className="flex items-center gap-3 sm:gap-4">
               <button
-                onClick={() => setShowReportModal(true)}
+                onClick={() => setShowShareModal(true)}
                 className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
               >
-                <Flag size={14} /> Report
+                <Share2 size={14} /> Share
               </button>
-            ) : (
-              <Link
-                to={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(window.location.pathname)}`}
-                className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
-              >
-                <LogIn size={14} /> Log in to report
-              </Link>
-            )}
+              {isAuthenticated ? (
+                <button
+                  onClick={() => setShowReportModal(true)}
+                  className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+                >
+                  <Flag size={14} /> Report
+                </button>
+              ) : (
+                <Link
+                  to={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(window.location.pathname)}`}
+                  className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-[var(--color-text)] dark:hover:text-[var(--color-text)] transition-colors"
+                >
+                  <LogIn size={14} /> Log in to report
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
@@ -418,6 +429,14 @@ export function ReviewDetailPage() {
         <ReportModal
           reviewPublicId={publicId}
           onClose={() => setShowReportModal(false)}
+        />
+      )}
+
+      {showShareModal && review && (
+        <ShareReviewModal
+          review={review}
+          isOpen
+          onClose={() => setShowShareModal(false)}
         />
       )}
     </div>
