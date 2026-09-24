@@ -34,6 +34,11 @@
 
 /* ─── Dark Theme ─── */
 .dark {
+  /* Dark mode here is class-toggled, not OS-preference-based, so the browser
+     keeps rendering native widgets (<select> popup lists, their options and
+     arrows, scrollbars, autofill) with the light palette. color-scheme tells
+     the UA to paint those native surfaces dark too. */
+  color-scheme: dark;
   --color-bg: #2b2f23;
   --color-surface: #34382a;
   --color-card: #3b4030;
@@ -41,6 +46,13 @@
   --color-text-secondary: rgba(255, 239, 205, 0.75);
   --color-border: rgba(255, 239, 205, 0.08);
   --color-info: var(--color-brand-navy-light);
+}
+
+/* Belt-and-braces for engines whose option list needs explicit colors even
+   with color-scheme set (older Firefox/Chrome builds). */
+.dark option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 /* ─── Base Styles ─── */
