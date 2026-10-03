@@ -13,6 +13,7 @@ export {
   getMyReviews,
   getMyReview,
   getReviewTags,
+  suggestReviewTitle,
 } from './reviews.service';
 export { getComments, createComment } from './comments.service';
 export { voteOnReview } from './votes.service';

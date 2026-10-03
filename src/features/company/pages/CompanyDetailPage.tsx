@@ -3,6 +3,7 @@ import { Globe, MapPin, ArrowLeft, ThumbsUp, Briefcase, Pencil, MessageSquareTex
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton, CompanyLogo } from '@/components/ui';
 import { useCompany, useReviews } from '@/hooks';
+import { VoteButtons } from '@/features/review/components/VoteButtons';
 import { formatDate } from '@/utils';
 import { ROUTES } from '@/constants';
 import { tornEffect, cardShadow } from '@/constants/brand';
@@ -238,9 +239,11 @@ export function CompanyDetailPage() {
 
                     <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
                       <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
-                        <span className="flex items-center gap-1.5">
-                          <ThumbsUp size={12} /> {review.helpfulCount || 0}
-                        </span>
+                        <VoteButtons
+                          reviewPublicId={review.publicId}
+                          helpfulCount={review.helpfulCount || 0}
+                          unhelpfulCount={review.unhelpfulCount || 0}
+                        />
                         <span className="flex items-center gap-1.5">
                           <MessageSquareText size={12} /> DISCUSS
                         </span>

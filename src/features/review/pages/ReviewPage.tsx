@@ -7,13 +7,13 @@ import {
   ChevronRight,
   Search,
   X,
-  ThumbsUp,
   ArrowUpRight,
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
 import type { Review } from '@/types';
 import { useReviews, useCompanies, useDebounce } from '@/hooks';
+import { VoteButtons } from '@/features/review/components/VoteButtons';
 import { formatDate } from '@/utils';
 import { tornEffect, cardShadow } from '@/constants/brand';
 
@@ -53,9 +53,11 @@ function ReviewCard({ review }: { review: Review }) {
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-stone-200 dark:border-[var(--color-border)] mt-4">
           <div className="flex items-center gap-4 text-xs font-medium text-stone-500 dark:text-[var(--color-text-secondary)]">
-            <span className="flex items-center gap-1.5">
-              <ThumbsUp size={12} /> {review.helpfulCount || 0}
-            </span>
+            <VoteButtons
+              reviewPublicId={review.publicId}
+              helpfulCount={review.helpfulCount || 0}
+              unhelpfulCount={review.unhelpfulCount || 0}
+            />
             <span className="flex items-center gap-1.5">
               <MessageSquareText size={12} /> DISCUSS
             </span>

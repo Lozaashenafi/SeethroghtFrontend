@@ -31,6 +31,22 @@ export async function getReviewByPublicId(publicId: string): Promise<Review> {
   return data.data;
 }
 
+/** AI-generated (or fallback) title suggestion from the review's pros/cons. */
+export async function suggestReviewTitle(input: {
+  pros?: string;
+  cons?: string;
+  jobTitle?: string;
+  /** `auto` = drafted by the form while typing, `manual` = explicit button click. */
+  trigger?: 'auto' | 'manual';
+}): Promise<{ title: string; source: 'ai' | 'fallback' }> {
+  const { data } = await apiClient.post<ApiResponse<{ title: string; source: 'ai' | 'fallback' }>>(
+    API_ENDPOINTS.REVIEWS_SUGGEST_TITLE,
+    input,
+  );
+  if (!data.data) throw new Error('Failed to generate title');
+  return data.data;
+}
+
 export async function createReview(input: CreateReviewInput): Promise<Review> {
   const { data } = await apiClient.post<ApiResponse<Review>>(API_ENDPOINTS.REVIEWS, input);
   if (!data.data) throw new Error('Failed to create review');

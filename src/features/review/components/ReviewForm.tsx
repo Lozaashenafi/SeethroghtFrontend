@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Building2, Briefcase, Send, Check, X } from 'lucide-react';
+import { Building2, Briefcase, Send, Check, X, Sparkles, Loader2 } from 'lucide-react';
 import { useCompanies, useTags, useDebounce } from '@/hooks';
+import { useUserAuth } from '@/context/UserAuthContext';
+import { suggestReviewTitle } from '@/services';
 import { ROUTES } from '@/constants';
 import { getApiErrorMessage, profanityError } from '@/utils';
 import { toast } from 'sonner';
@@ -314,6 +316,9 @@ export function ReviewForm({
 
   const [companySlug, setCompanySlug] = useState(initialValues?.companySlug ?? '');
   const [title, setTitle] = useState(initialValues?.title ?? '');
+  // Once the reviewer types a title themselves we stop auto-drafting, so their
+  // words are never overwritten. An existing title (edit mode) counts as theirs.
+  const [titleManuallyEdited, setTitleManuallyEdited] = useState(Boolean(initialValues?.title));
   const [pros, setPros] = useState(initialValues?.pros ?? '');
   const [cons, setCons] = useState(initialValues?.cons ?? '');
   const [workLifeBalance, setWorkLifeBalance] = useState<number | null>(initialValues?.workLifeBalance ?? null);
@@ -329,6 +334,8 @@ export function ReviewForm({
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(initialValues?.tagIds ?? []);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [drafting, setDrafting] = useState<'manual' | 'auto' | null>(null);
+  const { isAuthenticated } = useUserAuth();
 
   // The overall rating is not entered directly — it is derived as the average of
   // the five category ratings, so it always reflects what the reviewer actually
@@ -352,17 +359,17 @@ export function ReviewForm({
         )
       : null;
 
-  const validate = useCallback((): Record<string, string> => {
+  const validate = useCallback((titleValue: string = title): Record<string, string> => {
     const newErrors: Record<string, string> = {};
     if (mode === 'create' && !companySlug) newErrors.company = 'Please select a company';
-    if (!title.trim() || title.trim().length < 10) newErrors.title = 'Title must be at least 10 characters';
-    if (title.trim().length > 200) newErrors.title = 'Title must be at most 200 characters';
+    if (!titleValue.trim() || titleValue.trim().length < 10) newErrors.title = 'Title must be at least 10 characters';
+    if (titleValue.trim().length > 200) newErrors.title = 'Title must be at most 200 characters';
     if (pros && pros.length > 2000) newErrors.pros = 'Pros must be at most 2000 characters';
     if (cons && cons.length > 2000) newErrors.cons = 'Cons must be at most 2000 characters';
     if (jobTitle && jobTitle.length > 100) newErrors.jobTitle = 'Job title must be at most 100 characters';
 
     // Profanity gate — warn inline and block submission until the text is fixed.
-    const titleProfanity = profanityError(title);
+    const titleProfanity = profanityError(titleValue);
     if (titleProfanity) newErrors.title = titleProfanity;
     const prosProfanity = profanityError(pros);
     if (prosProfanity) newErrors.pros = prosProfanity;
@@ -384,9 +391,122 @@ export function ReviewForm({
       ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
 
+  const autoTitleTimerRef = useRef<number | null>(null);
+  const inFlightRef = useRef<{ trigger: 'manual' | 'auto'; promise: Promise<string | null> } | null>(null);
+
+  const clearAutoTitleTimer = () => {
+    if (autoTitleTimerRef.current) {
+      window.clearTimeout(autoTitleTimerRef.current);
+      autoTitleTimerRef.current = null;
+    }
+  };
+
+  // Ask the backend for an AI-generated title from the current pros/cons.
+  // `manual` is the explicit "Write it for me" button (overwrites + toasts);
+  // `auto` drafts below Pros & Cons and never touches user text.
+  // Resolves to the drafted title, or null when nothing was generated.
+  const generateTitle = useCallback(
+    async (source: 'manual' | 'auto'): Promise<string | null> => {
+      if (source === 'auto') {
+        if (titleManuallyEdited || title.trim()) return null;
+        if (!pros.trim() && !cons.trim()) return null;
+        if (!isAuthenticated) return null;
+      } else {
+        if (!isAuthenticated) {
+          toast.error('Log in to use AI title suggestions.');
+          return null;
+        }
+        if (!pros.trim() && !cons.trim()) {
+          toast.error('Write some pros or cons first — the title is generated from them.');
+          return null;
+        }
+      }
+
+      // Automatic drafts join whatever is already running; a manual click only
+      // joins another manual click, so pressing the button always starts a
+      // fresh draft instead of replaying the last one.
+      const inFlight = inFlightRef.current;
+      if (inFlight && (source === 'auto' || inFlight.trigger === 'manual')) {
+        return inFlight.promise;
+      }
+
+      setDrafting(source);
+      const request = suggestReviewTitle({
+        pros: pros.trim() || undefined,
+        cons: cons.trim() || undefined,
+        jobTitle: jobTitle.trim() || undefined,
+        trigger: source,
+      })
+        .then(({ title: drafted, source: generatedSource }) => {
+          // Manual runs overwrite; auto runs only fill an empty field in case
+          // the reviewer started typing while the request was in flight.
+          setTitle((current) => (source === 'manual' || !current.trim() ? drafted : current));
+          setErrors((p) => (p.title ? { ...p, title: '' } : p));
+          toast.success(
+            source === 'manual'
+              ? generatedSource === 'fallback'
+                ? 'Quick draft (AI is offline) — edit it or press again for another.'
+                : 'Title drafted — feel free to tweak it.'
+              : 'Title drafted from your Pros & Cons — edit it if you like.',
+          );
+          return drafted;
+        })
+        .catch((error) => {
+          if (source === 'manual') {
+            toast.error(getApiErrorMessage(error, 'Could not generate a title. Try writing one yourself.'));
+          }
+          return null;
+        })
+        .finally(() => {
+          const isCurrent = inFlightRef.current?.promise === request;
+          if (isCurrent) inFlightRef.current = null;
+          if (!inFlightRef.current) setDrafting(null);
+        });
+
+      inFlightRef.current = { trigger: source, promise: request };
+      return request;
+    },
+    [isAuthenticated, titleManuallyEdited, title, pros, cons, jobTitle],
+  );
+
+  const handleSuggestTitle = () => {
+    void generateTitle('manual');
+  };
+
+  // Auto-draft the title shortly after the reviewer stops typing in Pros/Cons.
+  useEffect(() => {
+    clearAutoTitleTimer();
+    if (titleManuallyEdited || title.trim()) return;
+    if (!pros.trim() && !cons.trim()) return;
+    autoTitleTimerRef.current = window.setTimeout(() => {
+      autoTitleTimerRef.current = null;
+      void generateTitle('auto');
+    }, 1200);
+    return clearAutoTitleTimer;
+  }, [pros, cons, title, titleManuallyEdited, generateTitle]);
+
+  // Leaving the Pros/Cons fields with both filled drafts the title right away.
+  const handleProsConsBlur = () => {
+    if (titleManuallyEdited || title.trim()) return;
+    if (!pros.trim() || !cons.trim()) return;
+    clearAutoTitleTimer();
+    void generateTitle('auto');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const validationErrors = validate();
+
+    // If the reviewer submits before the auto-draft landed, wait for it so the
+    // title field isn't flagged as empty.
+    let effectiveTitle = title;
+    if (!title.trim() && !titleManuallyEdited && (pros.trim() || cons.trim())) {
+      const drafted = await generateTitle('auto');
+      if (drafted) {
+        effectiveTitle = drafted;
+      }
+    }
+
+    const validationErrors = validate(effectiveTitle);
     if (Object.keys(validationErrors).length > 0) {
       const messages = Object.values(validationErrors);
       toast.error(`Please fix the form errors: ${messages.join(' ')}`);
@@ -395,7 +515,7 @@ export function ReviewForm({
     }
 
     const common = {
-      title: title.trim(),
+      title: effectiveTitle.trim(),
       pros: pros.trim() || undefined,
       cons: cons.trim() || undefined,
       overallRating: computedOverallRating ?? undefined,
@@ -516,22 +636,6 @@ export function ReviewForm({
             Your Review
           </h2>
           <div className="space-y-5">
-            <div className="space-y-1.5" data-field="title">
-              <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
-                Review Title *
-              </label>
-              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
-                <input
-                  value={title}
-                  onChange={(e) => { setTitle(e.target.value); if (errors.title) setErrors(p => ({ ...p, title: '' })); }}
-                  placeholder="Summarize your experience..."
-                  maxLength={200}
-                  className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
-                />
-              </div>
-              {errors.title && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.title}</p>}
-            </div>
-
             <div className="space-y-1.5" data-field="pros">
               <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Pros
@@ -540,6 +644,7 @@ export function ReviewForm({
                 <textarea
                   value={pros}
                   onChange={(e) => { setPros(e.target.value); if (errors.pros) setErrors(p => ({ ...p, pros: '' })); }}
+                  onBlur={handleProsConsBlur}
                   placeholder="What did you like about working here?"
                   rows={4}
                   maxLength={2000}
@@ -557,6 +662,7 @@ export function ReviewForm({
                 <textarea
                   value={cons}
                   onChange={(e) => { setCons(e.target.value); if (errors.cons) setErrors(p => ({ ...p, cons: '' })); }}
+                  onBlur={handleProsConsBlur}
                   placeholder="What could be improved?"
                   rows={4}
                   maxLength={2000}
@@ -564,6 +670,46 @@ export function ReviewForm({
                 />
               </div>
               {errors.cons && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.cons}</p>}
+            </div>
+
+            <div className="space-y-1.5" data-field="title">
+              <div className="flex items-center justify-between gap-3">
+                <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  Review Title *
+                </label>
+                <button
+                  type="button"
+                  onClick={handleSuggestTitle}
+                  disabled={drafting === 'manual'}
+                  title="Generate a title from your pros and cons"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-medium tracking-normal border-2 border-[var(--color-text)] dark:border-[var(--color-text)] text-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-200 dark:hover:bg-[var(--color-card)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {drafting ? (
+                    <>
+                      <Loader2 size={12} className="animate-spin" />
+                      Drafting...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles size={12} />
+                      Write it for me
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+                <input
+                  value={title}
+                  onChange={(e) => { setTitle(e.target.value); setTitleManuallyEdited(true); if (errors.title) setErrors(p => ({ ...p, title: '' })); }}
+                  placeholder="Summarize your experience..."
+                  maxLength={200}
+                  className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:placeholder-[var(--color-text-secondary)]"
+                />
+              </div>
+              <p className="text-[10px] text-stone-400 dark:text-[var(--color-text-secondary)]">
+                Auto-drafted once you finish Pros &amp; Cons above — edit it anytime, or press “Write it for me” to redo it.
+              </p>
+              {errors.title && <p className="text-[11px] font-medium tracking-normal text-orange-700 dark:text-orange-400">{errors.title}</p>}
             </div>
           </div>
         </div>

@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
-  ThumbsUp,
-  ThumbsDown,
   Send,
   Flag,
   LogIn,
@@ -11,13 +9,14 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/common';
 import { BrandStarRating, TornSkeleton } from '@/components/ui';
-import { useReview, useMyReviews, useComments, useCreateComment, useVoteOnReview, useCreateReport } from '@/hooks';
+import { useReview, useMyReviews, useComments, useCreateComment, useCreateReport } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
 import { formatDate, profanityError, getApiErrorMessage } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
 import { ShareReviewModal } from '@/features/review/components/ShareReviewModal';
+import { VoteButtons } from '@/features/review/components/VoteButtons';
 import { ROUTES } from '@/constants';
 
 function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onClose: () => void }) {
@@ -118,9 +117,7 @@ export function ReviewDetailPage() {
   const [commentError, setCommentError] = useState('');
   const [showReportModal, setShowReportModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-
   const createComment = useCreateComment();
-  const vote = useVoteOnReview();
   const { isAuthenticated } = useUserAuth();
   // Reviews carry no author identity anymore, so authorship is checked via the
   // authenticated /user/me/reviews list instead of a userId on the payload.
@@ -154,21 +151,6 @@ export function ReviewDetailPage() {
       toast.success('Comment posted');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Failed to post comment'));
-    }
-  };
-
-  const handleVote = async (voteType: 'helpful' | 'unhelpful') => {
-    if (!isAuthenticated) {
-      const redirect = encodeURIComponent(window.location.pathname);
-      window.location.href = `${ROUTES.LOGIN}?redirect=${redirect}`;
-      return;
-    }
-    if (!publicId) return;
-    try {
-      await vote.mutateAsync({ reviewPublicId: publicId, voteType });
-      toast.success('Vote recorded');
-    } catch {
-      toast.error('Failed to record vote');
     }
   };
 
@@ -229,6 +211,15 @@ export function ReviewDetailPage() {
                 {review.companyName?.charAt(0) || 'R'}
               </div>
               <div className="min-w-0">
+                {/* Company name — same size as the review title, linked to the company page. */}
+                {review.companySlug && review.companyName && (
+                  <Link
+                    to={`/company/${review.companySlug}`}
+                    className="text-xl sm:text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words hover:opacity-70 transition-opacity"
+                  >
+                    {review.companyName}
+                  </Link>
+                )}
                 <h1 className="text-xl sm:text-2xl font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)] leading-none break-words">
                   {review.title}
                 </h1>
@@ -301,20 +292,14 @@ export function ReviewDetailPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
             <div className="flex flex-wrap items-center gap-3 sm:gap-6">
               <span className="text-xs text-stone-500 dark:text-[var(--color-text-secondary)]">Was this helpful?</span>
-              <button
-                onClick={() => handleVote('helpful')}
-                disabled={vote.isPending}
-                className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-emerald-700 dark:hover:text-emerald-400 disabled:opacity-50 transition-colors"
-              >
-                <ThumbsUp size={14} /> {review.helpfulCount}
-              </button>
-              <button
-                onClick={() => handleVote('unhelpful')}
-                disabled={vote.isPending}
-                className="flex items-center gap-2 font-medium text-xs tracking-normal text-stone-500 dark:text-[var(--color-text-secondary)] hover:text-orange-700 dark:hover:text-orange-400 disabled:opacity-50 transition-colors"
-              >
-                <ThumbsDown size={14} /> {review.unhelpfulCount}
-              </button>
+              {publicId && (
+                <VoteButtons
+                  reviewPublicId={publicId}
+                  helpfulCount={review.helpfulCount}
+                  unhelpfulCount={review.unhelpfulCount}
+                  size="md"
+                />
+              )}
             </div>
             <div className="flex items-center gap-3 sm:gap-4">
               <button
