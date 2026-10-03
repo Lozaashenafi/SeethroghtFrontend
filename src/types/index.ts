@@ -74,6 +74,7 @@ export interface Review {
   opportunities: number | null;
   isCurrentEmployee: boolean | null;
   employmentStatus: string | null;
+  tenure: string | null;
   jobTitle: string | null;
   isVerified: boolean;
   status?: 'published' | 'pending' | 'rejected';
@@ -113,6 +114,7 @@ export interface CreateReviewInput {
   opportunities?: number;
   isCurrentEmployee?: boolean;
   employmentStatus?: 'full-time' | 'part-time' | 'contract' | 'intern' | 'freelance';
+  tenure?: 'under-1-year' | '1-2-years' | '3-5-years' | '6-10-years' | '10-plus-years';
   jobTitle?: string;
   tagIds?: number[];
 }

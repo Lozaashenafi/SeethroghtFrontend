@@ -16,6 +16,7 @@ import {
 import { Card, Badge, Button, BrandStarRating, ConfirmDialog } from '@/components/ui';
 import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview, useAdminBanReviewAuthor } from '@/hooks';
 import { formatDate } from '@/utils';
+import { tenureLabel } from '@/constants';
 import { toast } from 'sonner';
 import type { Review } from '@/types';
 
@@ -166,6 +167,7 @@ export function AdminReviewDetailPage() {
               )}
               {review.jobTitle && <span>{review.jobTitle}</span>}
               {review.employmentStatus && <span>{review.employmentStatus}</span>}
+              {tenureLabel(review.tenure) && <span>{tenureLabel(review.tenure)}</span>}
               {review.isCurrentEmployee && <span>Current employee</span>}
               <span>{formatDate(review.createdAt)}</span>
             </div>

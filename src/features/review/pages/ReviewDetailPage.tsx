@@ -17,7 +17,7 @@ import { tornEffect, cardShadow } from '@/constants/brand';
 import { Modal } from '@/components/ui';
 import { ShareReviewModal } from '@/features/review/components/ShareReviewModal';
 import { VoteButtons } from '@/features/review/components/VoteButtons';
-import { ROUTES } from '@/constants';
+import { ROUTES, tenureLabel } from '@/constants';
 
 function ReportModal({ reviewPublicId, onClose }: { reviewPublicId: string; onClose: () => void }) {
   const [reason, setReason] = useState('');
@@ -281,6 +281,11 @@ export function ReviewDetailPage() {
             <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
               {review.employmentStatus}
             </span>
+            {tenureLabel(review.tenure) && (
+              <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                {tenureLabel(review.tenure)}
+              </span>
+            )}
             {review.isCurrentEmployee && (
               <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
                 Current Employee

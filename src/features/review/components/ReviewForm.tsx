@@ -4,7 +4,7 @@ import { Building2, Briefcase, Send, Check, X, Sparkles, Loader2 } from 'lucide-
 import { useCompanies, useTags, useDebounce } from '@/hooks';
 import { useUserAuth } from '@/context/UserAuthContext';
 import { suggestReviewTitle } from '@/services';
-import { ROUTES } from '@/constants';
+import { ROUTES, TENURE_VALUES, TENURE_LABELS, type TenureFormValue } from '@/constants';
 import { getApiErrorMessage, profanityError } from '@/utils';
 import { toast } from 'sonner';
 import { tornEffect, cardShadow } from '@/constants/brand';
@@ -20,6 +20,11 @@ const employmentOptions = [
 ] as const;
 
 type EmploymentStatusValue = (typeof employmentOptions)[number]['value'];
+
+const tenureOptions: { value: TenureFormValue; label: string }[] = [
+  { value: '', label: 'Select how long you worked here...' },
+  ...TENURE_VALUES.map((value) => ({ value, label: TENURE_LABELS[value] })),
+];
 
 const ratingLabels: Record<string, string> = {
   workLifeBalance: 'Work/Life Balance',
@@ -51,6 +56,7 @@ export interface ReviewFormValues {
   opportunities: number | null;
   isCurrentEmployee: boolean;
   employmentStatus: EmploymentStatusValue;
+  tenure: TenureFormValue;
   jobTitle: string;
   tagIds: number[];
 }
@@ -330,6 +336,7 @@ export function ReviewForm({
   const [employmentStatus, setEmploymentStatus] = useState<EmploymentStatusValue>(
     (initialValues?.employmentStatus as EmploymentStatusValue) ?? '',
   );
+  const [tenure, setTenure] = useState<TenureFormValue>(initialValues?.tenure ?? '');
   const [jobTitle, setJobTitle] = useState(initialValues?.jobTitle ?? '');
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(initialValues?.tagIds ?? []);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -526,6 +533,7 @@ export function ReviewForm({
       opportunities: opportunities ?? undefined,
       isCurrentEmployee,
       employmentStatus: employmentStatus === '' ? undefined : employmentStatus,
+      tenure: tenure === '' ? undefined : tenure,
       jobTitle: jobTitle.trim() || undefined,
       tagIds: selectedTagIds.length > 0 ? selectedTagIds : undefined,
     };
@@ -748,6 +756,23 @@ export function ReviewForm({
                   className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:text-[var(--color-text)]"
                 >
                   {employmentOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5" data-field="tenure">
+              <label className="block text-[11px] font-medium tracking-normal text-[var(--color-text)] dark:text-[var(--color-text)]">
+                Tenure
+              </label>
+              <div className="border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
+                <select
+                  value={tenure}
+                  onChange={(e) => setTenure(e.target.value as TenureFormValue)}
+                  className="w-full px-4 py-3 text-sm font-medium tracking-normal outline-none bg-transparent dark:text-[var(--color-text)]"
+                >
+                  {tenureOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>

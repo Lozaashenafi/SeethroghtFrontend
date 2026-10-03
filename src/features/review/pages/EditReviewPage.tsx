@@ -83,6 +83,7 @@ export function EditReviewPage() {
     opportunities: review.opportunities,
     isCurrentEmployee: review.isCurrentEmployee ?? false,
     employmentStatus: (review.employmentStatus ?? '') as ReviewFormValues['employmentStatus'],
+    tenure: (review.tenure ?? '') as ReviewFormValues['tenure'],
     jobTitle: review.jobTitle ?? '',
     tagIds: tagIds ?? [],
   };

@@ -16,6 +16,7 @@ import { useReviews, useCompanies, useDebounce } from '@/hooks';
 import { VoteButtons } from '@/features/review/components/VoteButtons';
 import { formatDate } from '@/utils';
 import { tornEffect, cardShadow } from '@/constants/brand';
+import { tenureLabel } from '@/constants';
 
 function ReviewCard({ review }: { review: Review }) {
   return (
@@ -62,9 +63,16 @@ function ReviewCard({ review }: { review: Review }) {
               <MessageSquareText size={12} /> DISCUSS
             </span>
           </div>
-          <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
-            {review.employmentStatus}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
+              {review.employmentStatus}
+            </span>
+            {tenureLabel(review.tenure) && (
+              <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                {tenureLabel(review.tenure)}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </Link>

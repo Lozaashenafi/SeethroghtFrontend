@@ -5,7 +5,7 @@ import { BrandStarRating, TornSkeleton, CompanyLogo } from '@/components/ui';
 import { useCompany, useReviews } from '@/hooks';
 import { VoteButtons } from '@/features/review/components/VoteButtons';
 import { formatDate } from '@/utils';
-import { ROUTES } from '@/constants';
+import { ROUTES, tenureLabel } from '@/constants';
 import { tornEffect, cardShadow } from '@/constants/brand';
 
 export function CompanyDetailPage() {
@@ -252,6 +252,11 @@ export function CompanyDetailPage() {
                         <span className="px-2 py-0.5 bg-[var(--color-text)] dark:bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] text-[10px] font-medium ">
                           {review.employmentStatus}
                         </span>
+                        {tenureLabel(review.tenure) && (
+                          <span className="px-2 py-0.5 border border-[var(--color-text)] dark:border-[var(--color-text)] text-[10px] font-medium text-[var(--color-text)] dark:text-[var(--color-text)]">
+                            {tenureLabel(review.tenure)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
