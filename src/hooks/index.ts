@@ -2,6 +2,7 @@ export { useTheme } from './useTheme';
 export { useDebounce } from './useDebounce';
 export { useLocalStorage } from './useLocalStorage';
 export { useClickOutside } from './useClickOutside';
+export { usePwaInstall } from './usePwaInstall';
 
 export { useCompanies, useCompany, useCompanyDuplicateCheck } from './useCompanies';
 export {

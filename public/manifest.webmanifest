@@ -1,0 +1,56 @@
+{
+  "name": "See Through — Anonymous Workplace Reviews",
+  "short_name": "See Through",
+  "description": "Honest, anonymous workplace reviews. Read what employees really say before you join.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait-primary",
+  "theme_color": "#FFFDF7",
+  "background_color": "#FFFDF7",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["business", "social", "productivity"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Write a review",
+      "short_name": "Write review",
+      "url": "/review/new?source=pwa",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Browse companies",
+      "short_name": "Companies",
+      "url": "/company?source=pwa",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Read reviews",
+      "short_name": "Reviews",
+      "url": "/review?source=pwa",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}
