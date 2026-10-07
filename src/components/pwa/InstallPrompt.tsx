@@ -10,10 +10,12 @@ const benefits = [
 ];
 
 /**
- * Aggressive install interstitial shown to phone visitors who are browsing in
- * a browser tab. Browsers forbid programmatic installs, so this is the closest
- * legitimate equivalent: it takes over the screen, drives the native prompt
- * where available, and shows exact "add to home screen" steps where it isn't.
+ * Aggressive install popup shown to phone visitors who are browsing in a
+ * browser tab. Browsers forbid programmatic installs, so this is the closest
+ * legitimate equivalent: it drops down from the top of the screen with an
+ * always-visible X, drives the native prompt where available, and shows exact
+ * "add to home screen" steps where it isn't. It re-appears on every load until
+ * the app is actually installed (the close X is not remembered).
  */
 export function InstallPrompt() {
   const { shouldPrompt, platform, canPrompt, isInstalling, install, dismiss } = usePwaInstall();
@@ -30,9 +32,9 @@ export function InstallPrompt() {
   }, [shouldPrompt]);
 
   const handleInstall = async () => {
-    const outcome = await install();
-    // 'unavailable' (e.g. iOS) leaves the sheet open so the steps stay visible.
-    if (outcome === 'unavailable' && platform !== 'ios') dismiss();
+    // Nothing to close here: an accepted install hides the sheet via
+    // `isInstalled`, and every other outcome keeps the manual steps visible.
+    await install();
   };
 
   const ios = platform === 'ios';
@@ -51,36 +53,36 @@ export function InstallPrompt() {
           aria-modal="true"
           aria-labelledby="pwa-install-title"
         >
-          {/* Brand row so it never feels like a spam overlay. */}
-          <div className="flex items-center justify-center gap-2 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-2 text-white">
-            <img src="/lightlogo.png" alt="" className="h-6 w-6 object-contain" />
-            <span className="text-sm font-medium tracking-normal">See Through</span>
-          </div>
-
           <motion.div
-            initial={{ y: 40, opacity: 0 }}
+            initial={{ y: '-100%', opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 40, opacity: 0 }}
+            exit={{ y: '-100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="mt-auto w-full max-h-[92dvh] overflow-y-auto overscroll-contain border-t-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] px-5 pt-6 pb-safe"
+            className="w-full max-h-[92dvh] overflow-y-auto overscroll-contain border-b-4 border-[var(--color-text)] dark:border-[var(--color-text)] bg-[var(--color-paper-warm)] dark:bg-[var(--color-bg)] px-5 pt-[max(0.75rem,env(safe-area-inset-top))] pb-6"
           >
             <div className="mx-auto w-full max-w-md">
-              <div className="flex items-start justify-between gap-4">
-                <h2
-                  id="pwa-install-title"
-                  className="text-2xl font-medium leading-tight text-[var(--color-text)] dark:text-[var(--color-text)]"
-                >
-                  Install the See Through app
-                </h2>
+              {/* Top bar: brand on the left, close (X) always at the top-right. */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-[var(--color-text)] dark:text-[var(--color-text)]">
+                  <img src="/lightlogo.png" alt="" className="h-7 w-7 border-2 border-[var(--color-text)] object-contain dark:border-[var(--color-text)]" />
+                  <span className="text-sm font-medium tracking-normal">See Through</span>
+                </div>
                 <button
                   type="button"
                   onClick={dismiss}
                   aria-label="Close install prompt"
-                  className="-mr-1 -mt-1 shrink-0 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] p-2 text-[var(--color-text)] dark:text-[var(--color-text)] active:bg-[var(--color-text)] active:text-white dark:active:bg-[var(--color-text)] dark:active:text-[var(--color-bg)]"
+                  className="shrink-0 border-2 border-[var(--color-text)] p-2 text-[var(--color-text)] active:bg-[var(--color-text)] active:text-white dark:border-[var(--color-text)] dark:text-[var(--color-text)] dark:active:bg-[var(--color-text)] dark:active:text-[var(--color-bg)]"
                 >
-                  <X size={18} />
+                  <X size={20} />
                 </button>
               </div>
+
+              <h2
+                id="pwa-install-title"
+                className="mt-4 text-2xl font-medium leading-tight text-[var(--color-text)] dark:text-[var(--color-text)]"
+              >
+                Install the See Through app
+              </h2>
 
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)]">
                 Get a faster, offline-ready app on your phone. It is free and takes a few seconds.
