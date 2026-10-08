@@ -17,6 +17,9 @@ import { toast } from 'sonner';
 import type { AdminUser } from '@/types';
 
 type StatusFilter = 'all' | 'active' | 'blocked' | 'restricted';
+// Anonymous device identities are hidden from the default view, so blocked
+// guests (e.g. a blind-banned reviewer) would otherwise be unfindable here.
+type GuestFilter = 'account' | 'guest' | 'all';
 
 interface PendingAction {
   userId: string;
@@ -27,11 +30,13 @@ export function UsersTab() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<StatusFilter>('all');
+  const [guestFilter, setGuestFilter] = useState<GuestFilter>('account');
   const debouncedSearch = useDebounce(search, 300);
   const { data, isLoading, isError } = useAdminUsers({
     page,
     limit: 10,
     status,
+    isGuest: guestFilter,
     search: debouncedSearch || undefined,
   });
   const blockUser = useAdminBlockUser();
@@ -101,6 +106,12 @@ export function UsersTab() {
     { key: 'blocked', label: 'Blocked' },
   ];
 
+  const guestTabs: { key: GuestFilter; label: string }[] = [
+    { key: 'account', label: 'Accounts' },
+    { key: 'guest', label: 'Anonymous devices' },
+    { key: 'all', label: 'Accounts + anonymous' },
+  ];
+
   return (
     <div>
       <div className="relative mb-4">
@@ -122,6 +133,23 @@ export function UsersTab() {
             onClick={() => { setStatus(tab.key); setPage(1); }}
             className={`px-3 py-1.5 text-xs font-medium tracking-normal border-2 transition-colors ${
               status === tab.key
+                ? 'bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-[var(--color-text)]'
+                : 'border-[var(--color-text)]/30 text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-[var(--color-text)]'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {guestTabs.map(tab => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => { setGuestFilter(tab.key); setPage(1); }}
+            className={`px-3 py-1.5 text-xs font-medium tracking-normal border-2 transition-colors ${
+              guestFilter === tab.key
                 ? 'bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] border-[var(--color-text)]'
                 : 'border-[var(--color-text)]/30 text-stone-500 dark:text-[var(--color-text-secondary)] hover:border-[var(--color-text)]'
             }`}
@@ -153,12 +181,15 @@ export function UsersTab() {
                         {user.displayName}
                       </Link>
                       {user.role === 'admin' && <Badge variant="outline" className="shrink-0">admin</Badge>}
+                      {user.isGuest && <Badge variant="outline" className="shrink-0">Anonymous</Badge>}
                       {user.isBlocked && <Badge variant="error" dot className="shrink-0">Blocked</Badge>}
                       {!user.isBlocked && isTempBlocked(user) && <Badge variant="warning" dot className="shrink-0">Temp restricted</Badge>}
                       {!user.isBlocked && !isTempBlocked(user) && <Badge variant="success" dot className="shrink-0">Active</Badge>}
                     </div>
                     <p className="text-xs text-text-secondary/60 mt-0.5 truncate">
-                      {user.email} · {user.emailVerified ? 'Email verified' : 'Email unverified'} · Joined {formatDate(user.createdAt)}
+                      {user.isGuest
+                        ? `Anonymous device · Joined ${formatDate(user.createdAt)}`
+                        : `${user.email} · ${user.emailVerified ? 'Email verified' : 'Email unverified'} · Joined ${formatDate(user.createdAt)}`}
                     </p>
                     {isTempBlocked(user) && (
                       <p className="text-xs text-warning mt-0.5">

@@ -1,7 +1,5 @@
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useVoteOnReview } from '@/hooks';
-import { useUserAuth } from '@/context/UserAuthContext';
-import { ROUTES } from '@/constants';
 import { toast } from 'sonner';
 
 interface VoteButtonsProps {
@@ -18,7 +16,8 @@ interface VoteButtonsProps {
  * Renders as buttons, not a Link, so it can sit inside a clickable review
  * card without nesting interactive elements. Prevents the click from
  * bubbling to any parent link so voting never navigates the user away.
- * Redirects unauthenticated visitors to login with a return path.
+ * Open to anonymous visitors too — the backend keys each anonymous voter to a
+ * device identity, so no account is required.
  */
 export function VoteButtons({
   reviewPublicId,
@@ -27,14 +26,8 @@ export function VoteButtons({
   size = 'sm',
 }: VoteButtonsProps) {
   const vote = useVoteOnReview();
-  const { isAuthenticated } = useUserAuth();
 
   const handleVote = async (voteType: 'helpful' | 'unhelpful') => {
-    if (!isAuthenticated) {
-      const redirect = encodeURIComponent(window.location.pathname);
-      window.location.href = `${ROUTES.LOGIN}?redirect=${redirect}`;
-      return;
-    }
     try {
       await vote.mutateAsync({ reviewPublicId, voteType });
       toast.success('Vote recorded');

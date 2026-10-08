@@ -14,7 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { Card, Badge, Button, BrandStarRating, ConfirmDialog } from '@/components/ui';
-import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview, useAdminBanReviewAuthor } from '@/hooks';
+import { useComments, useAdminReview, useAdminModerateReview, useAdminDeleteReview, useAdminBanReviewAuthor, useAdminUnbanReviewAuthor } from '@/hooks';
 import { formatDate } from '@/utils';
 import { tenureLabel } from '@/constants';
 import { toast } from 'sonner';
@@ -52,8 +52,10 @@ export function AdminReviewDetailPage() {
   const deleteReview = useAdminDeleteReview();
   const moderate = useAdminModerateReview();
   const banAuthor = useAdminBanReviewAuthor();
+  const unbanAuthor = useAdminUnbanReviewAuthor();
 
   const [banConfirmOpen, setBanConfirmOpen] = useState(false);
+  const [unbanConfirmOpen, setUnbanConfirmOpen] = useState(false);
 
   const handleDeleteReview = async () => {
     if (!deleteReviewTarget) return;
@@ -81,6 +83,21 @@ export function AdminReviewDetailPage() {
       setBanConfirmOpen(false);
     } catch {
       toast.error('Failed to ban the author');
+    }
+  };
+
+  const handleUnban = async () => {
+    if (!review) return;
+    try {
+      const unbanned = await unbanAuthor.mutateAsync(review.publicId);
+      if (unbanned) {
+        toast.success('Author unblocked. They can post reviews, comments and votes again.');
+      } else {
+        toast.info('No action taken — the author was not blocked.');
+      }
+      setUnbanConfirmOpen(false);
+    } catch {
+      toast.error('Failed to unblock the author');
     }
   };
 
@@ -192,13 +209,31 @@ export function AdminReviewDetailPage() {
               </Button>
             </>
           )}
-          <Button variant="outline" size="sm" className="text-error hover:bg-error/5"
-            onClick={() => setBanConfirmOpen(true)}
-            disabled={banAuthor.isPending}
-            leftIcon={<Ban size={14} />}
-          >
-            Ban Author
-          </Button>
+          {/*
+            Blind moderation. The reviewer's identity is never known, so the
+            only way back is to undo it from the review the ban was applied on —
+            an anonymous author is a guest row and never shows in the Users
+            tab. An admin author is never moderatable, so the control is hidden.
+          */}
+          {review.authorStatus?.canModerate !== false && (
+            review.authorStatus?.isBlocked ? (
+              <Button variant="outline" size="sm" className="text-success hover:bg-success/5"
+                onClick={() => setUnbanConfirmOpen(true)}
+                disabled={unbanAuthor.isPending}
+                leftIcon={<Check size={14} />}
+              >
+                Unblock Author
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" className="text-error hover:bg-error/5"
+                onClick={() => setBanConfirmOpen(true)}
+                disabled={banAuthor.isPending}
+                leftIcon={<Ban size={14} />}
+              >
+                Ban Author
+              </Button>
+            )
+          )}
           <Link to={`/review/${review.publicId}`}>
             <Button variant="outline" size="sm" rightIcon={<ExternalLink size={14} />}>View Public Page</Button>
           </Link>
@@ -325,10 +360,20 @@ export function AdminReviewDetailPage() {
       <ConfirmDialog
         isOpen={banConfirmOpen}
         title="Ban this author?"
-        description={`Block the author of "${review?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — an admin can unblock the account later from the Users tab if this was a mistake.`}
+        description={`Block the author of "${review?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — you can undo this from this same page with "Unblock Author" if it was a mistake.`}
         isLoading={banAuthor.isPending}
         onConfirm={handleBan}
         onClose={() => setBanConfirmOpen(false)}
+      />
+
+      <ConfirmDialog
+        isOpen={unbanConfirmOpen}
+        title="Unblock this author?"
+        description={`Lift the block on the author of "${review?.title}" so they can post reviews, comments and votes again? They stay anonymous — you still will not see who they are.`}
+        confirmLabel="Unblock"
+        isLoading={unbanAuthor.isPending}
+        onConfirm={handleUnban}
+        onClose={() => setUnbanConfirmOpen(false)}
       />
 
       <ConfirmDialog

@@ -148,7 +148,7 @@ export function ReviewsTab() {
       <ConfirmDialog
         isOpen={!!banTarget}
         title="Ban this author?"
-        description={`Block the author of "${banTarget?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — an admin can unblock the account later from the Users tab if this was a mistake.`}
+        description={`Block the author of "${banTarget?.title}" from posting any new reviews, comments or votes? For privacy reasons you will never see who they are — open the review to undo this with "Unblock Author" if it was a mistake.`}
         isLoading={banAuthor.isPending}
         onConfirm={handleBan}
         onClose={() => setBanTarget(null)}

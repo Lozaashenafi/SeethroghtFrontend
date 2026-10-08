@@ -5,6 +5,7 @@ import {
   adminGetReview,
   adminModerateReview,
   adminBanReviewAuthor,
+  adminUnbanReviewAuthor,
   adminListUsers,
   adminGetUser,
   adminBlockUser,
@@ -108,6 +109,22 @@ export function useAdminBanReviewAuthor() {
     mutationFn: (publicId: string) => adminBanReviewAuthor(publicId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      // Refresh the review so its author-status badge and the ban/unban button
+      // flip to the state we just created.
+      queryClient.invalidateQueries({ queryKey: ['admin-review'] });
+    },
+  });
+}
+
+/** Blind unban — the inverse of useAdminBanReviewAuthor, equally anonymous. */
+export function useAdminUnbanReviewAuthor() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (publicId: string) => adminUnbanReviewAuthor(publicId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-review'] });
     },
   });
 }
@@ -120,6 +137,7 @@ export function useAdminUsers(params: {
   search?: string;
   role?: 'user' | 'admin' | 'all';
   status?: 'active' | 'blocked' | 'restricted' | 'all';
+  isGuest?: 'account' | 'guest' | 'all';
 } = {}) {
   return useQuery({
     queryKey: ['admin-users', params],

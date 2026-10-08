@@ -30,6 +30,7 @@ export {
   useAdminDeleteReview,
   useAdminModerateReview,
   useAdminBanReviewAuthor,
+  useAdminUnbanReviewAuthor,
   useAdminUsers,
   useAdminUser,
   useAdminUserActivity,

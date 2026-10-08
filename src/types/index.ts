@@ -84,6 +84,23 @@ export interface Review {
   updatedAt: string;
 }
 
+/**
+ * Moderation state of a review's author, admin-only and deliberately
+ * identity-free: it says whether the author can post, never who they are. It
+ * exists so a blind ban can be undone from the review it was applied on.
+ */
+export interface ReviewAuthorStatus {
+  canModerate: boolean;
+  isBlocked: boolean;
+  isGuest: boolean;
+  tempBlockedUntil: string | null;
+}
+
+/** Admin review view — the public review plus the author's moderation state. */
+export interface AdminReview extends Review {
+  authorStatus: ReviewAuthorStatus | null;
+}
+
 export interface Comment {
   publicId: string;
   reviewId: number;
@@ -149,6 +166,9 @@ export interface AdminUser {
   displayName: string;
   role: string;
   emailVerified: boolean;
+  // Anonymous device identities. Hidden from the default Users list, so the
+  // tab needs an explicit filter to show them.
+  isGuest: boolean;
   isBlocked: boolean;
   blockedAt: string | null;
   tempBlockedUntil: string | null;

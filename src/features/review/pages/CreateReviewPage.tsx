@@ -1,8 +1,10 @@
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import { Container } from '@/components/common';
+import { cardShadow } from '@/constants/brand';
 import { ReviewForm } from '../components/ReviewForm';
 import { useCreateReview, useCompany } from '@/hooks';
+import { useUserAuth } from '@/context/UserAuthContext';
 
 import { toast } from 'sonner';
 
@@ -11,6 +13,7 @@ export function CreateReviewPage() {
   const [searchParams] = useSearchParams();
   const prefillCompanySlug = searchParams.get('company');
   const { data: prefillCompany } = useCompany(prefillCompanySlug ?? undefined);
+  const { isAuthenticated } = useUserAuth();
 
   const createReview = useCreateReview();
 
@@ -40,14 +43,34 @@ export function CreateReviewPage() {
           </p>
         </header>
 
+        {!isAuthenticated && (
+          <div className="mb-8 flex items-start gap-3 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)] p-4" style={{ ...cardShadow }}>
+            <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[var(--color-text)] dark:text-[var(--color-text)]" />
+            <p className="text-xs leading-relaxed text-[var(--color-text)] dark:text-[var(--color-text)]">
+              <span className="font-medium">No account needed.</span> Post anonymously right
+              now — your review is held for a quick moderation check before it goes
+              live. We never ask for your name or email.
+            </p>
+          </div>
+        )}
+
         <ReviewForm
           mode="create"
           presetCompanyName={prefillCompany?.name}
           initialValues={{ companySlug: prefillCompanySlug ?? '' }}
           onSubmit={async (payload) => {
             const review = await createReview.mutateAsync(payload as Parameters<typeof createReview.mutateAsync>[0]);
-            toast.success('Your review has been posted!');
-            navigate(`/review/${review.publicId}`);
+            if (isAuthenticated) {
+              toast.success('Your review has been posted!');
+              navigate(`/review/${review.publicId}`);
+              return;
+            }
+            // Anonymous reviews are held for moderation, so their detail page is
+            // not public yet — send the author back to the reviews hub instead.
+            toast.success(
+              'Thanks! Your review is awaiting moderation and will appear once approved.',
+            );
+            navigate('/review');
           }}
           submitLabel="Post Review"
           submitPendingLabel="Posting..."

@@ -187,12 +187,21 @@ export function AboutPage() {
               Have something to say?
             </h2>
             <p className="mx-auto mb-8 max-w-md text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
-              Create a free account, verify your email, and share your experience anonymously. Your name is never revealed.
+              No account needed. Share your experience anonymously right now — your
+              review is checked by a moderator before it goes live. Your name is never
+              revealed. Create a free account only if you want to edit your reviews later.
             </p>
            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
   <Link
-    to={ROUTES.REGISTER}
+    to={ROUTES.CREATE_REVIEW}
     className="inline-block border-2 border-transparent bg-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-white dark:bg-[var(--color-text)] dark:text-[var(--color-bg)] hover:opacity-90 transition-opacity"
+  >
+    Write a Review
+  </Link>
+
+  <Link
+    to={ROUTES.REGISTER}
+    className="inline-block border-2 border-[var(--color-text)] px-8 py-3 text-[10px] font-medium tracking-normal text-[var(--color-text)] dark:border-[var(--color-text)] dark:text-[var(--color-text)] hover:bg-stone-100 dark:hover:bg-[var(--color-card)] transition-colors"
   >
     Create Account
   </Link>

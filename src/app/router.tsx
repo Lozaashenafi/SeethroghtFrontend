@@ -56,10 +56,9 @@ export function AppRouter() {
           <Route path={ROUTES.COMPANY} element={<CompanyPage />} />
           <Route path={ROUTES.COMPANY_DETAIL} element={<CompanyDetailPage />} />
           <Route path={ROUTES.REVIEW} element={<ReviewPage />} />
-          <Route
-            path={ROUTES.CREATE_REVIEW}
-            element={<ProtectedUserRoute><CreateReviewPage /></ProtectedUserRoute>}
-          />
+          {/* Posting is open to anyone — anonymous posters are held for
+              moderation, signed-in accounts publish directly. */}
+          <Route path={ROUTES.CREATE_REVIEW} element={<CreateReviewPage />} />
           <Route path={ROUTES.REVIEW_DETAIL} element={<ReviewDetailPage />} />
           <Route
             path={ROUTES.EDIT_REVIEW}

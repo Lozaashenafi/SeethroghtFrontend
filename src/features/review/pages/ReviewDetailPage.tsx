@@ -127,11 +127,6 @@ export function ReviewDetailPage() {
     (myReviews?.reviews ?? []).some((r) => r.publicId === review.publicId);
 
   const handleSubmitComment = async () => {
-    if (!isAuthenticated) {
-      const redirect = encodeURIComponent(window.location.pathname);
-      window.location.href = `${ROUTES.LOGIN}?redirect=${redirect}`;
-      return;
-    }
     if (!publicId || !commentText.trim()) return;
 
     // Profanity gate — warn and block until the comment is cleaned up.
@@ -349,7 +344,7 @@ export function ReviewDetailPage() {
               <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
                 You cannot comment on your own review.
               </p>
-            ) : isAuthenticated ? (
+            ) : (
               <div className="flex gap-3">
                 <div className="flex-1 border-2 border-[var(--color-text)] dark:border-[var(--color-text)] bg-white dark:bg-[var(--color-surface)]">
                   <input
@@ -368,19 +363,6 @@ export function ReviewDetailPage() {
                   <Send size={14} />
                   Post
                 </button>
-              </div>
-            ) : (
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p className="text-sm text-stone-500 dark:text-[var(--color-text-secondary)]">
-                  Log in to leave a comment.
-                </p>
-                <Link
-                  to={`${ROUTES.LOGIN}?redirect=${encodeURIComponent(window.location.pathname)}`}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--color-text)] text-white dark:text-[var(--color-bg)] font-medium text-xs tracking-normal border-2 border-[var(--color-text)] hover:opacity-90 transition-opacity"
-                >
-                  <LogIn size={14} />
-                  Log In
-                </Link>
               </div>
             )}
             {commentError && (

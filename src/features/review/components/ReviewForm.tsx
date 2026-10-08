@@ -417,12 +417,11 @@ export function ReviewForm({
       if (source === 'auto') {
         if (titleManuallyEdited || title.trim()) return null;
         if (!pros.trim() && !cons.trim()) return null;
+        // Auto-drafting keeps firing while the reviewer types and swallows its
+        // own failures, so for a guest it would quietly drain their small daily
+        // AI budget with no way to explain itself. Guests keep the button.
         if (!isAuthenticated) return null;
       } else {
-        if (!isAuthenticated) {
-          toast.error('Log in to use AI title suggestions.');
-          return null;
-        }
         if (!pros.trim() && !cons.trim()) {
           toast.error('Write some pros or cons first — the title is generated from them.');
           return null;

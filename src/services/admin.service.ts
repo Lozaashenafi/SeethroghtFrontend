@@ -4,6 +4,7 @@ import type {
   ApiResponse,
   Company,
   Review,
+  AdminReview,
   Pagination,
   Report,
   AdminUser,
@@ -67,8 +68,8 @@ export async function adminDeleteReview(publicId: string): Promise<void> {
   await apiClient.delete(`${API_ENDPOINTS.REVIEWS}/${publicId}`);
 }
 
-export async function adminGetReview(publicId: string): Promise<Review> {
-  const { data } = await apiClient.get<ApiResponse<Review>>(`${API_ENDPOINTS.REVIEWS}/admin/${publicId}`);
+export async function adminGetReview(publicId: string): Promise<AdminReview> {
+  const { data } = await apiClient.get<ApiResponse<AdminReview>>(`${API_ENDPOINTS.REVIEWS}/admin/${publicId}`);
   if (!data.data) throw new Error('Review not found');
   return data.data;
 }
@@ -91,6 +92,18 @@ export async function adminBanReviewAuthor(publicId: string): Promise<boolean> {
   return data.data?.banned ?? false;
 }
 
+/**
+ * Blind unban — lifts the block on the review's author, again without revealing
+ * who they are. The inverse of adminBanReviewAuthor.
+ */
+export async function adminUnbanReviewAuthor(publicId: string): Promise<boolean> {
+  const { data } = await apiClient.patch<ApiResponse<{ unbanned: boolean }>>(
+    `${API_ENDPOINTS.REVIEWS}/admin/${publicId}/unban-author`,
+    {},
+  );
+  return data.data?.unbanned ?? false;
+}
+
 // ─── Users (admin-only) ───
 
 const emptyPagination: Pagination = { total: 0, page: 1, limit: 20, totalPages: 0 };
@@ -101,6 +114,7 @@ export async function adminListUsers(params: {
   search?: string;
   role?: 'user' | 'admin' | 'all';
   status?: 'active' | 'blocked' | 'restricted' | 'all';
+  isGuest?: 'account' | 'guest' | 'all';
 } = {}): Promise<{ users: AdminUser[]; pagination: Pagination }> {
   const { data } = await apiClient.get<ApiResponse<{ users: AdminUser[]; pagination: Pagination }>>(
     API_ENDPOINTS.ADMIN_USERS,
