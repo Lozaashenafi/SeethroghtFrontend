@@ -4,6 +4,24 @@
 
 React frontend for the See Through workplace review platform, where employees share anonymous experiences about companies.
 
+---
+
+## 📸 Screenshots & Preview
+
+See Kimo Emoji in action:
+
+<!-- Replace these paths with your actual screenshot paths -->
+
+### image 
+![ Collection](./screenshots/image1.png)
+
+### image
+![ Components](./screenshots/image2.png)
+
+### image
+![ Playground](./screenshots/image3.png)
+
+---
 ## Tech Stack
 
 | Category          | Library          |
